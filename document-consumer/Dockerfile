@@ -3,24 +3,28 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
+# Install minimal system dependencies in one layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Copy only requirements first for better caching
 COPY pyproject.toml ./
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
+# Install Python dependencies (keep pip cache, install in editable mode)
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install -e .
 
 # Copy application code
 COPY app ./app
 
-# Expose ports (if needed for metrics/health checks)
+# Run as non-root user
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Expose ports
 EXPOSE 8000
 
-# Run the application
-CMD ["python", "-m", "app.main"]
+# Run the application with Faststream CLI
+CMD ["faststream", "run", "app.main:app"]

@@ -15,18 +15,10 @@ logger = structlog.get_logger()
 # Initialize Kafka broker
 broker = KafkaBroker(
     bootstrap_servers=settings.kafka_bootstrap_servers,
-    # Enable at-least-once delivery
-    enable_auto_commit=True,
-    auto_offset_reset="earliest",
 )
 
 # Create FastStream app
-app = FastStream(
-    broker,
-    title=settings.app_name,
-    version=settings.app_version,
-    description="RAG-based document processing service",
-)
+app = FastStream(broker)
 
 # Include routers
 broker.include_router(document_router)
@@ -64,11 +56,4 @@ async def after_startup() -> None:
     )
 
 
-if __name__ == "__main__":
-    import uvloop
-
-    # Use uvloop for better async performance
-    uvloop.install()
-
-    # Run the application
-    app.run()
+# No need for __main__ block when using faststream CLI

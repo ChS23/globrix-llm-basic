@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 
 class VectorStoreInterface(ABC):

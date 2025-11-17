@@ -5,6 +5,8 @@ from typing import Any
 
 import structlog
 from faststream.kafka import KafkaRouter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
 
 from app.config.settings import settings
 from app.models.events import (
@@ -12,11 +14,15 @@ from app.models.events import (
     DocumentProcessedEvent,
     DocumentStatus,
 )
+from app.vector_store.manager import VectorStoreManager
 
 logger = structlog.get_logger()
 
 # Create router for document-related topics
 router = KafkaRouter()
+
+# Get vector store instance
+vector_store = VectorStoreManager.get_vector_store()
 
 
 @router.subscriber(settings.kafka_topic_documents_ingest)
@@ -50,29 +56,63 @@ async def process_document_ingest(
     )
 
     try:
-        # TODO: Implement actual document processing
-        # 1. Download from MinIO
-        # 2. Load document with LangChain loader
-        # 3. Chunk document
-        # 4. Generate embeddings
-        # 5. Store in vector DB
+        # 1. Load document with LangChain loader
+        # TODO: Add MinIO download support (for now use local file path)
+        logger.info("loading_document", file_path=event.file_path)
 
-        # Placeholder for now
-        chunks_count = 0
+        if event.file_type == "pdf":
+            loader = PyPDFLoader(event.file_path)
+            documents = loader.load()
+        else:
+            raise ValueError(f"Unsupported file type: {event.file_type}")
+
+        logger.info("document_loaded", pages_count=len(documents))
+
+        # 2. Chunk document
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=settings.chunk_size,
+            chunk_overlap=settings.chunk_overlap,
+            length_function=len,
+        )
+        chunks = text_splitter.split_documents(documents)
+
+        logger.info("document_chunked", chunks_count=len(chunks))
+
+        # 3. Add metadata to chunks
+        for i, chunk in enumerate(chunks):
+            chunk.metadata.update({
+                "document_id": event.document_id,
+                "file_name": event.file_name,
+                "country": event.country,
+                "category": event.category,
+                "language": event.language,
+                "chunk_index": i,
+                "total_chunks": len(chunks),
+            })
+
+        # 4. Store in vector DB (embeddings generated automatically)
+        logger.info("storing_chunks_in_vector_db", chunks_count=len(chunks))
+        doc_ids = await vector_store.add_documents(chunks)
+
+        logger.info(
+            "chunks_stored",
+            chunks_count=len(doc_ids),
+            sample_ids=doc_ids[:3],
+        )
 
         processing_time = time.time() - start_time
 
         logger.info(
             "document_processed_successfully",
             document_id=event.document_id,
-            chunks_count=chunks_count,
+            chunks_count=len(chunks),
             processing_time=processing_time,
         )
 
         return DocumentProcessedEvent(
             document_id=event.document_id,
             status=DocumentStatus.COMPLETED,
-            chunks_count=chunks_count,
+            chunks_count=len(chunks),
             processing_time_seconds=processing_time,
         )
 
