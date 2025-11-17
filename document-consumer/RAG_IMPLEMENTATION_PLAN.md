@@ -2,16 +2,62 @@
 
 ---
 
+## 🎯 Краткий обзор
+
+**Технологический стек:** LangChain + Faststream + Vector DB (Qdrant/Milvus/Weaviate)
+
+**Проблема:** Риэлторы работают с недвижимостью в разных странах (Таиланд, Малайзия) с различными законодательствами и терминологией. Одни и те же понятия называются по-разному: аренда = "lease" / "rent" / "sewa" / "tenancy agreement". Нужна RAG-система для релевантного поиска с учётом региональной специфики.
+
+**Текущие приоритеты (3 задачи):**
+1. ✨ Инициализировать Faststream проект с Kafka
+2. ✨ Выбрать Vector DB и поднять в Docker (Qdrant/Milvus/Weaviate)
+3. ✨ Реализовать класс загрузки с глобальным vector store (singleton)
+
+**Ключевые улучшения:**
+- 🔧 **LangChain** для построения RAG pipeline
+- 📊 **Perplexity** добавлена в метрики оценки
+- 🎯 **Schema-Guided Reasoning** для структурированных ответов
+- 🌏 Фокус на **мультистрановую** специфику (Thailand, Malaysia)
+- 📄 Тестовые документы в `test_data/`: Thailand Legal Guides
+
+---
+
 ## 1. Введение
 
 ### 1.1 Цель проекта
-Построить оптимальный RAG-пайплайн для информационно-поисковой системы по недвижимости с AI-агентами путём систематического сравнения всех компонентов retrieval и generation.
+Построить оптимальный RAG-пайплайн на **LangChain** для информационно-поисковой системы по недвижимости с AI-агентами путём систематического сравнения всех компонентов retrieval и generation.
+
+### 1.1.1 Ближайшие задачи (Immediate Sprint)
+
+**Три приоритетные задачи для старта:**
+
+1. **Инициализировать Faststream проект**
+   - Настроить структуру проекта с Faststream
+   - Создать базовые consumers для обработки документов
+   - Интеграция с Kafka для асинхронной обработки
+
+2. **Выбрать Vector DB и поднять в Docker**
+   - Сравнить Qdrant, Milvus, Weaviate
+   - Выбрать оптимальное решение на основе критериев
+   - Настроить docker-compose с выбранной Vector DB
+
+3. **Реализовать класс для загрузки с глобальным vector store**
+   - Создать абстракцию `VectorStoreInterface` на LangChain
+   - Имплементировать глобальный singleton для vector store
+   - Реализовать методы загрузки документов и поиска
 
 ### 1.2 Проблематика
-Риэлторам сложно работать с большими объёмами разрозненной информации (сайты, PDF-презентации, документы, базы данных). Необходима система для:
-- Быстрого поиска релевантной информации
-- Генерации персонализированных презентаций
-- Интеллектуального общения через чат-интерфейс
+Риэлторам сложно работать с большими объёмами разрозненной информации из разных стран с различными правовыми системами:
+- **Региональная специфика**: В Таиланде свои законы о недвижимости, в Малайзии - свои
+- **Терминологическая вариативность**: Одни и те же понятия называются по-разному в разных странах (например, аренда может называться "lease", "rent", "tenancy agreement", "hire purchase")
+- **Многоязычность**: Документы на английском, тайском, малайском языках
+- **Разнородные форматы**: PDF-презентации, юридические документы, веб-страницы
+
+Необходима RAG-система для:
+- Релевантного поиска информации с учётом региональной и терминологической специфики
+- Понимания синонимов и вариаций названий юридических сущностей
+- Генерации точных ответов на основе правильных источников для конкретной страны
+- Интеллектуального общения через чат-интерфейс с учётом контекста региона
 
 ### 1.3 Архитектура решения
 ```
@@ -28,15 +74,21 @@
            │
            v
 ┌─────────────────────┐
-│ document-consumer   │  RAG Pipeline
+│ document-consumer   │  RAG Pipeline (LangChain)
 │  (Loader Service)   │  (эксперименты)
 └─────────────────────┘
 ```
 
 **Сервисы:**
-- **document-consumer** - RAG-сервис для обработки документов и retrieval
+- **document-consumer** - RAG-сервис на **LangChain** для обработки документов и retrieval
 - **assistant-service** - Агент-оркестратор с инструментами
 - **real-estate-frontend** - Пользовательский интерфейс
+
+**Технологический стек RAG:**
+- **Framework**: LangChain для построения RAG pipeline
+- **Messaging**: Faststream + Kafka для асинхронной обработки
+- **Vector DB**: Выбор между Qdrant/Milvus/Weaviate
+- **Storage**: MinIO для хранения документов
 
 ### 1.4 Требования к системе
 
@@ -70,15 +122,19 @@
 ### 2.1 Источники данных
 
 **Типы документов:**
-- PDF-презентации жилых комплексов
-- DOCX документы с условиями ипотеки
+- PDF-презентации и юридические справочники
+- DOCX документы с условиями сделок
 - HTML страницы с региональной аналитикой
 - Structured data (JSON/CSV) с характеристиками объектов
 
 **Региональное покрытие:**
-- Москва и Московская область
-- Санкт-Петербург и Ленинградская область
-- Другие регионы России (расширение)
+- Таиланд (тайское и английское законодательство о недвижимости)
+- Малайзия (малайские и английские юридические термины)
+- Другие страны Юго-Восточной Азии (расширение)
+
+**Примеры документов в test_data:**
+- `Thailand_Real_Estate_Legal_Guide_Comprehensive.pdf`
+- `Thailand_Real_Estate_Terms_Regional_Guide.pdf`
 
 ### 2.2 Валидационная выборка
 
@@ -115,6 +171,7 @@
 - **Context Precision** - точность извлечённого контекста
 - **Context Recall** - полнота извлечённого контекста
 - **Hallucination Rate** - процент галлюцинаций в ответах
+- **Perplexity** - мера уверенности модели в сгенерированном тексте (lower is better)
 
 #### Performance метрики:
 - **Latency** (p50, p95, p99) - время ответа
@@ -291,13 +348,17 @@ configs = [
 ```python
 {
     "source": "document_id",
-    "region": "Москва",  # для региональной фильтрации
-    "property_type": "квартира",  # тип недвижимости
+    "country": "Thailand",  # для региональной фильтрации
+    "category": "legal_terms",  # legal_terms, ownership_rules, taxes_fees, etc.
+    "language": "en",  # en, th, ms
+    "document_type": "legal_guide",  # legal_guide, property_listing, analysis
     "document_date": "2024-11-14",
     "chunk_index": 5,
     "chunk_strategy": "recursive_1000_200",
     "page_number": 3,  # для PDF
-    "total_chunks": 45
+    "total_chunks": 45,
+    "legal_entities": ["leasehold", "freehold"],  # извлечённые юридические термины
+    "synonyms": ["lease", "rental agreement"]  # синонимы для поиска
 }
 ```
 
@@ -1389,6 +1450,7 @@ class RetrievalExperiment:
 | **Corrective RAG** | Проверка релевантности → re-retrieval если нужно | Меньше галлюцинаций | Увеличивает латентность |
 | **Self-RAG** | Модель сама решает, нужен ли retrieval | Адаптивный | Требует fine-tuning |
 | **Adaptive RAG** | Динамический выбор стратегии по типу запроса | Оптимален для разных типов запросов | Сложнее в реализации |
+| **Schema-Guided RAG** | Использование предопределенной схемы для структурирования ответов | Структурированные, консистентные ответы | Требует определения схем для каждого типа запросов |
 
 ### 8.3 Экспериментальный дизайн
 
@@ -1409,6 +1471,51 @@ Query → Retrieve(k=5) → Relevance_Check(context)
 Query → Should_Retrieve? (LLM decides)
   ├─ Yes → Retrieve → Generate + Self-Critique
   └─ No → Generate directly
+```
+
+**Schema-Guided RAG:**
+```
+Query → Extract Intent & Entity Type
+  ↓
+Retrieve(k=5) → Select Appropriate Schema (based on query type)
+  ↓
+Generate with Schema Constraints → Validate Output Structure
+  ↓
+Return Structured Response
+```
+
+**Пример схем для недвижимости:**
+```python
+# Схема для юридических терминов
+legal_term_schema = {
+    "term": str,
+    "definition": str,
+    "country": str,  # Thailand, Malaysia, etc.
+    "synonyms": List[str],
+    "legal_reference": str,
+    "examples": List[str]
+}
+
+# Схема для типов собственности
+property_type_schema = {
+    "type_name": str,
+    "local_term": str,
+    "country": str,
+    "ownership_rights": str,
+    "restrictions": List[str],
+    "typical_duration": str
+}
+
+# Схема для сравнения между странами
+comparison_schema = {
+    "concept": str,
+    "countries": List[{
+        "country": str,
+        "local_term": str,
+        "description": str,
+        "legal_framework": str
+    }]
+}
 ```
 
 **Метрики оценки:**
@@ -1733,19 +1840,25 @@ class RAGVariantsExperiment:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Document Ingestion Pipeline              │
+│         Document Ingestion Pipeline (LangChain)             │
 ├─────────────────────────────────────────────────────────────┤
-│ PDF/DOCX/HTML → PDFPlumber → RecursiveChunking(1000/200)   │
+│ PDF/DOCX/HTML → LangChain Loaders (PDFPlumber)             │
+│                        ↓                                     │
+│      LangChain RecursiveCharacterTextSplitter(1000/200)    │
 │                        ↓                                     │
 │             E5-Large Embeddings (local)                     │
 │                        ↓                                     │
-│           Qdrant (dense + sparse vectors)                   │
+│           Qdrant VectorStore (dense + sparse)               │
+│                        ↓                                     │
+│            Faststream + Kafka (async processing)            │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│                    Query Pipeline                           │
+│              Query Pipeline (LangChain RAG)                 │
 ├─────────────────────────────────────────────────────────────┤
 │                    User Query                               │
+│                        ↓                                     │
+│            Schema-Guided Intent Detection                   │
 │                        ↓                                     │
 │         Hybrid Search (alpha=0.7, k=30)                     │
 │         ├─ Dense search (E5-Large)                          │
@@ -1755,11 +1868,25 @@ class RAGVariantsExperiment:
 │                        ↓                                     │
 │         Cross-Encoder Reranking (top 5)                     │
 │                        ↓                                     │
-│              Relevance Check (Corrective RAG)               │
+│         Relevance Check (Corrective RAG)                    │
+│         ├─ If relevant → proceed                            │
+│         └─ If not → query expansion + re-retrieve           │
 │                        ↓                                     │
-│              LLM Generation (GPT-4/Claude)                  │
+│         LLM Generation with Schema Constraints              │
+│         (GPT-4/Claude + Structured Output)                  │
+│                        ↓                                     │
+│              Validate Output Structure                      │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**Ключевые компоненты LangChain:**
+- `PyPDFLoader` / `UnstructuredPDFLoader` для загрузки документов
+- `RecursiveCharacterTextSplitter` для чанкинга
+- `HuggingFaceEmbeddings` для E5-Large embeddings
+- `QdrantVectorStore` для хранения и поиска
+- `ContextualCompressionRetriever` для reranking
+- `ConversationalRetrievalChain` для RAG pipeline
+- Pydantic для Schema-Guided output validation
 
 ### 10.4 Технический стек
 
@@ -2025,31 +2152,40 @@ rag:
 [
   {
     "query_id": "q001",
-    "query": "Какие районы Москвы лучше для инвестиций в новостройки?",
-    "expected_topics": ["инвестиции", "районы Москвы", "новостройки"],
-    "metadata_filter": {"region": "Москва", "property_type": "квартира"},
+    "query": "What is a leasehold in Thailand and how does it differ from freehold?",
+    "expected_topics": ["leasehold", "freehold", "Thailand", "ownership types"],
+    "metadata_filter": {"country": "Thailand", "category": "legal_terms"},
     "ground_truth_chunks": [
-      {"chunk_id": "doc_123_chunk_5", "relevance": 3},
-      {"chunk_id": "doc_456_chunk_2", "relevance": 2}
+      {"chunk_id": "doc_thailand_legal_chunk_5", "relevance": 3},
+      {"chunk_id": "doc_thailand_terms_chunk_12", "relevance": 2}
     ]
   },
   {
     "query_id": "q002",
-    "query": "Условия ипотеки в ЖК Сколково Парк",
-    "expected_topics": ["ипотека", "ЖК Сколково Парк"],
-    "metadata_filter": {"region": "Москва"},
+    "query": "Can foreigners buy property in Thailand?",
+    "expected_topics": ["foreign ownership", "Thailand", "restrictions", "condominium"],
+    "metadata_filter": {"country": "Thailand", "category": "ownership_rules"},
     "ground_truth_chunks": [
-      {"chunk_id": "doc_789_chunk_12", "relevance": 3}
+      {"chunk_id": "doc_thailand_legal_chunk_8", "relevance": 3}
     ]
   },
   {
     "query_id": "q003",
-    "query": "Цены на квартиры в Санкт-Петербурге в 2024 году",
-    "expected_topics": ["цены", "квартиры", "Санкт-Петербург", "2024"],
-    "metadata_filter": {"region": "Санкт-Петербург"},
+    "query": "What is the difference between 'sewa' in Malaysia and 'lease' in Thailand?",
+    "expected_topics": ["rental terms", "Malaysia", "Thailand", "comparison", "terminology"],
+    "metadata_filter": {"category": "cross_country_comparison"},
     "ground_truth_chunks": [
-      {"chunk_id": "doc_234_chunk_7", "relevance": 3},
-      {"chunk_id": "doc_567_chunk_15", "relevance": 2}
+      {"chunk_id": "doc_malaysia_terms_chunk_3", "relevance": 3},
+      {"chunk_id": "doc_thailand_terms_chunk_7", "relevance": 2}
+    ]
+  },
+  {
+    "query_id": "q004",
+    "query": "Explain property transfer tax in Thailand",
+    "expected_topics": ["taxes", "transfer", "Thailand", "fees"],
+    "metadata_filter": {"country": "Thailand", "category": "taxes_fees"},
+    "ground_truth_chunks": [
+      {"chunk_id": "doc_thailand_legal_chunk_15", "relevance": 3}
     ]
   }
 ]
@@ -2064,19 +2200,24 @@ rag:
 - [x] Загрузить в Object Storage (MinIO)
 
 #### До 13.12.2024 - Core RAG + Эксперименты 🔬
-- [ ] Инициализировать Faststream проект с Kafka
-- [ ] Настроить Vector DB (Qdrant) в Docker
-- [ ] Реализовать абстракции (VectorStoreInterface, EmbeddingService)
+
+**🚀 ПРИОРИТЕТ 1: Базовая инфраструктура (сейчас)**
+- [ ] ✨ **Инициализировать Faststream проект с Kafka** (LangChain-based)
+- [ ] ✨ **Выбрать и настроить Vector DB в Docker** (Qdrant/Milvus/Weaviate)
+- [ ] ✨ **Реализовать класс для загрузки с глобальным vector store** (singleton pattern)
+
+**Остальные задачи:**
+- [ ] Реализовать абстракции (DocumentLoaderInterface, ChunkingStrategy)
 - [ ] **Провести эксперимент: Document Loaders**
 - [ ] **Провести эксперимент: Chunking Strategies**
 - [ ] **Провести эксперимент: Embeddings**
 - [ ] **Провести эксперимент: Vector Stores**
 - [ ] **Провести эксперимент: Retrieval Strategies**
-- [ ] Реализовать Corrective RAG
+- [ ] Реализовать Corrective RAG + Schema-Guided Reasoning
 - [ ] **Провести End-to-End эксперимент**
 - [ ] **Выбрать лучшую конфигурацию**
 - [ ] Написать тесты (coverage > 80%)
-- [ ] **Замерить метрики на валидационной выборке**
+- [ ] **Замерить метрики на валидационной выборке** (включая Perplexity)
 - [ ] Создать отчет экспериментов
 
 #### До 27.12.2024 - Deployment
