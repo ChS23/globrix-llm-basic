@@ -1,1 +1,1 @@
-"""Vector store module for document embeddings and retrieval."""
+"""Модуль для работы с векторным хранилищем."""

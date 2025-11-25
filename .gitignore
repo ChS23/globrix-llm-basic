@@ -213,3 +213,16 @@ __marimo__/
 
 # Julia-dev
 /assets-j
+Claude.md
+
+# Project specific
+# Docker volumes data
+**/qdrant_data/
+**/rabbitmq_data/
+
+# Временные файлы тестов
+test_setup.py
+
+# IDE
+.vscode/
+.idea/

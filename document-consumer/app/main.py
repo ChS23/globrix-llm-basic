@@ -1,59 +1,60 @@
-"""Main Faststream application entrypoint."""
+"""
+Главный файл приложения FastStream.
 
+Что он делает:
+- Создает подключение к RabbitMQ
+- Запускает FastStream приложение
+- Подключает обработчики сообщений (роутеры)
+"""
 import structlog
 from faststream import FastStream
-from faststream.kafka import KafkaBroker
+from faststream.rabbit import RabbitBroker
 
 from app.config.settings import settings
 from app.consumers.document_consumer import router as document_router
-from app.utils.logging import configure_logging
 
-# Configure logging
-configure_logging(debug=settings.debug)
+# Настраиваем логирование
+# structlog - это библиотека для красивых и структурированных логов
 logger = structlog.get_logger()
 
-# Initialize Kafka broker
-broker = KafkaBroker(
-    bootstrap_servers=settings.kafka_bootstrap_servers,
-)
+# Создаем брокер для подключения к RabbitMQ
+# URL формата: amqp://user:password@host:port/
+broker = RabbitBroker(url=settings.rabbitmq_url)
 
-# Create FastStream app
+# Создаем FastStream приложение
+# Это главный объект, который управляет всем приложением
 app = FastStream(broker)
 
-# Include routers
+# Подключаем роутер с обработчиками документов
+# Роутер содержит функции, которые обрабатывают сообщения из RabbitMQ
 broker.include_router(document_router)
 
 
 @app.on_startup
-async def on_startup() -> None:
-    """Execute on application startup."""
+async def on_startup():
+    """
+    Выполняется при запуске приложения.
+
+    Здесь можно:
+    - Проверить подключение к базам данных
+    - Инициализировать глобальные объекты
+    - Вывести информацию о конфигурации
+    """
     logger.info(
-        "starting_application",
+        "application_starting",
         app_name=settings.app_name,
-        version=settings.app_version,
-        kafka_servers=settings.kafka_bootstrap_servers,
-        vector_store=settings.vector_store_type,
+        rabbitmq_url=settings.rabbitmq_url,
     )
 
 
 @app.on_shutdown
-async def on_shutdown() -> None:
-    """Execute on application shutdown."""
-    logger.info("shutting_down_application")
+async def on_shutdown():
+    """
+    Выполняется при остановке приложения.
 
-
-@app.after_startup
-async def after_startup() -> None:
-    """Execute after application startup."""
-    logger.info(
-        "application_ready",
-        topics={
-            "ingest": settings.kafka_topic_documents_ingest,
-            "processed": settings.kafka_topic_documents_processed,
-            "query_requests": settings.kafka_topic_query_requests,
-            "query_responses": settings.kafka_topic_query_responses,
-        },
-    )
-
-
-# No need for __main__ block when using faststream CLI
+    Здесь можно:
+    - Закрыть подключения к БД
+    - Сохранить состояние
+    - Завершить фоновые задачи
+    """
+    logger.info("application_shutting_down")
