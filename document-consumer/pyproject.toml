@@ -1,7 +1,46 @@
 [project]
-name = "globrix-llm-basic"
+name = "document-consumer"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "RAG-based document processing service"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    # FastStream с RabbitMQ
+    "faststream[rabbit]>=0.5.0",
+
+    # LangChain компоненты
+    "langchain>=0.1.0",
+    "langchain-community>=0.1.0",
+    "langchain-openai>=0.1.0",
+    "langchain-text-splitters>=0.1.0",
+    "langchain-qdrant>=0.1.0",
+
+    # Обработка PDF
+    "pypdf>=3.0.0",
+
+    # Векторная БД
+    "qdrant-client>=1.7.0",
+
+    # OpenAI для эмбеддингов
+    "openai>=1.0.0",
+
+    # Настройки и логирование
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "structlog>=24.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+exclude = ["test_data*"]
