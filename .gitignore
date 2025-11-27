@@ -214,6 +214,7 @@ __marimo__/
 # Julia-dev
 /assets-j
 Claude.md
+document-consumer/explain.md
 
 # Project specific
 # Docker volumes data
