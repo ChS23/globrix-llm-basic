@@ -1,0 +1,6 @@
+structlog
+aiohttp
+pydantic
+fastapi
+langgraph
+langchain-core
