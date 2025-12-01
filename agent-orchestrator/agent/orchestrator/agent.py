@@ -5,8 +5,10 @@ from langchain_core.messages import AIMessage, HumanMessage
 from agent.tools.realty_search import realty_search, RealtyFilter
 from agent.tools.regional_rag_tool import regional_rag_tool
 from agent.tools.genui_tool import genui_tool
+from agent.tools.document_ingestion_tool import document_ingestion_tool
+import asyncio
 
-def respond_node(state: MessagesState):
+async def respond_node(state: MessagesState):
     # Получаем последнее сообщение от пользователя
     last_message = state["messages"][-1].content
 
@@ -29,6 +31,21 @@ def respond_node(state: MessagesState):
         answer = regional_rag_tool(user_input)
         response = f"Ответ от RAG: {answer}"
 
+    elif any(word in user_input for word in ["загрузи", "добавь документ", "загрузить pdf", "инжест"]):
+        # Пример: "загрузи документ /path/to/file.pdf"
+        # Извлекаем путь к файлу из сообщения (упрощенный парсинг)
+        words = last_message.split()
+        file_path = None
+        for word in words:
+            if word.endswith('.pdf'):
+                file_path = word
+                break
+
+        if file_path:
+            response = await document_ingestion_tool(file_path)
+        else:
+            response = "Пожалуйста, укажите путь к PDF файлу. Например: 'загрузи документ /path/to/file.pdf'"
+
     elif any(word in user_input for word in ["лэндинг", "презентация", "сайт"]):
         # Пример: "сделай лэндинг для квартиры"
         # Пока — заглушка, в будущем можно передавать данные
@@ -36,7 +53,7 @@ def respond_node(state: MessagesState):
         response = "Лэндинг готов (заглушка)"
 
     else:
-        response = "Не понял запрос. Попробуйте: 'найди недвижимость', 'расскажи о районе', 'сделай лэндинг'"
+        response = "Не понял запрос. Попробуйте: 'найди недвижимость', 'расскажи о районе', 'загрузи документ', 'сделай лэндинг'"
 
     return {"messages": [AIMessage(content=response)]}
 

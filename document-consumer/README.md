@@ -152,10 +152,119 @@ uv run pytest tests/test_vector_store.py -v
 - Если найден → статус "duplicate", обработка прерывается
 - Если не найден → документ обрабатывается и сохраняется
 
+## Интеграция с Agent Orchestrator ✅
+
+Document Consumer может быть использован как tool для агента. Агент сможет загружать документы в векторную базу для последующего использования в RAG.
+
+### Как это работает
+
+1. **Агент получает запрос** от пользователя: "загрузи документ /path/to/file.pdf"
+2. **Agent Tool** (`document_ingestion_tool`) читает PDF файл и отправляет его в RabbitMQ
+3. **Document Consumer** автоматически получает событие из RabbitMQ и обрабатывает документ
+4. **Результат** сохраняется в Qdrant и становится доступен для поиска
+
+### Готовый код для интеграции
+
+Файл уже создан: `/agent-orchestrator/agent/tools/document_ingestion_tool.py`
+
+```python
+from agent.tools.document_ingestion_tool import document_ingestion_tool
+
+# Использование в агенте
+result = await document_ingestion_tool(
+    file_path="/path/to/contract.pdf",
+    metadata={"region": "Ростов", "category": "Контракты"}
+)
+```
+
+### Архитектура взаимодействия
+
+```
+┌─────────────────┐
+│      Агент      │  (получает команду от пользователя)
+│  (LangGraph)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────────┐
+│ document_ingestion_tool │  (читает PDF, кодирует base64)
+└────────┬────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│    RabbitMQ     │  (топик: documents.ingest)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│Document Consumer│  (обрабатывает асинхронно)
+│  (FastStream)   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│     Qdrant      │  (векторная БД)
+└─────────────────┘
+```
+
+### Необходимые зависимости для агента
+
+```txt
+# В agent-orchestrator/requirements.txt
+aio-pika>=9.0.0        # Для отправки сообщений в RabbitMQ
+pydantic>=2.0.0        # Для валидации данных
+structlog>=24.0.0      # Для логирования
+```
+
+### Пример использования в агенте
+
+```python
+# agent/orchestrator/agent.py
+from agent.tools.document_ingestion_tool import document_ingestion_tool
+
+async def respond_node(state: MessagesState):
+    user_input = state["messages"][-1].content
+
+    if "загрузи документ" in user_input.lower():
+        # Извлекаем путь к файлу
+        file_path = extract_file_path(user_input)
+
+        # Загружаем документ
+        response = await document_ingestion_tool(
+            file_path=file_path,
+            metadata={"region": "default"}
+        )
+
+        return {"messages": [AIMessage(content=response)]}
+```
+
+### Как агент вызывает tool
+
+```python
+# Пользователь: "загрузи документ /data/contract.pdf"
+
+# 1. Агент распознает команду
+# 2. Вызывает document_ingestion_tool("/data/contract.pdf")
+# 3. Tool:
+#    - Читает файл
+#    - Кодирует в base64
+#    - Отправляет событие в RabbitMQ
+#    - Возвращает: "✅ Документ отправлен на обработку. ID: abc-123"
+# 4. Document Consumer асинхронно обрабатывает документ
+# 5. Через несколько секунд документ доступен для поиска
+```
+
+### Особенности
+
+- **Асинхронность**: Агент не ждет завершения обработки документа
+- **Надежность**: RabbitMQ гарантирует доставку сообщения
+- **Изоляция**: Агент и Document Consumer работают независимо
+- **Масштабируемость**: Можно запустить несколько Consumer'ов для параллельной обработки
+
 ## Следующие шаги (Этап 3)
 
-- [ ] API для поиска документов (REST endpoint или LangChain Tool для Agent Orchestrator)
-- [ ] Интеграция с Agent Orchestrator
+- [x] Интеграция с Agent Orchestrator как tool
+- [ ] API для поиска документов (REST endpoint)
 - [ ] Дополнительные форматы документов (DOCX, TXT)
 - [ ] Улучшение chunking стратегии
 - [ ] Мониторинг и метрики
