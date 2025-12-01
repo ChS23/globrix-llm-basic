@@ -61,12 +61,12 @@ class TestDocumentIngestionService:
             return_value=mock_vector_store,
         )
 
-        # Мокируем PyPDFLoader
-        mock_pdf_loader = mocker.patch(
-            "app.services.document_ingestion.PyPDFLoader"
+        # Мокируем PyMuPDF4LLMParser
+        mock_parser = mocker.patch(
+            "app.services.document_ingestion.PyMuPDF4LLMParser"
         )
-        mock_loader_instance = mock_pdf_loader.return_value
-        mock_loader_instance.load.return_value = [
+        mock_parser_instance = mock_parser.return_value
+        mock_parser_instance.parse.return_value = [
             Document(
                 page_content="Page 1 content",
                 metadata={"page": 0, "source": "test.pdf"},
@@ -76,6 +76,9 @@ class TestDocumentIngestionService:
                 metadata={"page": 1, "source": "test.pdf"},
             ),
         ]
+
+        # Мокируем Blob
+        mocker.patch("app.services.document_ingestion.Blob")
 
         # Создаём сервис и обрабатываем документ
         service = DocumentIngestionService()
@@ -131,12 +134,15 @@ class TestDocumentIngestionService:
             return_value=mock_vector_store,
         )
 
-        # Мокируем PyPDFLoader чтобы он выбросил ошибку
-        mock_pdf_loader = mocker.patch(
-            "app.services.document_ingestion.PyPDFLoader"
+        # Мокируем PyMuPDF4LLMParser чтобы он выбросил ошибку
+        mock_parser = mocker.patch(
+            "app.services.document_ingestion.PyMuPDF4LLMParser"
         )
-        mock_loader_instance = mock_pdf_loader.return_value
-        mock_loader_instance.load.side_effect = Exception("PDF parsing failed")
+        mock_parser_instance = mock_parser.return_value
+        mock_parser_instance.parse.side_effect = Exception("PDF parsing failed")
+
+        # Мокируем Blob
+        mocker.patch("app.services.document_ingestion.Blob")
 
         # Создаём сервис и обрабатываем документ
         service = DocumentIngestionService()
@@ -168,17 +174,20 @@ class TestDocumentIngestionService:
             return_value=mock_vector_store,
         )
 
-        # Мокируем PyPDFLoader
-        mock_pdf_loader = mocker.patch(
-            "app.services.document_ingestion.PyPDFLoader"
+        # Мокируем PyMuPDF4LLMParser
+        mock_parser = mocker.patch(
+            "app.services.document_ingestion.PyMuPDF4LLMParser"
         )
-        mock_loader_instance = mock_pdf_loader.return_value
-        mock_loader_instance.load.return_value = [
+        mock_parser_instance = mock_parser.return_value
+        mock_parser_instance.parse.return_value = [
             Document(
                 page_content="Test content" * 200,  # Длинный текст
                 metadata={"page": 0},
             ),
         ]
+
+        # Мокируем Blob
+        mocker.patch("app.services.document_ingestion.Blob")
 
         # Создаём сервис и обрабатываем документ
         service = DocumentIngestionService()

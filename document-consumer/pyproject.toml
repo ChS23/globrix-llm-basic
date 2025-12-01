@@ -15,7 +15,7 @@ dependencies = [
     "langchain-qdrant>=0.1.0",
 
     # Обработка PDF
-    "pypdf>=3.0.0",
+    "langchain-pymupdf4llm>=0.1.0",
 
     # Векторная БД
     "qdrant-client>=1.7.0",

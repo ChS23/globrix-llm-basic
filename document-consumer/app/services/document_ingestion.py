@@ -10,12 +10,11 @@
 """
 import base64
 import hashlib
-import tempfile
-from pathlib import Path
 from typing import Optional
 
 import structlog
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.document_loaders import Blob
+from langchain_pymupdf4llm import PyMuPDF4LLMParser
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client.models import Filter, FieldCondition, MatchValue
 
@@ -174,33 +173,25 @@ class DocumentIngestionService:
         """
         Извлекает текст из PDF файла.
 
-        PyPDFLoader работает только с файлами, поэтому:
-        1. Сохраняем байты во временный файл
-        2. Загружаем через PyPDFLoader
-        3. Удаляем временный файл
+        Использует PyMuPDF4LLMParser для работы напрямую с байтами:
+        1. Создаём Blob из байтов PDF
+        2. Парсим через PyMuPDF4LLMParser (оптимизирован для LLM)
+        3. Возвращаем документы в Markdown формате
 
         Аргументы:
             pdf_bytes: Содержимое PDF в байтах
 
         Возвращает:
-            Список LangChain Document объектов (по одному на страницу)
+            Список LangChain Document объектов
         """
-        # Создаём временный файл
-        with tempfile.NamedTemporaryFile(
-            delete=False, suffix=".pdf"
-        ) as tmp_file:
-            tmp_file.write(pdf_bytes)
-            tmp_path = tmp_file.name
+        # Создаём Blob из байтов
+        blob = Blob.from_data(pdf_bytes, mime_type="application/pdf")
 
-        try:
-            # Загружаем PDF с помощью LangChain
-            loader = PyPDFLoader(tmp_path)
-            documents = loader.load()
-            return documents
+        # Парсим PDF с помощью PyMuPDF4LLM (оптимизирован для LLM)
+        parser = PyMuPDF4LLMParser()
+        documents = list(parser.parse(blob))
 
-        finally:
-            # Удаляем временный файл в любом случае
-            Path(tmp_path).unlink(missing_ok=True)
+        return documents
 
     def _split_into_chunks(self, documents):
         """

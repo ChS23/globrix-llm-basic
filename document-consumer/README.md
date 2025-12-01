@@ -16,7 +16,7 @@
 - **DocumentIngestionService** - класс для обработки документов
 - **RabbitMQ Consumer** - получение документов из очереди
 - **Проверка дубликатов** через SHA256 хеширование
-- **Извлечение текста** из PDF с помощью PyPDFLoader
+- **Извлечение текста** из PDF с помощью PyMuPDF4LLM (работа с байтами, оптимизация для LLM)
 - **Разбиение на chunks** (RecursiveCharacterTextSplitter)
 - **Автоматическая векторизация** через OpenAI text-embedding-3-small
 - **Сохранение в Qdrant** с метаданными
@@ -64,6 +64,7 @@ document-consumer/
 ```bash
 # Активировать conda окружение
 conda activate llm-p
+cd document-consumer
 
 # Установить зависимости через uv
 uv sync --extra dev
@@ -138,7 +139,7 @@ uv run pytest tests/test_vector_store.py -v
 3. **Декодирование** - base64 → PDF байты
 4. **Хеширование** - SHA256 для проверки дубликатов
 5. **Проверка дубликатов** - Поиск в Qdrant по `document_hash`
-6. **Извлечение текста** - PyPDFLoader читает PDF → текст по страницам
+6. **Извлечение текста** - PyMuPDF4LLM читает PDF из байтов → Markdown формат (оптимизирован для LLM)
 7. **Chunking** - RecursiveCharacterTextSplitter разбивает на куски (1000 символов, overlap 200)
 8. **Метаданные** - Добавление document_id, file_name, document_hash, chunk_index, country, category
 9. **Векторизация** - OpenAI API превращает каждый chunk в вектор (1536 чисел)
