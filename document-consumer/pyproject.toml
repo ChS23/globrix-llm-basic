@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "RAG-based document processing service"
 requires-python = ">=3.12"
 dependencies = [
-    # FastStream с RabbitMQ
-    "faststream[rabbit]>=0.5.0",
+    # FastStream с RabbitMQ и CLI
+    "faststream[rabbit,cli]>=0.5.0",
 
     # LangChain компоненты
     "langchain>=0.1.0",
@@ -15,7 +15,7 @@ dependencies = [
     "langchain-qdrant>=0.1.0",
 
     # Обработка PDF
-    "pypdf>=3.0.0",
+    "langchain-pymupdf4llm>=0.1.0",
 
     # Векторная БД
     "qdrant-client>=1.7.0",
@@ -34,6 +34,7 @@ dependencies = [
 dev = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.12.0",  # Для мокирования
 ]
 
 [build-system]

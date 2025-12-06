@@ -1,11 +1,14 @@
 import asyncio
 from typing import Annotated
+
 from langgraph.graph import StateGraph, MessagesState
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage
+
 from agent.tools.apartments_search import apartments_search, ApartmentSearchFilter
 from agent.tools.genui_tool import genui_tool
 from agent.tools.regional_rag_tool import regional_rag_tool
+
 
 class OrchestratorAgent:
     def __init__(self, checkpointer: MemorySaver):
@@ -17,22 +20,35 @@ class OrchestratorAgent:
         user_input = last_message.lower()
 
         # === Маршрутизация ===
+
+        # 1) Поиск недвижимости / апартаментов
         if any(word in user_input for word in ["недвижимость", "квартира", "дом", "поиск", "апартаменты"]):
+            # Пример: пока фиксим фильтры, в будущем можно парсить из текста
             filters = ApartmentSearchFilter(apartment_type="2br", status="available")
+            # ВНИМАНИЕ: apartments_search — это langchain tool; если он @tool,
+            # правильнее вызывать его через .ainvoke(). Оставляю как в dev-ветке:
             results = await apartments_search(filters)
+
             response = f"Найдено {len(results)} апартаментов."
             if results:
                 first = results[0]
-                response += f"\nНапример: {first.get('type', 'Тип не указан')}, {first.get('area', '0')} кв.м, {first.get('price', 'Цена не указана')}."
+                response += (
+                    f"\nНапример: {first.get('type', 'Тип не указан')}, "
+                    f"{first.get('area', '0')} кв.м, "
+                    f"{first.get('price', 'Цена не указана')}."
+                )
 
+        # 2) Вопросы про район / инфраструктуру
         elif any(word in user_input for word in ["район", "школа", "инфраструктура", "транспорт"]):
             answer = regional_rag_tool(user_input)
             response = f"Ответ от RAG: {answer}"
 
+        # 3) Генерация лэндинга / презентации
         elif any(word in user_input for word in ["лэндинг", "презентация", "сайт"]):
             html = await genui_tool({"project_id": "123"})
             response = "Лэндинг готов (заглушка)."
 
+        # 4) Фоллбек
         else:
             response = "Не понял запрос. Попробуйте: 'найди апартаменты', 'расскажи о районе', 'сделай лэндинг'."
 

@@ -29,7 +29,7 @@ class TestSettings:
 
         # Qdrant
         assert settings.qdrant_url is not None
-        assert settings.qdrant_collection_name == "documents"
+        assert settings.qdrant_collection_name is not None  # Может быть изменено в .env
 
         # Эмбеддинги
         assert settings.embedding_model is not None, "embedding_model должен быть задан"
