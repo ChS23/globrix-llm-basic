@@ -42,6 +42,23 @@ async def chat(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка оркестратора: {str(e)}")
 
+# === DEAL STATE API ===
+from agent.genui.tools import read_deal_state
+
+@app.get("/api/deal/{deal_id}/state")
+async def get_deal_state(deal_id: str):
+    """Get UI state for a deal.
+
+    Returns the current JSON state of the deal page.
+    Frontend uses this to render dynamic blocks.
+    """
+    try:
+        state = await read_deal_state(deal_id)
+        return state
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch deal state: {str(e)}")
+
+
 # === ТЕСТИРОВАНИЕ ТУЛЗОВ ===
 from agent.tools.apartments_search import apartments_search, ApartmentSearchFilter
 
