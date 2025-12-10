@@ -1,65 +1,205 @@
-import asyncio
-from typing import Annotated
+"""
+Orchestrator Agent - главный агент системы Globrix.
 
-from langgraph.graph import StateGraph, MessagesState
+Использует LangGraph ReAct pattern с tool calling.
+LLM сам решает какие инструменты вызывать на основе запроса пользователя.
+"""
+
+import os
+from typing import Literal
+
+import structlog
+from langgraph.graph import StateGraph, MessagesState, END
 from langgraph.checkpoint.memory import MemorySaver
-from langchain_core.messages import AIMessage, HumanMessage
+from langgraph.prebuilt import ToolNode
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage
+from langchain_core.tools import tool
 
-from agent.tools.apartments_search import apartments_search, ApartmentSearchFilter
+from agent.tools.retriever_tool import retriever_tool
 from agent.tools.genui_tool import genui_tool
-from agent.tools.regional_rag_tool import regional_rag_tool
 
+logger = structlog.get_logger(__name__)
+
+# === Configuration ===
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+MODEL_NAME = os.getenv("ORCHESTRATOR_MODEL", "openai/gpt-4.1-mini")
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
+SYSTEM_PROMPT = """Ты — AI-ассистент риэлтора Globrix. Помогаешь клиентам с недвижимостью в Дубае и Таиланде.
+
+Твои возможности:
+1. **Поиск недвижимости** — используй tool `search_apartments` для поиска апартаментов по параметрам
+2. **Информация о проектах** — используй tool `retriever_tool` для поиска в базе знаний о проектах, районах, инфраструктуре
+3. **Генерация UI** — используй tool `genui_tool` для обновления страницы сделки (добавление карточек, фильтров и т.д.)
+
+Правила:
+- Отвечай на русском языке
+- Будь вежливым и профессиональным
+- Если не знаешь ответ — честно скажи и предложи уточнить запрос
+- Используй tools когда нужна актуальная информация из базы данных
+- Форматируй ответы для удобного чтения
+"""
+
+
+# === Tools ===
+
+@tool
+async def search_apartments(
+    apartment_type: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    min_area: float | None = None,
+    max_area: float | None = None,
+    status: str | None = None,
+    limit: int = 10,
+) -> str:
+    """Search for apartments in the database.
+
+    Use this tool when the user wants to find apartments or properties.
+
+    Args:
+        apartment_type: Type of apartment (studio, 1br, 2br, 3br, 4br, penthouse, duplex, loft)
+        min_price: Minimum price filter
+        max_price: Maximum price filter
+        min_area: Minimum area in sqm
+        max_area: Maximum area in sqm
+        status: Status filter (available, sold, reserved)
+        limit: Maximum number of results (default 10)
+
+    Returns:
+        Formatted list of found apartments
+    """
+    from agent.tools.apartments_search import apartments_search, ApartmentSearchFilter
+
+    filters = ApartmentSearchFilter(
+        apartment_type=apartment_type,
+        min_price=min_price,
+        max_price=max_price,
+        min_area=min_area,
+        max_area=max_area,
+        status=status,
+        limit=limit,
+    )
+
+    results = await apartments_search(filters)
+
+    if not results:
+        return "Апартаменты по заданным критериям не найдены."
+
+    # Format results
+    formatted = [f"Найдено {len(results)} апартаментов:\n"]
+    for i, apt in enumerate(results[:limit], 1):
+        apt_type = apt.get("type", "N/A")
+        price = apt.get("price", "N/A")
+        area = apt.get("area", "N/A")
+        status = apt.get("status", "N/A")
+        identifier = apt.get("identifier", "N/A")
+
+        formatted.append(
+            f"{i}. **{identifier}** — {apt_type}, {area} м², {price} AED, статус: {status}"
+        )
+
+    return "\n".join(formatted)
+
+
+# === Agent Class ===
 
 class OrchestratorAgent:
+    """
+    Главный агент-оркестратор.
+
+    Использует LangGraph с ReAct pattern:
+    - LLM анализирует запрос и решает какие tools вызвать
+    - Tools выполняются
+    - LLM формирует финальный ответ
+    """
+
     def __init__(self, checkpointer: MemorySaver):
         self.checkpointer = checkpointer
-        self.graph = self.create_graph()
 
-    async def create_node(self, state: MessagesState):
-        last_message = state["messages"][-1].content
-        user_input = last_message.lower()
+        # LLM с tool calling через OpenRouter
+        self.llm = ChatOpenAI(
+            api_key=OPENROUTER_API_KEY,
+            base_url=OPENROUTER_BASE_URL,
+            model=MODEL_NAME,
+            temperature=0.3,
+        )
 
-        # === Маршрутизация ===
+        # Доступные tools
+        self.tools = [
+            search_apartments,
+            retriever_tool,
+            genui_tool,
+        ]
 
-        # 1) Поиск недвижимости / апартаментов
-        if any(word in user_input for word in ["недвижимость", "квартира", "дом", "поиск", "апартаменты"]):
-            # Пример: пока фиксим фильтры, в будущем можно парсить из текста
-            filters = ApartmentSearchFilter(apartment_type="2br", status="available")
-            # ВНИМАНИЕ: apartments_search — это langchain tool; если он @tool,
-            # правильнее вызывать его через .ainvoke(). Оставляю как в dev-ветке:
-            results = await apartments_search(filters)
+        # LLM с привязанными tools
+        self.llm_with_tools = self.llm.bind_tools(self.tools)
 
-            response = f"Найдено {len(results)} апартаментов."
-            if results:
-                first = results[0]
-                response += (
-                    f"\nНапример: {first.get('type', 'Тип не указан')}, "
-                    f"{first.get('area', '0')} кв.м, "
-                    f"{first.get('price', 'Цена не указана')}."
-                )
+        # Создаём граф
+        self.graph = self._build_graph()
 
-        # 2) Вопросы про район / инфраструктуру
-        elif any(word in user_input for word in ["район", "школа", "инфраструктура", "транспорт"]):
-            answer = regional_rag_tool(user_input)
-            response = f"Ответ от RAG: {answer}"
+        logger.info("OrchestratorAgent initialized", model=MODEL_NAME, tools=len(self.tools))
 
-        # 3) Генерация лэндинга / презентации
-        elif any(word in user_input for word in ["лэндинг", "презентация", "сайт"]):
-            html = await genui_tool({"project_id": "123"})
-            response = "Лэндинг готов (заглушка)."
+    def _build_graph(self) -> StateGraph:
+        """Построение LangGraph с ReAct pattern."""
 
-        # 4) Фоллбек
-        else:
-            response = "Не понял запрос. Попробуйте: 'найди апартаменты', 'расскажи о районе', 'сделай лэндинг'."
+        # Tool node для выполнения tools
+        tool_node = ToolNode(self.tools)
 
-        return {"messages": [AIMessage(content=response)]}
+        # Определяем граф
+        workflow = StateGraph(MessagesState)
 
-    def create_graph(self):
-        builder = StateGraph(MessagesState)
-        builder.add_node("respond", self.create_node)
-        builder.set_entry_point("respond")
-        builder.set_finish_point("respond")
-        return builder.compile(checkpointer=self.checkpointer)
+        # Nodes
+        workflow.add_node("agent", self._call_model)
+        workflow.add_node("tools", tool_node)
 
-    async def ainvoke(self, inputs: dict, config: dict):
+        # Entry point
+        workflow.set_entry_point("agent")
+
+        # Conditional edges: agent -> tools или END
+        workflow.add_conditional_edges(
+            "agent",
+            self._should_continue,
+            {
+                "continue": "tools",
+                "end": END,
+            }
+        )
+
+        # После tools всегда возвращаемся к agent
+        workflow.add_edge("tools", "agent")
+
+        return workflow.compile(checkpointer=self.checkpointer)
+
+    async def _call_model(self, state: MessagesState) -> dict:
+        """Вызов LLM с системным промптом."""
+        messages = state["messages"]
+
+        # Добавляем system prompt если его нет
+        if not messages or not isinstance(messages[0], SystemMessage):
+            messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
+
+        response = await self.llm_with_tools.ainvoke(messages)
+
+        return {"messages": [response]}
+
+    def _should_continue(self, state: MessagesState) -> Literal["continue", "end"]:
+        """Решает продолжать ли выполнение tools или завершить."""
+        last_message = state["messages"][-1]
+
+        # Если есть tool_calls — продолжаем
+        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+            return "continue"
+
+        # Иначе завершаем
+        return "end"
+
+    async def ainvoke(self, inputs: dict, config: dict) -> dict:
+        """Асинхронный вызов агента."""
         return await self.graph.ainvoke(inputs, config)
+
+    def invoke(self, inputs: dict, config: dict) -> dict:
+        """Синхронный вызов агента."""
+        return self.graph.invoke(inputs, config)

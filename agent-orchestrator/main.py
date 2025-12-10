@@ -1,17 +1,33 @@
 from contextlib import asynccontextmanager
 import asyncio
-from fastapi import FastAPI, HTTPException
+import os
+
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
-from langgraph.checkpoint.memory import MemorySaver
+from psycopg_pool import AsyncConnectionPool
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from agent.orchestrator.agent import OrchestratorAgent
+
+# Database URL for checkpointer
+POSTGRES_URL = os.getenv("POSTGRES_URL", "postgresql://user:password@localhost:5432/globrix")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    checkpointer = MemorySaver()
-    agent = OrchestratorAgent(checkpointer=checkpointer)
-    app.state.agent = agent
-    print("✅ Агент инициализирован (MemorySaver)")
-    yield
+    # PostgreSQL connection pool for checkpointer
+    async with AsyncConnectionPool(
+        conninfo=POSTGRES_URL,
+        max_size=10,
+        min_size=2,
+    ) as pool:
+        checkpointer = AsyncPostgresSaver(pool)
+        await checkpointer.setup()
+
+        agent = OrchestratorAgent(checkpointer=checkpointer)
+        app.state.agent = agent
+        print("✅ Агент инициализирован (PostgreSQL checkpointer с пулом)")
+        yield
+
     print("🔒 Приложение завершено")
 
 app = FastAPI(
@@ -44,16 +60,21 @@ async def chat(request: ChatRequest):
 
 # === DEAL STATE API ===
 from agent.genui.tools import read_deal_state
+from agent.genui.dependencies import get_deal_crud
+from services.supabase_client.deal_crud import DealCRUD
 
 @app.get("/api/deal/{deal_id}/state")
-async def get_deal_state(deal_id: str):
+async def get_deal_state(
+    deal_id: str,
+    deal_crud: DealCRUD = Depends(get_deal_crud)
+):
     """Get UI state for a deal.
 
     Returns the current JSON state of the deal page.
     Frontend uses this to render dynamic blocks.
     """
     try:
-        state = await read_deal_state(deal_id)
+        state = await read_deal_state(deal_id, deal_crud)
         return state
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch deal state: {str(e)}")

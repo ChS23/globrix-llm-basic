@@ -17,9 +17,10 @@ from .state import GenUIState
 from .tools import (
     read_deal_state,
     write_deal_state,
-    fetch_component_schemas,
     validate_blocks,
 )
+from .dependencies import get_deal_crud, get_component_schema_service, ComponentSchemaService
+from services.supabase_client.deal_crud import DealCRUD
 
 logger = structlog.get_logger(__name__)
 
@@ -38,13 +39,26 @@ class GenUIAgent:
     Использует LangGraph для reasoning и принятия решений.
     """
 
-    def __init__(self):
-        """Initialize GenUI Agent."""
+    def __init__(
+        self,
+        deal_crud: DealCRUD | None = None,
+        schema_service: ComponentSchemaService | None = None,
+    ):
+        """Initialize GenUI Agent.
+
+        Args:
+            deal_crud: DealCRUD instance (dependency injection)
+                      If None, will be created via get_deal_crud()
+            schema_service: ComponentSchemaService instance (dependency injection)
+                           If None, will be created via get_component_schema_service()
+        """
         self.llm = ChatAnthropic(
             api_key=ANTHROPIC_API_KEY,
             model=MODEL_NAME,
             temperature=0,  # Детерминистичность для UI генерации
         )
+        self.deal_crud = deal_crud or get_deal_crud()
+        self.schema_service = schema_service or get_component_schema_service()
         self.graph = self._build_graph()
 
     def _build_graph(self) -> StateGraph:
@@ -72,12 +86,12 @@ class GenUIAgent:
 
         try:
             # Read current UI state from Supabase
-            ui_state = await read_deal_state(state["deal_id"])
+            ui_state = await read_deal_state(state["deal_id"], self.deal_crud)
             state["current_blocks"] = ui_state.get("blocks", [])
             state["metadata"] = ui_state.get("metadata", {})
 
             # Fetch component schemas from frontend
-            schemas = await fetch_component_schemas()
+            schemas = await self.schema_service.get_schemas()
             state["component_schemas"] = schemas
 
             logger.info(
@@ -240,6 +254,7 @@ Return ONLY the JSON array, no other text.
             await write_deal_state(
                 deal_id=state["deal_id"],
                 blocks=state["new_blocks"],
+                deal_crud=self.deal_crud,
                 metadata=metadata,
             )
 

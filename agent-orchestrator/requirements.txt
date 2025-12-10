@@ -4,3 +4,6 @@ pydantic
 fastapi
 langgraph
 langchain-core
+langchain-openai
+langchain-qdrant
+qdrant-client

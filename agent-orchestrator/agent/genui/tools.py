@@ -8,10 +8,8 @@
 
 import os
 import structlog
-from typing import Dict, Any, Optional
-import httpx
+from typing import Any
 
-from services.supabase_client.base_client import SupabaseClientService
 from services.supabase_client.deal_crud import DealCRUD
 
 logger = structlog.get_logger(__name__)
@@ -19,79 +17,39 @@ logger = structlog.get_logger(__name__)
 # === Configuration ===
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3001")
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 
 
-# === Supabase Client Initialization ===
-
-_supabase_service: Optional[SupabaseClientService] = None
-_deal_crud: Optional[DealCRUD] = None
+# === Component Schemas Fetching ===
 
 
-def get_deal_crud() -> DealCRUD:
-    """Get or initialize DealCRUD instance."""
-    global _supabase_service, _deal_crud
+async def fetch_component_schemas(
+    schema_service=None,
+) -> dict[str, Any]:
+    """Fetch UI component schemas (wrapper for backward compatibility).
 
-    if _deal_crud is None:
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set")
-
-        _supabase_service = SupabaseClientService.get_instance(
-            url=SUPABASE_URL, key=SUPABASE_KEY
-        )
-        _deal_crud = DealCRUD(_supabase_service)
-
-    return _deal_crud
-
-
-# === Component Schemas Cache ===
-
-_component_schemas_cache: Optional[Dict[str, Any]] = None
-
-
-async def fetch_component_schemas() -> Dict[str, Any]:
-    """Fetch UI component schemas from frontend API.
-
-    Кэширует схемы для последующих вызовов.
+    Args:
+        schema_service: ComponentSchemaService instance (dependency injection)
+                       If None, will use get_component_schema_service()
 
     Returns:
         Dict со схемами всех компонентов
-
-    Raises:
-        Exception: При ошибке запроса к API
     """
-    global _component_schemas_cache
+    if schema_service is None:
+        from agent.genui.dependencies import get_component_schema_service
+        schema_service = get_component_schema_service()
 
-    if _component_schemas_cache is not None:
-        return _component_schemas_cache
-
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"{FRONTEND_URL}/api/ui-components")
-            response.raise_for_status()
-            data = response.json()
-
-            _component_schemas_cache = data.get("schemas", {})
-            logger.info(
-                f"Fetched {len(_component_schemas_cache)} component schemas from frontend"
-            )
-
-            return _component_schemas_cache
-
-    except Exception as e:
-        logger.error(f"Failed to fetch component schemas: {e}")
-        raise
+    return await schema_service.get_schemas()
 
 
 # === Deal State Tools ===
 
 
-async def read_deal_state(deal_id: str) -> Dict[str, Any]:
+async def read_deal_state(deal_id: str, deal_crud: DealCRUD) -> dict[str, Any]:
     """Read current UI state for a deal from Supabase.
 
     Args:
         deal_id: UUID сделки
+        deal_crud: DealCRUD instance (dependency injection)
 
     Returns:
         Dict with deal UI state:
@@ -105,11 +63,10 @@ async def read_deal_state(deal_id: str) -> Dict[str, Any]:
         Exception: При ошибке чтения из Supabase
     """
     try:
-        deal_crud = get_deal_crud()
         deal = await deal_crud.get_by_id(deal_id)
 
         if not deal:
-            logger.warning(f"Deal {deal_id} not found, returning empty state")
+            logger.awarning(f"Deal {deal_id} not found, returning empty state")
             return {
                 "deal_id": deal_id,
                 "blocks": [],
@@ -118,7 +75,7 @@ async def read_deal_state(deal_id: str) -> Dict[str, Any]:
 
         ui_state = deal.get("ui_state") or {"blocks": []}
 
-        logger.info(f"Read deal state for {deal_id}: {len(ui_state.get('blocks', []))} blocks")
+        logger.ainfo(f"Read deal state for {deal_id}: {len(ui_state.get('blocks', []))} blocks")
 
         return {
             "deal_id": deal_id,
@@ -127,18 +84,22 @@ async def read_deal_state(deal_id: str) -> Dict[str, Any]:
         }
 
     except Exception as e:
-        logger.error(f"Failed to read deal state for {deal_id}: {e}")
+        logger.aerror(f"Failed to read deal state for {deal_id}: {e}")
         raise
 
 
 async def write_deal_state(
-    deal_id: str, blocks: list[Dict[str, Any]], metadata: Optional[Dict[str, Any]] = None
+    deal_id: str,
+    blocks: list[dict[str, Any]],
+    deal_crud: DealCRUD,
+    metadata: dict[str, Any] | None = None
 ) -> bool:
     """Write updated UI state to Supabase.
 
     Args:
         deal_id: UUID сделки
         blocks: Массив UI блоков
+        deal_crud: DealCRUD instance (dependency injection)
         metadata: Метаданные (опционально)
 
     Returns:
@@ -148,8 +109,6 @@ async def write_deal_state(
         Exception: При ошибке записи в Supabase
     """
     try:
-        deal_crud = get_deal_crud()
-
         # Prepare UI state
         ui_state = {
             "deal_id": deal_id,
@@ -163,23 +122,23 @@ async def write_deal_state(
         if existing_deal:
             # Update existing deal
             await deal_crud.update(deal_id=deal_id, ui_state=ui_state)
-            logger.info(f"Updated deal state for {deal_id}: {len(blocks)} blocks")
+            logger.ainfo(f"Updated deal state for {deal_id}: {len(blocks)} blocks")
         else:
             # Create new deal
             await deal_crud.create(deal_id=deal_id, ui_state=ui_state)
-            logger.info(f"Created new deal {deal_id} with {len(blocks)} blocks")
+            logger.ainfo(f"Created new deal {deal_id} with {len(blocks)} blocks")
 
         return True
 
     except Exception as e:
-        logger.error(f"Failed to write deal state for {deal_id}: {e}")
+        logger.aerror(f"Failed to write deal state for {deal_id}: {e}")
         raise
 
 
 # === Validation Tools ===
 
 
-async def validate_block(block: Dict[str, Any]) -> bool:
+async def validate_block(block: dict[str, Any]) -> bool:
     """Validate a UI block against component schema.
 
     Args:
@@ -207,11 +166,11 @@ async def validate_block(block: Dict[str, Any]) -> bool:
     if "props" not in block:
         raise ValueError(f"Block of type '{block_type}' must have 'props' field")
 
-    logger.debug(f"Block type '{block_type}' validated successfully")
+    logger.adebug(f"Block type '{block_type}' validated successfully")
     return True
 
 
-async def validate_blocks(blocks: list[Dict[str, Any]]) -> bool:
+async def validate_blocks(blocks: list[dict[str, Any]]) -> bool:
     """Validate multiple blocks.
 
     Args:
@@ -229,5 +188,5 @@ async def validate_blocks(blocks: list[Dict[str, Any]]) -> bool:
         except ValueError as e:
             raise ValueError(f"Block at index {i} is invalid: {e}")
 
-    logger.info(f"Validated {len(blocks)} blocks successfully")
+    logger.ainfo(f"Validated {len(blocks)} blocks successfully")
     return True

@@ -109,33 +109,3 @@ def _summarize_blocks(blocks: list[Dict[str, Any]]) -> str:
     return "\n".join(summary)
 
 
-# === Legacy function for backwards compatibility ===
-# (Can be removed if not used anywhere)
-
-async def genui_tool_legacy(property_data: Dict[str, Any]) -> str:
-    """
-    Legacy function - generates HTML presentation.
-    Use genui_tool() instead for UI state transformation.
-    """
-    logger.warning("genui_tool_legacy called - this is deprecated")
-
-    from services.core_api_client.presentations import PresentationsClient
-    from services.core_api_client.base_client import CoreApiClient
-
-    client = CoreApiClient(
-        base_url="http://core-api:8000",
-        api_key="your-api-key"
-    )
-    presentations_client = PresentationsClient(api_client=client)
-
-    try:
-        project_id = property_data.get("project_id")
-        if not project_id:
-            return "Ошибка: не указан project_id"
-
-        html_content = await presentations_client.render(presentation_id=project_id)
-        return html_content
-
-    except Exception as e:
-        logger.error(f"Ошибка при генерации презентации: {e}")
-        return f"Ошибка: {str(e)}"
