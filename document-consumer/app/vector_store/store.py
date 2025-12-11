@@ -60,7 +60,7 @@ class DocumentVectorStore:
         # 2. Создаем объект для генерации эмбеддингов
         self.embeddings = OpenAIEmbeddings(
             model=settings.embedding_model,
-            openai_api_key=settings.embedding_api_key
+            openai_api_key=settings.openai_api_key
         )
 
         # 3. Создаем коллекцию в Qdrant (если еще не создана)

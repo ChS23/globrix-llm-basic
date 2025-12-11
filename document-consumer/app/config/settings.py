@@ -45,9 +45,9 @@ class Settings(BaseSettings):
     )
 
     # Эмбеддинги - настройки модели
-    embedding_api_key: str = Field(
+    openai_api_key: str = Field(
         default="",
-        description="API ключ для модели эмбеддингов (OpenAI, Cohere, etc.)"
+        description="OpenAI API ключ (используется для эмбеддингов и evaluation)"
     )
     embedding_model: str = Field(
         default="text-embedding-3-small",
@@ -66,6 +66,38 @@ class Settings(BaseSettings):
     chunk_overlap: int = Field(
         default=200,
         description="Перекрытие между кусочками в символах (чтобы не терять контекст)"
+    )
+
+    # Evaluation - настройки для метрик
+    evaluation_model: str = Field(
+        default="gpt-4o-mini",
+        description="Модель для LLM-as-a-judge метрик (gpt-4o-mini, gpt-4o, claude-3-5-sonnet, etc.)"
+    )
+
+    # Evaluation - пороги для метрик (0.0 - 1.0)
+    eval_threshold_context_precision: float = Field(
+        default=0.8,
+        description="Минимальный порог для Context Precision (ранжирование документов)"
+    )
+    eval_threshold_context_relevancy: float = Field(
+        default=0.9,
+        description="Минимальный порог для Context Relevancy (релевантность контекста)"
+    )
+    eval_threshold_context_recall: float = Field(
+        default=0.9,
+        description="Минимальный порог для Context Recall (полнота извлечения)"
+    )
+    eval_threshold_faithfulness: float = Field(
+        default=0.9,
+        description="Минимальный порог для Faithfulness (отсутствие галлюцинаций)"
+    )
+    eval_threshold_answer_relevancy: float = Field(
+        default=0.85,
+        description="Минимальный порог для Answer Relevancy (релевантность ответа)"
+    )
+    eval_threshold_semantic_similarity: float = Field(
+        default=0.85,
+        description="Минимальный порог для Semantic Similarity (семантическая близость к эталону)"
     )
 
     # Конфигурация Pydantic
