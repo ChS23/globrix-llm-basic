@@ -236,19 +236,14 @@ Question: {question}"""
         answer = await self.run_generation(question, contexts)
 
         # 3. Test case
-        if include_gt:
-            return LLMTestCase(
-                input=question,
-                actual_output=answer,
-                retrieval_context=contexts,
-                expected_output=ground_truth,
-            )
-        else:
-            return LLMTestCase(
-                input=question,
-                actual_output=answer,
-                retrieval_context=contexts,
-            )
+        # Примечание: native DeepEval метрики требуют expected_output
+        # даже для "no GT" режима, поэтому передаём ground_truth если есть
+        return LLMTestCase(
+            input=question,
+            actual_output=answer,
+            retrieval_context=contexts,
+            expected_output=ground_truth if ground_truth else None,
+        )
 
     async def evaluate_retrieval_only(
         self, metrics: Optional[List] = None, max_concurrency: int = 3
@@ -310,7 +305,7 @@ Question: {question}"""
         return results
 
     async def evaluate_full_pipeline_no_gt(
-        self, metrics: Optional[List] = None, max_concurrency: int = 3
+        self, metrics: Optional[List] = None, max_concurrency: int = 2
     ) -> Dict[str, Any]:
         """
         Полная оценка retrieval + generation БЕЗ ground truth.

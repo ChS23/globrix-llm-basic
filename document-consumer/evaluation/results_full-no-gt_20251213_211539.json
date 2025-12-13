@@ -1,0 +1,288 @@
+{
+  "timestamp": "2025-12-13T21:17:20.717618",
+  "mode": "full-no-gt",
+  "dataset": "/tmp/small_test.json",
+  "summary": {
+    "total_tests": 10,
+    "passed": 1,
+    "failed": 9
+  },
+  "average_metrics": {
+    "Contextual Precision": 0.8655555555555555,
+    "Contextual Relevancy": 0.3125459458130251,
+    "Faithfulness": 0.9175757575757576,
+    "Answer Relevancy": 0.9754545454545454
+  },
+  "detailed_results": [
+    {
+      "test_index": 0,
+      "input": "Which document is required for foreigners to register freehold condominium ownership to prove the tr...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7555555555555555,
+          "success": false,
+          "reason": "The score is 0.76 because while there are relevant nodes that provide essential information about the FET Form necessary for foreigners to register freehold condominium ownership, there are also irrel"
+        },
+        "Contextual Relevancy": {
+          "score": 0.3333333333333333,
+          "success": false,
+          "reason": "The score is 0.33 because while there are relevant statements such as 'Valid passport copy is required for foreign buyers to register freehold condominium ownership' and 'FET must be presented at Land"
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the required document for foreigners to register freehold condominium ownership without any irrelevant statements."
+        }
+      }
+    },
+    {
+      "test_index": 1,
+      "input": "What is the main difference between a Condominium and an Apartment in Thailand in terms of ownership...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because while the relevant nodes are ranked higher, there are still several irrelevant nodes that dilute the overall precision. Specifically, the first node provides a clear explanat"
+        },
+        "Contextual Relevancy": {
+          "score": 0.625,
+          "success": true,
+          "reason": "The score is 0.62 because while there are relevant statements such as 'Condominium (Condo) offers individual unit ownership with title deed' and 'Apartment does NOT offer individual unit ownership', m"
+        },
+        "Faithfulness": {
+          "score": 0.9090909090909091,
+          "success": true,
+          "reason": "The score is 0.91 because the actual output implies that condominium owners have complete ownership of their units, while the retrieval context highlights the importance of the foreign ownership quota"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the differences in ownership rights between a Condominium and an Apartment in Thailand without any irrelevant statements."
+        }
+      }
+    },
+    {
+      "test_index": 2,
+      "input": "How is land area in Thailand determined using traditional units, and what is the conversion of 1 Rai...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7,
+          "success": false,
+          "reason": "The score is 0.70 because while the relevant nodes are present and provide direct answers to the question about land area in Thailand, there are also several irrelevant nodes that rank higher than som"
+        },
+        "Contextual Relevancy": {
+          "score": 0.2222222222222222,
+          "success": false,
+          "reason": "The score is 0.22 because while there are relevant statements such as '1 Rai = 4 Ngan = 1,600 sqm.' and 'Thailand uses traditional land measurement units alongside metric system.', the majority of the"
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about how land area in Thailand is determined using traditional units and provides the conversion of 1 Rai into square meters wit"
+        }
+      }
+    },
+    {
+      "test_index": 3,
+      "input": "What are the current (2025) disadvantages of owning land through a Thai Company Structure?",
+      "success": true,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node highlights that 'Thai authorities have intensified scrutiny of 'nominee' companies formed solel"
+        },
+        "Contextual Relevancy": {
+          "score": 0.5416666666666666,
+          "success": true,
+          "reason": "The score is 0.54 because while some relevant statements like 'Formation of Thai limited company to hold land' and 'Thai authorities have intensified scrutiny of nominee companies' provide context, th"
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the disadvantages of owning land through a Thai Company Structure without any irrelevant statements."
+        }
+      }
+    },
+    {
+      "test_index": 4,
+      "input": "What is a Chanote and why is it considered the 'gold standard' for land titles in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear explanation that 'Chanote (Nor Sor 4 Jor) is the highest and most secure form "
+        },
+        "Contextual Relevancy": {
+          "score": 0.14634146341463414,
+          "success": false,
+          "reason": "The score is 0.15 because the retrieval context primarily discusses 'Nor Sor 3 Gor' and other unrelated land titles, which detracts from the focus on Chanote. While there are relevant statements like "
+        },
+        "Faithfulness": {
+          "score": 0.8571428571428571,
+          "success": false,
+          "reason": "The score is 0.86 because the actual output incorrectly refers to Chanote as Nor Sor 4 Jor, while the retrieval context clearly states it is simply called Chanote."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about Chanote and its significance as a land title in Thailand without any irrelevant statements."
+        }
+      }
+    },
+    {
+      "test_index": 5,
+      "input": "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calcula...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first three nodes provide direct answers about the maximum foreign ownership quota and its calculation, st"
+        },
+        "Contextual Relevancy": {
+          "score": 0.22916666666666666,
+          "success": false,
+          "reason": "The score is 0.23 because while there are relevant statements such as 'Foreign Ownership Quota: Maximum: 49% of total saleable area in any condominium' and 'Calculated by floor area, not unit count', "
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the maximum Foreign Ownership Quota for condominium units in Thailand and how it is calculated, with no irrelevant statemen"
+        }
+      }
+    },
+    {
+      "test_index": 6,
+      "input": "What is the LTR Visa (Long-Term Resident Visa) and which of its categories were updated in 2025?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides essential information about the LTR Visa being 'Introduced September 2022, updated Jan"
+        },
+        "Contextual Relevancy": {
+          "score": 0.1702127659574468,
+          "success": false,
+          "reason": "The score is 0.17 because the retrieval context primarily contains irrelevant information about taxes, property, and other visa types, while only a few statements, such as 'Introduced September 2022, "
+        },
+        "Faithfulness": {
+          "score": 0.8571428571428571,
+          "success": false,
+          "reason": "The score is 0.86 because the actual output fails to mention the continued requirements for the Wealthy Global Citizen category regarding assets and investments, as well as the specific age and income"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the question about the LTR Visa and its updated categories in 2025 without any irrelevant statements."
+        }
+      }
+    },
+    {
+      "test_index": 7,
+      "input": "List the main financial obligations associated with a property purchase and who typically pays them.",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7,
+          "success": false,
+          "reason": "The score is 0.70 because the relevant nodes are ranked higher than the irrelevant nodes, but there are still three nodes that do not address financial obligations. The first node provides detailed in"
+        },
+        "Contextual Relevancy": {
+          "score": 0.4,
+          "success": false,
+          "reason": "The score is 0.40 because while there are relevant statements regarding financial obligations such as 'Transfer Fee: 2% of assessed value' and 'Buyer pays BPHTB: 5% of (property value minus NPOPTKP th"
+        },
+        "Faithfulness": {
+          "score": 0.9523809523809523,
+          "success": true,
+          "reason": "The score is 0.95 because the actual output inaccurately suggests that the management fee includes various services, while the retrieval context clearly states that it does not and specifies the fee p"
+        },
+        "Answer Relevancy": {
+          "score": 0.9545454545454546,
+          "success": true,
+          "reason": "The score is 0.95 because while the response provided valuable information about fund management, it failed to directly address the specific financial obligations related to property purchases, which "
+        }
+      }
+    },
+    {
+      "test_index": 8,
+      "input": "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.9166666666666666,
+          "success": true,
+          "reason": "The score is 0.92 because the relevant nodes are well-ranked, with the first node providing a direct answer about the standard structure of lease agreements, stating that 'the most common structure is"
+        },
+        "Contextual Relevancy": {
+          "score": 0.23529411764705882,
+          "success": false,
+          "reason": "The score is 0.24 because while there are relevant statements such as 'Leasehold represents a long-term rental arrangement where the lessee gains rights to use and occupy property for a specified peri"
+        },
+        "Faithfulness": {
+          "score": 0.6,
+          "success": false,
+          "reason": "The score is 0.60 because the actual output suggests that lease renewals are guaranteed, which contradicts the retrieval context stating that renewals are not automatically guaranteed and must be stru"
+        },
+        "Answer Relevancy": {
+          "score": 0.8,
+          "success": false,
+          "reason": "The score is 0.80 because while the response provided relevant information about the structure of lease agreements in Thailand, it included an irrelevant statement regarding renewals that did not dire"
+        }
+      }
+    },
+    {
+      "test_index": 9,
+      "input": "What are the key characteristics of Freehold (absolute) ownership in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are ranked higher than the irrelevant nodes, with the first node providing key characteristics of freehold ownership, stating that 'Freehold ownership repr"
+        },
+        "Contextual Relevancy": {
+          "score": 0.2222222222222222,
+          "success": false,
+          "reason": "The score is 0.22 because the retrieval context primarily discusses leasehold ownership and related costs, which are irrelevant to the key characteristics of Freehold ownership. While there are releva"
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the key characteristics of Freehold ownership in Thailand without any irrelevant statements."
+        }
+      }
+    }
+  ]
+}
