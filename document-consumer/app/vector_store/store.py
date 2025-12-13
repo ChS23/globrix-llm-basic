@@ -58,9 +58,13 @@ class DocumentVectorStore:
         self.client = QdrantClient(url=settings.qdrant_url)
 
         # 2. Создаем объект для генерации эмбеддингов
+        # Используем отдельный ключ для эмбеддингов если задан
+        # Явно указываем base_url для OpenAI, чтобы не подхватывать OPENAI_BASE_URL из env
+        embedding_key = settings.embedding_api_key or settings.openai_api_key
         self.embeddings = OpenAIEmbeddings(
             model=settings.embedding_model,
-            openai_api_key=settings.openai_api_key
+            openai_api_key=embedding_key,
+            openai_api_base="https://api.openai.com/v1"  # Явно OpenAI для эмбеддингов
         )
 
         # 3. Создаем коллекцию в Qdrant (если еще не создана)

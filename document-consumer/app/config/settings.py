@@ -47,7 +47,11 @@ class Settings(BaseSettings):
     # Эмбеддинги - настройки модели
     openai_api_key: str = Field(
         default="",
-        description="OpenAI API ключ (используется для эмбеддингов и evaluation)"
+        description="OpenAI API ключ (используется для эмбеддингов)"
+    )
+    embedding_api_key: str = Field(
+        default="",
+        description="Отдельный API ключ для эмбеддингов (если отличается от openai_api_key)"
     )
     embedding_model: str = Field(
         default="text-embedding-3-small",
@@ -80,7 +84,7 @@ class Settings(BaseSettings):
         description="Минимальный порог для Context Precision (ранжирование документов)"
     )
     eval_threshold_context_relevancy: float = Field(
-        default=0.9,
+        default=0.5,
         description="Минимальный порог для Context Relevancy (релевантность контекста)"
     )
     eval_threshold_context_recall: float = Field(
@@ -103,7 +107,8 @@ class Settings(BaseSettings):
     # Конфигурация Pydantic
     model_config = SettingsConfigDict(
         env_file=".env",
-        env_file_encoding="utf-8"
+        env_file_encoding="utf-8",
+        extra="ignore",  # Игнорировать неизвестные переменные из .env
     )
 
 

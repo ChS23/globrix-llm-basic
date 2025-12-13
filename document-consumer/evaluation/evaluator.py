@@ -10,14 +10,16 @@ RAG Evaluator - оркестратор для оценки качества RAG 
 
 import json
 import asyncio
+import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
+import httpx
 from deepeval.test_case import LLMTestCase
 from deepeval import evaluate
 import structlog
 
-from app.vector_store.store import DocumentVectorStore
+from app.vector_store.store import get_vector_store
 from app.config.settings import Settings
 
 
@@ -112,7 +114,7 @@ class RAGEvaluator:
         logger.debug("Running retrieval", question=question, k=k)
 
         # Получить singleton instance vector store
-        store = DocumentVectorStore.get_instance()
+        store = get_vector_store()
 
         # Поиск документов
         docs = await store.search(query=question, k=k)
@@ -132,10 +134,9 @@ class RAGEvaluator:
         self, question: str, contexts: List[str]
     ) -> str:
         """
-        Запускает generation для создания ответа.
+        Запускает generation для создания ответа через agent-orchestrator.
 
-        ВАЖНО: Пока это заглушка!
-        TODO: Заменить на вызов regional_rag_tool когда будет готов.
+        Вызывает HTTP endpoint agent-orchestrator для получения ответа.
 
         Args:
             question: Вопрос пользователя
@@ -144,32 +145,113 @@ class RAGEvaluator:
         Returns:
             str - сгенерированный ответ
 
+        Raises:
+            RuntimeError: Если agent-orchestrator недоступен
+
         Example:
             >>> answer = await evaluator.run_generation(
             ...     question="Какие квартиры?",
             ...     contexts=["В Лиссабоне есть...", "Цены на..."]
             ... )
         """
-        logger.warning(
-            "Using MOCK generation (regional_rag_tool not implemented yet)",
-            question=question,
-            contexts_count=len(contexts),
+        agent_url = os.getenv("AGENT_ORCHESTRATOR_URL", "http://localhost:8000")
+
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            # Формируем запрос с контекстом
+            context_text = "\n\n".join(contexts)
+            augmented_question = f"""Based on the following context, answer the question.
+
+Context:
+{context_text}
+
+Question: {question}"""
+
+            response = await client.post(
+                f"{agent_url}/chat",
+                json={
+                    "message": augmented_question,
+                    "thread_id": f"eval-{hash(question) % 10000}",
+                },
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            answer = data.get("response", "")
+
+            logger.debug(
+                "Generation completed via agent-orchestrator",
+                question=question[:50],
+                answer_length=len(answer),
+            )
+
+            return answer
+
+    async def _process_item_retrieval(
+        self, idx: int, item: Dict[str, Any]
+    ) -> LLMTestCase:
+        """
+        Обрабатывает один элемент датасета для retrieval-only оценки.
+        """
+        question = item["question"]
+        ground_truth = item.get("ground_truth", "")
+
+        logger.debug(
+            f"Processing item {idx + 1}",
+            question=question[:50],
         )
 
-        # TODO: Заменить на реальный вызов
-        # from agent_orchestrator.tools import regional_rag_tool
-        # answer = await regional_rag_tool(question=question, contexts=contexts)
+        contexts = await self.run_retrieval(question)
 
-        # Заглушка для тестирования структуры
-        mock_answer = (
-            f"Mock answer based on {len(contexts)} contexts. "
-            f"Question: {question[:50]}..."
+        return LLMTestCase(
+            input=question,
+            retrieval_context=contexts,
+            expected_output=ground_truth,
         )
 
-        return mock_answer
+    async def _process_item_full(
+        self, idx: int, item: Dict[str, Any], include_gt: bool = False
+    ) -> Optional[LLMTestCase]:
+        """
+        Обрабатывает один элемент датасета для full pipeline оценки.
+        """
+        question = item["question"]
+        ground_truth = item.get("ground_truth", "")
+
+        if include_gt and not ground_truth:
+            logger.warning(
+                f"Item {idx + 1} missing ground_truth, skipping",
+                question=question[:50],
+            )
+            return None
+
+        logger.debug(
+            f"Processing item {idx + 1}",
+            question=question[:50],
+        )
+
+        # 1. Retrieval
+        contexts = await self.run_retrieval(question)
+
+        # 2. Generation
+        answer = await self.run_generation(question, contexts)
+
+        # 3. Test case
+        if include_gt:
+            return LLMTestCase(
+                input=question,
+                actual_output=answer,
+                retrieval_context=contexts,
+                expected_output=ground_truth,
+            )
+        else:
+            return LLMTestCase(
+                input=question,
+                actual_output=answer,
+                retrieval_context=contexts,
+            )
 
     async def evaluate_retrieval_only(
-        self, metrics: Optional[List] = None
+        self, metrics: Optional[List] = None, max_concurrency: int = 3
     ) -> Dict[str, Any]:
         """
         Оценка только retrieval (БЕЗ generation).
@@ -199,29 +281,22 @@ class RAGEvaluator:
             "Starting RETRIEVAL-ONLY evaluation",
             dataset_size=len(self.dataset),
             metrics_count=len(metrics),
+            max_concurrency=max_concurrency,
         )
 
-        test_cases = []
+        # Параллельная обработка с ограничением concurrency
+        semaphore = asyncio.Semaphore(max_concurrency)
 
-        for idx, item in enumerate(self.dataset):
-            question = item["question"]
-            ground_truth = item.get("ground_truth", "")
+        async def process_with_semaphore(idx: int, item: Dict[str, Any]) -> LLMTestCase:
+            async with semaphore:
+                return await self._process_item_retrieval(idx, item)
 
-            logger.debug(
-                f"Processing item {idx + 1}/{len(self.dataset)}",
-                question=question[:50],
-            )
+        tasks = [
+            process_with_semaphore(idx, item)
+            for idx, item in enumerate(self.dataset)
+        ]
 
-            # Запустить retrieval
-            contexts = await self.run_retrieval(question)
-
-            # Создать test case БЕЗ actual_output (для retrieval метрик)
-            test_case = LLMTestCase(
-                input=question,
-                retrieval_context=contexts,
-                expected_output=ground_truth,  # Нужен для Context Precision
-            )
-            test_cases.append(test_case)
+        test_cases = await asyncio.gather(*tasks)
 
         # Запустить оценку через DeepEval
         logger.info(
@@ -235,7 +310,7 @@ class RAGEvaluator:
         return results
 
     async def evaluate_full_pipeline_no_gt(
-        self, metrics: Optional[List] = None
+        self, metrics: Optional[List] = None, max_concurrency: int = 3
     ) -> Dict[str, Any]:
         """
         Полная оценка retrieval + generation БЕЗ ground truth.
@@ -246,6 +321,7 @@ class RAGEvaluator:
 
         Args:
             metrics: List метрик (если None - используются по умолчанию)
+            max_concurrency: Максимальное количество параллельных запросов
 
         Returns:
             Dict с результатами всех метрик
@@ -263,31 +339,22 @@ class RAGEvaluator:
             "Starting FULL PIPELINE (no GT) evaluation",
             dataset_size=len(self.dataset),
             metrics_count=len(metrics),
+            max_concurrency=max_concurrency,
         )
 
-        test_cases = []
+        # Параллельная обработка с ограничением concurrency
+        semaphore = asyncio.Semaphore(max_concurrency)
 
-        for idx, item in enumerate(self.dataset):
-            question = item["question"]
+        async def process_with_semaphore(idx: int, item: Dict[str, Any]) -> Optional[LLMTestCase]:
+            async with semaphore:
+                return await self._process_item_full(idx, item, include_gt=False)
 
-            logger.debug(
-                f"Processing item {idx + 1}/{len(self.dataset)}",
-                question=question[:50],
-            )
+        tasks = [
+            process_with_semaphore(idx, item)
+            for idx, item in enumerate(self.dataset)
+        ]
 
-            # 1. Retrieval
-            contexts = await self.run_retrieval(question)
-
-            # 2. Generation
-            answer = await self.run_generation(question, contexts)
-
-            # 3. Создать test case С actual_output
-            test_case = LLMTestCase(
-                input=question,
-                actual_output=answer,
-                retrieval_context=contexts,
-            )
-            test_cases.append(test_case)
+        test_cases = [tc for tc in await asyncio.gather(*tasks) if tc is not None]
 
         # Оценка
         logger.info("Running DeepEval evaluation", test_cases_count=len(test_cases))
@@ -297,7 +364,7 @@ class RAGEvaluator:
         return results
 
     async def evaluate_full_pipeline_with_gt(
-        self, metrics: Optional[List] = None
+        self, metrics: Optional[List] = None, max_concurrency: int = 3
     ) -> Dict[str, Any]:
         """
         Полная оценка retrieval + generation С ground truth.
@@ -308,6 +375,7 @@ class RAGEvaluator:
 
         Args:
             metrics: List метрик (если None - все доступные метрики)
+            max_concurrency: Максимальное количество параллельных запросов
 
         Returns:
             Dict с результатами всех метрик
@@ -326,40 +394,22 @@ class RAGEvaluator:
             "Starting FULL PIPELINE (with GT) evaluation",
             dataset_size=len(self.dataset),
             metrics_count=len(metrics),
+            max_concurrency=max_concurrency,
         )
 
-        test_cases = []
+        # Параллельная обработка с ограничением concurrency
+        semaphore = asyncio.Semaphore(max_concurrency)
 
-        for idx, item in enumerate(self.dataset):
-            question = item["question"]
-            ground_truth = item.get("ground_truth", "")
+        async def process_with_semaphore(idx: int, item: Dict[str, Any]) -> Optional[LLMTestCase]:
+            async with semaphore:
+                return await self._process_item_full(idx, item, include_gt=True)
 
-            if not ground_truth:
-                logger.warning(
-                    f"Item {idx + 1} missing ground_truth, skipping",
-                    question=question[:50],
-                )
-                continue
+        tasks = [
+            process_with_semaphore(idx, item)
+            for idx, item in enumerate(self.dataset)
+        ]
 
-            logger.debug(
-                f"Processing item {idx + 1}/{len(self.dataset)}",
-                question=question[:50],
-            )
-
-            # 1. Retrieval
-            contexts = await self.run_retrieval(question)
-
-            # 2. Generation
-            answer = await self.run_generation(question, contexts)
-
-            # 3. Test case С ground truth
-            test_case = LLMTestCase(
-                input=question,
-                actual_output=answer,
-                retrieval_context=contexts,
-                expected_output=ground_truth,
-            )
-            test_cases.append(test_case)
+        test_cases = [tc for tc in await asyncio.gather(*tasks) if tc is not None]
 
         if not test_cases:
             raise ValueError("No test cases with ground_truth found in dataset!")
@@ -372,7 +422,7 @@ class RAGEvaluator:
         return results
 
     async def evaluate_custom(
-        self, metrics: List, include_generation: bool = True
+        self, metrics: List, include_generation: bool = True, max_concurrency: int = 3
     ) -> Dict[str, Any]:
         """
         Оценка с кастомными метриками (включая LLM-as-a-judge).
@@ -380,6 +430,7 @@ class RAGEvaluator:
         Args:
             metrics: List кастомных метрик для оценки
             include_generation: Запускать ли generation (если False - только retrieval)
+            max_concurrency: Максимальное количество параллельных запросов
 
         Returns:
             Dict с результатами кастомных метрик
@@ -395,37 +446,41 @@ class RAGEvaluator:
             "Starting CUSTOM evaluation",
             metrics_count=len(metrics),
             include_generation=include_generation,
+            max_concurrency=max_concurrency,
         )
 
-        test_cases = []
+        # Параллельная обработка
+        semaphore = asyncio.Semaphore(max_concurrency)
 
-        for idx, item in enumerate(self.dataset):
-            question = item["question"]
-            ground_truth = item.get("ground_truth", "")
+        async def process_item(idx: int, item: Dict[str, Any]) -> LLMTestCase:
+            async with semaphore:
+                question = item["question"]
+                ground_truth = item.get("ground_truth", "")
 
-            # Retrieval
-            contexts = await self.run_retrieval(question)
+                logger.debug(f"Processing item {idx + 1}", question=question[:50])
 
-            # Generation (если нужен)
-            if include_generation:
-                answer = await self.run_generation(question, contexts)
-                test_case = LLMTestCase(
-                    input=question,
-                    actual_output=answer,
-                    retrieval_context=contexts,
-                    expected_output=ground_truth,
-                )
-            else:
-                test_case = LLMTestCase(
-                    input=question,
-                    retrieval_context=contexts,
-                    expected_output=ground_truth,
-                )
+                contexts = await self.run_retrieval(question)
 
-            test_cases.append(test_case)
+                if include_generation:
+                    answer = await self.run_generation(question, contexts)
+                    return LLMTestCase(
+                        input=question,
+                        actual_output=answer,
+                        retrieval_context=contexts,
+                        expected_output=ground_truth,
+                    )
+                else:
+                    return LLMTestCase(
+                        input=question,
+                        retrieval_context=contexts,
+                        expected_output=ground_truth,
+                    )
+
+        tasks = [process_item(idx, item) for idx, item in enumerate(self.dataset)]
+        test_cases = await asyncio.gather(*tasks)
 
         # Оценка
-        results = evaluate(test_cases=test_cases, metrics=metrics)
+        results = evaluate(test_cases=list(test_cases), metrics=metrics)
 
         logger.info("Custom evaluation completed", results=results)
         return results

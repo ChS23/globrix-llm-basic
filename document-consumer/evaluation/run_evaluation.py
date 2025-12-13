@@ -23,6 +23,7 @@ CLI скрипт для запуска оценки RAG системы.
 import asyncio
 import argparse
 import json
+import logging
 from pathlib import Path
 from datetime import datetime
 import sys
@@ -30,58 +31,124 @@ import sys
 import structlog
 
 from .evaluator import RAGEvaluator
-from .metrics import CUSTOM_METRICS_REAL_ESTATE
+from .metrics import get_custom_metrics_real_estate
 
 
 logger = structlog.get_logger(__name__)
 
 
-def print_results(results: dict, mode: str):
+def extract_metrics_from_results(results) -> dict:
+    """
+    Извлекает метрики из EvaluationResult объекта DeepEval.
+
+    Args:
+        results: EvaluationResult от evaluate()
+
+    Returns:
+        Dict с агрегированными метриками {metric_name: avg_score}
+    """
+    metrics_scores: dict[str, list[float]] = {}
+
+    # Итерируемся по test_results
+    for test_result in results.test_results:
+        # Каждый test_result содержит metrics_data
+        for metric_data in test_result.metrics_data:
+            name = metric_data.name
+            score = metric_data.score
+
+            if score is not None:
+                if name not in metrics_scores:
+                    metrics_scores[name] = []
+                metrics_scores[name].append(score)
+
+    # Вычисляем средние значения
+    avg_metrics = {}
+    for name, scores in metrics_scores.items():
+        avg_metrics[name] = sum(scores) / len(scores) if scores else 0.0
+
+    return avg_metrics
+
+
+def print_results(results, mode: str):
     """
     Печатает результаты оценки в консоль.
 
     Args:
-        results: Dict с результатами от evaluate()
+        results: EvaluationResult от evaluate()
         mode: Режим оценки (для контекста)
     """
     print("\n" + "=" * 70)
     print(f"📊 EVALUATION RESULTS - {mode.upper()}")
     print("=" * 70)
 
-    # Распечатать метрики
-    for key, value in results.items():
-        if isinstance(value, (int, float)):
-            # Определить статус на основе порога
-            if value >= 0.9:
-                status = "✅ EXCELLENT"
-            elif value >= 0.8:
-                status = "✅ GOOD"
-            elif value >= 0.7:
-                status = "⚠️  ACCEPTABLE"
-            else:
-                status = "❌ NEEDS IMPROVEMENT"
+    # Извлечь метрики из EvaluationResult
+    avg_metrics = extract_metrics_from_results(results)
 
-            print(f"{status:<20} {key:<30} {value:.3f}")
+    # Распечатать метрики
+    for name, score in sorted(avg_metrics.items()):
+        # Определить статус на основе порога
+        if score >= 0.9:
+            status = "✅ EXCELLENT"
+        elif score >= 0.8:
+            status = "✅ GOOD"
+        elif score >= 0.7:
+            status = "⚠️  ACCEPTABLE"
+        else:
+            status = "❌ NEEDS IMPROVEMENT"
+
+        print(f"{status:<20} {name:<30} {score:.3f}")
+
+    # Общая статистика
+    if avg_metrics:
+        overall = sum(avg_metrics.values()) / len(avg_metrics)
+        print("-" * 70)
+        print(f"{'OVERALL AVERAGE':<20} {'All Metrics':<30} {overall:.3f}")
 
     print("=" * 70)
 
 
-def save_results(results: dict, output_path: Path, mode: str, dataset_path: Path):
+def save_results(results, output_path: Path, mode: str, dataset_path: Path):
     """
     Сохраняет результаты в JSON файл с метаданными.
 
     Args:
-        results: Dict с результатами
+        results: EvaluationResult от evaluate()
         output_path: Путь для сохранения
         mode: Режим оценки
         dataset_path: Путь к использованному датасету
     """
+    # Извлечь метрики
+    avg_metrics = extract_metrics_from_results(results)
+
+    # Детальные результаты по каждому тесту
+    detailed_results = []
+    for i, test_result in enumerate(results.test_results):
+        test_detail = {
+            "test_index": i,
+            "input": test_result.input[:100] + "..." if len(test_result.input) > 100 else test_result.input,
+            "success": test_result.success,
+            "metrics": {}
+        }
+        for metric_data in test_result.metrics_data:
+            test_detail["metrics"][metric_data.name] = {
+                "score": metric_data.score,
+                "success": metric_data.success,
+                "reason": metric_data.reason[:200] if metric_data.reason and len(metric_data.reason) > 200 else metric_data.reason
+            }
+        detailed_results.append(test_detail)
+
     # Добавить метаданные
     output_data = {
         "timestamp": datetime.now().isoformat(),
         "mode": mode,
         "dataset": str(dataset_path),
-        "results": results,
+        "summary": {
+            "total_tests": len(results.test_results),
+            "passed": sum(1 for t in results.test_results if t.success),
+            "failed": sum(1 for t in results.test_results if not t.success),
+        },
+        "average_metrics": avg_metrics,
+        "detailed_results": detailed_results,
     }
 
     # Создать директорию если нужно
@@ -163,7 +230,7 @@ async def run_custom_mode(evaluator: RAGEvaluator) -> dict:
     print("-" * 70)
 
     results = await evaluator.evaluate_custom(
-        metrics=CUSTOM_METRICS_REAL_ESTATE,
+        metrics=get_custom_metrics_real_estate(),
         include_generation=True,
     )
     return results

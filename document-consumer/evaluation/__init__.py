@@ -8,17 +8,17 @@
 """
 
 from .metrics import (
-    METRICS_RETRIEVAL_NO_GT,
-    METRICS_RETRIEVAL_WITH_GT,
-    METRICS_GENERATION_NO_GT,
-    METRICS_GENERATION_WITH_GT,
+    get_metrics_for_retrieval_only,
+    get_metrics_for_full_pipeline_no_gt,
+    get_metrics_for_full_pipeline_with_gt,
+    get_custom_metrics_real_estate,
 )
 from .evaluator import RAGEvaluator
 
 __all__ = [
-    "METRICS_RETRIEVAL_NO_GT",
-    "METRICS_RETRIEVAL_WITH_GT",
-    "METRICS_GENERATION_NO_GT",
-    "METRICS_GENERATION_WITH_GT",
+    "get_metrics_for_retrieval_only",
+    "get_metrics_for_full_pipeline_no_gt",
+    "get_metrics_for_full_pipeline_with_gt",
+    "get_custom_metrics_real_estate",
     "RAGEvaluator",
 ]
