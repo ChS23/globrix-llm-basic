@@ -2,7 +2,11 @@ from contextlib import asynccontextmanager
 import asyncio
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from psycopg_pool import AsyncConnectionPool
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
@@ -37,17 +41,34 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# CORS middleware for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class ChatRequest(BaseModel):
     thread_id: str = "default"
+    deal_id: str | None = None
     message: str = ""
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
     try:
         thread_id = request.thread_id
+        deal_id = request.deal_id or thread_id  # Fallback to thread_id if no deal_id
         user_message = request.message
 
-        inputs = {"messages": [("user", user_message)]}
+        # Add deal context to message if deal_id provided
+        if request.deal_id:
+            context_message = f"[Context: Current deal_id = {deal_id}]\n\n{user_message}"
+        else:
+            context_message = user_message
+
+        inputs = {"messages": [("user", context_message)]}
         config = {"configurable": {"thread_id": thread_id}}
 
         output = await app.state.agent.ainvoke(inputs, config)

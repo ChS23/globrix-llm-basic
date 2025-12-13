@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 from langgraph.graph import StateGraph, END
-from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
 
 from .state import GenUIState
 from .tools import (
@@ -26,8 +26,9 @@ logger = structlog.get_logger(__name__)
 
 # === Configuration ===
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-MODEL_NAME = os.getenv("GENUI_MODEL", "claude-3-5-sonnet-20241022")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+MODEL_NAME = os.getenv("GENUI_MODEL", "openai/gpt-4.1-mini")
 
 
 # === GenUI Agent ===
@@ -52,8 +53,9 @@ class GenUIAgent:
             schema_service: ComponentSchemaService instance (dependency injection)
                            If None, will be created via get_component_schema_service()
         """
-        self.llm = ChatAnthropic(
-            api_key=ANTHROPIC_API_KEY,
+        self.llm = ChatOpenAI(
+            api_key=OPENROUTER_API_KEY,
+            base_url=OPENROUTER_BASE_URL,
             model=MODEL_NAME,
             temperature=0,  # Детерминистичность для UI генерации
         )

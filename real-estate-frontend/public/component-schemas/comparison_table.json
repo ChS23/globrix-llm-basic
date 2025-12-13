@@ -1,0 +1,55 @@
+{
+  "type": "comparison_table",
+  "name": "Comparison Table",
+  "description": "Таблица сравнения объектов",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Record%3Cstring%2Cany%3E"
+        }
+      },
+      "columns": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text",
+                "number",
+                "currency"
+              ]
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "type"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "items",
+      "columns"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "Record<string,any>": {
+        "type": "object"
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@
 // === Base Types ===
 
 export type PropertyStatus = "available" | "reserved" | "sold";
-export type ApartmentType = "studio" | "1br" | "2br" | "3br" | "4br" | "penthouse";
-export type Currency = "AED" | "USD" | "EUR";
+export type ApartmentType = "studio" | "1br" | "2br" | "3br" | "4br" | "penthouse" | "duplex" | "loft";
+export type Currency = "AED" | "USD" | "EUR" | "THB";
 
 // === Apartment ===
 

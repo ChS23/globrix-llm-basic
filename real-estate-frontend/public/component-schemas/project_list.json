@@ -1,0 +1,63 @@
+{
+  "type": "project_list",
+  "name": "Project List",
+  "description": "Список проектов",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "projects": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Project"
+        }
+      }
+    },
+    "required": [
+      "projects"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "developer": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "total_units": {
+            "type": "number"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "completion_date": {
+            "type": "string"
+          },
+          "min_price": {
+            "type": "number"
+          },
+          "max_price": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "developer",
+          "location",
+          "total_units"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

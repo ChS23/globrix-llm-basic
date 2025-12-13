@@ -1,0 +1,93 @@
+{
+  "type": "villa_cards",
+  "name": "Villa Cards",
+  "description": "Карточки вилл",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Villa"
+        }
+      }
+    },
+    "required": [
+      "items"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "Villa": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "bedrooms": {
+            "type": "number"
+          },
+          "bathrooms": {
+            "type": "number"
+          },
+          "area": {
+            "type": "number"
+          },
+          "plot_area": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "$ref": "#/definitions/Currency"
+          },
+          "location": {
+            "type": "string"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "$ref": "#/definitions/PropertyStatus"
+          }
+        },
+        "required": [
+          "id",
+          "bedrooms",
+          "area",
+          "price",
+          "location"
+        ],
+        "additionalProperties": false
+      },
+      "Currency": {
+        "type": "string",
+        "enum": [
+          "AED",
+          "USD",
+          "EUR",
+          "THB"
+        ]
+      },
+      "PropertyStatus": {
+        "type": "string",
+        "enum": [
+          "available",
+          "reserved",
+          "sold"
+        ],
+        "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+      }
+    }
+  }
+}

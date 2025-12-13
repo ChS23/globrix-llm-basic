@@ -1,0 +1,28 @@
+{
+  "type": "text",
+  "name": "Text Block",
+  "description": "Текстовый блок с поддержкой Markdown",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "content": {
+        "type": "string"
+      },
+      "variant": {
+        "type": "string",
+        "enum": [
+          "default",
+          "info",
+          "warning",
+          "error"
+        ]
+      }
+    },
+    "required": [
+      "content"
+    ],
+    "additionalProperties": false,
+    "definitions": {}
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "type": "filters",
+  "name": "Search Filters",
+  "description": "Активные фильтры поиска",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "price_min": {
+        "type": "number"
+      },
+      "price_max": {
+        "type": "number"
+      },
+      "bedrooms": {
+        "$ref": "#/definitions/ApartmentType"
+      },
+      "location": {
+        "type": "string"
+      },
+      "property_type": {
+        "type": "string",
+        "enum": [
+          "apartment",
+          "villa"
+        ]
+      },
+      "status": {
+        "$ref": "#/definitions/PropertyStatus"
+      }
+    },
+    "additionalProperties": false,
+    "definitions": {
+      "ApartmentType": {
+        "type": "string",
+        "enum": [
+          "studio",
+          "1br",
+          "2br",
+          "3br",
+          "4br",
+          "penthouse",
+          "duplex",
+          "loft"
+        ]
+      },
+      "PropertyStatus": {
+        "type": "string",
+        "enum": [
+          "available",
+          "reserved",
+          "sold"
+        ],
+        "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+      }
+    }
+  }
+}

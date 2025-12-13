@@ -1,0 +1,530 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-12-13T01:09:43.102Z",
+  "components": [
+    "apartment_cards",
+    "villa_cards",
+    "project_list",
+    "filters",
+    "summary",
+    "text",
+    "comparison_table",
+    "map"
+  ],
+  "schemas": {
+    "apartment_cards": {
+      "type": "apartment_cards",
+      "name": "Apartment Cards",
+      "description": "Карточки апартаментов",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Apartment"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "definitions": {
+          "Apartment": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/ApartmentType"
+              },
+              "area": {
+                "type": "number"
+              },
+              "price": {
+                "type": "number"
+              },
+              "currency": {
+                "$ref": "#/definitions/Currency"
+              },
+              "status": {
+                "$ref": "#/definitions/PropertyStatus"
+              },
+              "floor": {
+                "type": "number"
+              },
+              "project_id": {
+                "type": "string"
+              },
+              "images": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "bedrooms": {
+                "type": "number"
+              },
+              "bathrooms": {
+                "type": "number"
+              },
+              "developer": {
+                "type": "string"
+              },
+              "completion_date": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "area",
+              "price",
+              "status",
+              "project_id"
+            ],
+            "additionalProperties": false
+          },
+          "ApartmentType": {
+            "type": "string",
+            "enum": [
+              "studio",
+              "1br",
+              "2br",
+              "3br",
+              "4br",
+              "penthouse",
+              "duplex",
+              "loft"
+            ]
+          },
+          "Currency": {
+            "type": "string",
+            "enum": [
+              "AED",
+              "USD",
+              "EUR",
+              "THB"
+            ]
+          },
+          "PropertyStatus": {
+            "type": "string",
+            "enum": [
+              "available",
+              "reserved",
+              "sold"
+            ],
+            "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+          }
+        }
+      }
+    },
+    "villa_cards": {
+      "type": "villa_cards",
+      "name": "Villa Cards",
+      "description": "Карточки вилл",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Villa"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "definitions": {
+          "Villa": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "bedrooms": {
+                "type": "number"
+              },
+              "bathrooms": {
+                "type": "number"
+              },
+              "area": {
+                "type": "number"
+              },
+              "plot_area": {
+                "type": "number"
+              },
+              "price": {
+                "type": "number"
+              },
+              "currency": {
+                "$ref": "#/definitions/Currency"
+              },
+              "location": {
+                "type": "string"
+              },
+              "amenities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "images": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "status": {
+                "$ref": "#/definitions/PropertyStatus"
+              }
+            },
+            "required": [
+              "id",
+              "bedrooms",
+              "area",
+              "price",
+              "location"
+            ],
+            "additionalProperties": false
+          },
+          "Currency": {
+            "type": "string",
+            "enum": [
+              "AED",
+              "USD",
+              "EUR",
+              "THB"
+            ]
+          },
+          "PropertyStatus": {
+            "type": "string",
+            "enum": [
+              "available",
+              "reserved",
+              "sold"
+            ],
+            "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+          }
+        }
+      }
+    },
+    "project_list": {
+      "type": "project_list",
+      "name": "Project List",
+      "description": "Список проектов",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        },
+        "required": [
+          "projects"
+        ],
+        "additionalProperties": false,
+        "definitions": {
+          "Project": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "developer": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "total_units": {
+                "type": "number"
+              },
+              "image_url": {
+                "type": "string"
+              },
+              "completion_date": {
+                "type": "string"
+              },
+              "min_price": {
+                "type": "number"
+              },
+              "max_price": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "developer",
+              "location",
+              "total_units"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "filters": {
+      "type": "filters",
+      "name": "Search Filters",
+      "description": "Активные фильтры поиска",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "price_min": {
+            "type": "number"
+          },
+          "price_max": {
+            "type": "number"
+          },
+          "bedrooms": {
+            "$ref": "#/definitions/ApartmentType"
+          },
+          "location": {
+            "type": "string"
+          },
+          "property_type": {
+            "type": "string",
+            "enum": [
+              "apartment",
+              "villa"
+            ]
+          },
+          "status": {
+            "$ref": "#/definitions/PropertyStatus"
+          }
+        },
+        "additionalProperties": false,
+        "definitions": {
+          "ApartmentType": {
+            "type": "string",
+            "enum": [
+              "studio",
+              "1br",
+              "2br",
+              "3br",
+              "4br",
+              "penthouse",
+              "duplex",
+              "loft"
+            ]
+          },
+          "PropertyStatus": {
+            "type": "string",
+            "enum": [
+              "available",
+              "reserved",
+              "sold"
+            ],
+            "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "summary",
+      "name": "Search Summary",
+      "description": "Итоговая информация по результатам поиска",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "total_found": {
+            "type": "number"
+          },
+          "average_price": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "min_price": {
+                "type": "number"
+              },
+              "max_price": {
+                "type": "number"
+              },
+              "avg_area": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "total_found",
+          "message"
+        ],
+        "additionalProperties": false,
+        "definitions": {}
+      }
+    },
+    "text": {
+      "type": "text",
+      "name": "Text Block",
+      "description": "Текстовый блок с поддержкой Markdown",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "default",
+              "info",
+              "warning",
+              "error"
+            ]
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "additionalProperties": false,
+        "definitions": {}
+      }
+    },
+    "comparison_table": {
+      "type": "comparison_table",
+      "name": "Comparison Table",
+      "description": "Таблица сравнения объектов",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Record%3Cstring%2Cany%3E"
+            }
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "number",
+                    "currency"
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "label",
+                "type"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items",
+          "columns"
+        ],
+        "additionalProperties": false,
+        "definitions": {
+          "Record<string,any>": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "map": {
+      "type": "map",
+      "name": "Location Map",
+      "description": "Карта с отображением объектов",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "center": {
+            "type": "object",
+            "properties": {
+              "lat": {
+                "type": "number"
+              },
+              "lng": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "lat",
+              "lng"
+            ],
+            "additionalProperties": false
+          },
+          "markers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "lat",
+                "lng",
+                "title"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "zoom": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "center",
+          "markers"
+        ],
+        "additionalProperties": false,
+        "definitions": {}
+      }
+    }
+  }
+}

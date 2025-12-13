@@ -8,8 +8,8 @@ export default function HomePage() {
   const [dealId, setDealId] = useState("");
 
   const handleCreateDeal = () => {
-    // Generate a simple UUID-like ID
-    const newDealId = `deal-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    // Generate a proper UUID for Supabase
+    const newDealId = crypto.randomUUID();
     router.push(`/deal/${newDealId}`);
   };
 
@@ -74,7 +74,7 @@ export default function HomePage() {
                 value={dealId}
                 onChange={(e) => setDealId(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleOpenDeal()}
-                placeholder="deal-abc-123..."
+                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button

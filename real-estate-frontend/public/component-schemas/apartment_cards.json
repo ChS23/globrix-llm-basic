@@ -1,0 +1,110 @@
+{
+  "type": "apartment_cards",
+  "name": "Apartment Cards",
+  "description": "Карточки апартаментов",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Apartment"
+        }
+      }
+    },
+    "required": [
+      "items"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "Apartment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/definitions/ApartmentType"
+          },
+          "area": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "$ref": "#/definitions/Currency"
+          },
+          "status": {
+            "$ref": "#/definitions/PropertyStatus"
+          },
+          "floor": {
+            "type": "number"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bedrooms": {
+            "type": "number"
+          },
+          "bathrooms": {
+            "type": "number"
+          },
+          "developer": {
+            "type": "string"
+          },
+          "completion_date": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "area",
+          "price",
+          "status",
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "ApartmentType": {
+        "type": "string",
+        "enum": [
+          "studio",
+          "1br",
+          "2br",
+          "3br",
+          "4br",
+          "penthouse",
+          "duplex",
+          "loft"
+        ]
+      },
+      "Currency": {
+        "type": "string",
+        "enum": [
+          "AED",
+          "USD",
+          "EUR",
+          "THB"
+        ]
+      },
+      "PropertyStatus": {
+        "type": "string",
+        "enum": [
+          "available",
+          "reserved",
+          "sold"
+        ],
+        "description": "Типы для UI блоков сделки. Эти типы используются для генерации JSON схем через скрипт generate-schemas.ts"
+      }
+    }
+  }
+}

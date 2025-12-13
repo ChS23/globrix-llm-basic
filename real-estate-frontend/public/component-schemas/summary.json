@@ -1,0 +1,41 @@
+{
+  "type": "summary",
+  "name": "Search Summary",
+  "description": "Итоговая информация по результатам поиска",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "total_found": {
+        "type": "number"
+      },
+      "average_price": {
+        "type": "number"
+      },
+      "message": {
+        "type": "string"
+      },
+      "stats": {
+        "type": "object",
+        "properties": {
+          "min_price": {
+            "type": "number"
+          },
+          "max_price": {
+            "type": "number"
+          },
+          "avg_area": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "total_found",
+      "message"
+    ],
+    "additionalProperties": false,
+    "definitions": {}
+  }
+}
