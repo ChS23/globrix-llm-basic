@@ -294,3 +294,95 @@ RAG состоит из трёх уровней:
 | **RAG** | даёт знание |
 | **Deal API** | хранит JSON страницы |
 | **Frontend** | рендерит UI |
+
+---
+
+## 9. Технические зависимости
+
+### Системные требования
+
+| Требование | Версия |
+|------------|--------|
+| Python | 3.12+ |
+| Node.js | 18+ |
+| Docker | 20+ |
+| Docker Compose | 2.0+ |
+
+### Сервисы и порты
+
+| Сервис | Порт | Описание |
+|--------|------|----------|
+| agent-orchestrator | 8000 | Главный агент + API |
+| real-estate-frontend | 3000 | Next.js UI |
+| Qdrant | 6333, 6334 | Векторная БД |
+| RabbitMQ | 5672, 15672 | Очередь сообщений |
+| PostgreSQL | 5432 | Хранение состояния агента |
+
+### Agent Orchestrator (Python)
+
+Основные зависимости:
+```
+langchain-core >= 1.1.3
+langchain-openai >= 1.1.1
+langchain-anthropic >= 1.2.0
+langchain-qdrant >= 1.1.0
+langgraph >= 1.0.4
+fastapi >= 0.124.0
+qdrant-client >= 1.16.1
+pydantic >= 2.12.5
+```
+
+### Document Consumer (Python)
+
+Основные зависимости:
+```
+faststream[rabbit,cli] >= 0.5.0
+langchain >= 0.1.0
+langchain-openai >= 0.1.0
+langchain-qdrant >= 0.1.0
+langchain-pymupdf4llm >= 0.1.0
+qdrant-client >= 1.7.0
+deepeval >= 3.7.5
+```
+
+### Real Estate Frontend (Node.js)
+
+Основные зависимости:
+```
+next: 16.0.0
+react: 19.2.0
+tailwindcss: 4.x
+typescript: 5.x
+```
+
+### Инфраструктура (Docker)
+
+```yaml
+# Qdrant - векторная БД
+qdrant/qdrant:latest
+
+# RabbitMQ - очередь сообщений
+rabbitmq:3-management
+
+# PostgreSQL - хранение состояния
+postgres:15
+```
+
+### Переменные окружения
+
+```bash
+# LLM провайдеры
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Embeddings
+EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIMENSIONS=1536
+
+# Qdrant
+QDRANT_URL=http://localhost:6333
+QDRANT_COLLECTION=documents
+
+# PostgreSQL (для langgraph checkpointer)
+DATABASE_URL=postgresql://user:pass@localhost:5432/globrix
+```
