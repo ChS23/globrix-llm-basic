@@ -25,10 +25,10 @@ export function Timeline({ title, steps, currentStep }: TimelineProps) {
     : steps.findIndex(s => s.status === "current");
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl text-[var(--foreground)]">{title || "Этапы сделки"}</h2>
+    <div className="space-y-4 md:space-y-6">
+      <h2 className="text-xl md:text-2xl text-[var(--foreground)]">{title || "Этапы сделки"}</h2>
 
-      <div className="card p-6">
+      <div className="card p-4 md:p-6">
         {/* Desktop Timeline */}
         <div className="hidden md:block">
           <div className="relative">
@@ -139,11 +139,11 @@ function TimelineStepMobile({
   isLast: boolean;
 }) {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-3">
       {/* Line and Circle */}
       <div className="flex flex-col items-center">
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
             isCurrent
               ? "bg-[var(--accent)] text-[var(--background)] ring-4 ring-[var(--accent-glow)]"
               : isActive
@@ -152,28 +152,28 @@ function TimelineStepMobile({
           }`}
         >
           {step.status === "completed" ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="20,6 9,17 4,12"/>
             </svg>
           ) : (
-            <span className="text-sm font-bold">{index + 1}</span>
+            <span className="text-xs font-bold">{index + 1}</span>
           )}
         </div>
         {!isLast && (
-          <div className={`w-0.5 flex-1 min-h-[24px] ${isActive ? "bg-[var(--accent)]" : "bg-[var(--border)]"}`} />
+          <div className={`w-0.5 flex-1 min-h-[20px] ${isActive ? "bg-[var(--accent)]" : "bg-[var(--border)]"}`} />
         )}
       </div>
 
       {/* Content */}
-      <div className={`pb-4 ${isLast ? "" : "pb-6"}`}>
-        <p className={`font-medium ${isCurrent ? "text-[var(--accent)]" : "text-[var(--foreground)]"}`}>
+      <div className={`pb-3 ${isLast ? "" : "pb-4"}`}>
+        <p className={`text-sm font-medium ${isCurrent ? "text-[var(--accent)]" : "text-[var(--foreground)]"}`}>
           {step.title}
         </p>
         {step.date && (
-          <p className="text-xs text-[var(--foreground-subtle)] mt-0.5">{step.date}</p>
+          <p className="text-[10px] text-[var(--foreground-subtle)] mt-0.5">{step.date}</p>
         )}
         {step.description && (
-          <p className="text-sm text-[var(--foreground-muted)] mt-1">{step.description}</p>
+          <p className="text-xs text-[var(--foreground-muted)] mt-1">{step.description}</p>
         )}
       </div>
     </div>

@@ -54,26 +54,26 @@ export function AmenitiesList({ title, items, categories }: AmenitiesListProps) 
   // If categories provided, render grouped
   if (categories && categories.length > 0) {
     return (
-      <div className="space-y-6">
-        <h2 className="text-2xl text-[var(--foreground)]">{title || "Удобства и сервисы"}</h2>
+      <div className="space-y-4 md:space-y-6">
+        <h2 className="text-xl md:text-2xl text-[var(--foreground)]">{title || "Удобства и сервисы"}</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
           {categories.map((category, index) => (
-            <div key={index} className="card p-5">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[var(--accent-glow)] flex items-center justify-center">
+            <div key={index} className="card p-4 md:p-5">
+              <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-[var(--accent-glow)] flex items-center justify-center">
                   {getCategoryIcon(category.name)}
                 </div>
-                <h3 className="text-lg font-semibold text-[var(--foreground)]">{category.name}</h3>
+                <h3 className="text-base md:text-lg font-semibold text-[var(--foreground)]">{category.name}</h3>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5 md:space-y-2">
                 {category.items.map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--background-elevated)] transition-colors">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--success)]">
+                  <div key={i} className="flex items-center gap-2 md:gap-3 p-1.5 md:p-2 rounded-lg hover:bg-[var(--background-elevated)] transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--success)] md:w-4 md:h-4">
                       <polyline points="20,6 9,17 4,12"/>
                     </svg>
-                    <span className="text-sm text-[var(--foreground)]">{item}</span>
+                    <span className="text-xs md:text-sm text-[var(--foreground)]">{item}</span>
                   </div>
                 ))}
               </div>
@@ -86,11 +86,11 @@ export function AmenitiesList({ title, items, categories }: AmenitiesListProps) 
 
   // Simple list rendering
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl text-[var(--foreground)]">{title || "Удобства и сервисы"}</h2>
+    <div className="space-y-4 md:space-y-6">
+      <h2 className="text-xl md:text-2xl text-[var(--foreground)]">{title || "Удобства и сервисы"}</h2>
 
-      <div className="card p-5">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="card p-3 md:p-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
           {items!.map((item, index) => (
             <AmenityItem key={index} name={item} />
           ))}
@@ -105,11 +105,11 @@ function AmenityItem({ name }: { name: string }) {
   const icon = amenityIcons[iconKey] || <DefaultIcon />;
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background-elevated)] hover:bg-[var(--accent-glow)] transition-colors">
-      <div className="w-10 h-10 rounded-lg bg-[var(--background-card)] border border-[var(--border)] flex items-center justify-center text-[var(--accent)]">
+    <div className="flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-xl bg-[var(--background-elevated)] hover:bg-[var(--accent-glow)] active:scale-[0.98] transition-all">
+      <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-[var(--background-card)] border border-[var(--border)] flex items-center justify-center text-[var(--accent)]">
         {icon}
       </div>
-      <span className="text-sm text-[var(--foreground)] font-medium">{name}</span>
+      <span className="text-xs md:text-sm text-[var(--foreground)] font-medium leading-tight">{name}</span>
     </div>
   );
 }

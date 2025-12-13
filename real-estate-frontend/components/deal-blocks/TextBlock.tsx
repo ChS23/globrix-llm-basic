@@ -7,17 +7,17 @@ import type { TextBlockProps } from "./types";
  */
 export function TextBlock({ content, variant = "default" }: TextBlockProps) {
   const variantStyles = {
-    default: "bg-white border-gray-200 text-gray-900",
-    info: "bg-blue-50 border-blue-200 text-blue-900",
-    warning: "bg-yellow-50 border-yellow-200 text-yellow-900",
-    error: "bg-red-50 border-red-200 text-red-900",
+    default: "bg-[var(--background-card)] border-[var(--border)] text-[var(--foreground)]",
+    info: "bg-blue-500/10 border-blue-500/30 text-[var(--foreground)]",
+    warning: "bg-[var(--warning-muted)] border-[var(--warning)]/30 text-[var(--foreground)]",
+    error: "bg-[var(--error-muted)] border-[var(--error)]/30 text-[var(--foreground)]",
   };
 
   const variantIcons = {
     default: null,
     info: (
       <svg
-        className="w-5 h-5 text-blue-600"
+        className="w-4 h-4 md:w-5 md:h-5 text-blue-400"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -32,7 +32,7 @@ export function TextBlock({ content, variant = "default" }: TextBlockProps) {
     ),
     warning: (
       <svg
-        className="w-5 h-5 text-yellow-600"
+        className="w-4 h-4 md:w-5 md:h-5 text-[var(--warning)]"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -47,7 +47,7 @@ export function TextBlock({ content, variant = "default" }: TextBlockProps) {
     ),
     error: (
       <svg
-        className="w-5 h-5 text-red-600"
+        className="w-4 h-4 md:w-5 md:h-5 text-[var(--error)]"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -64,20 +64,18 @@ export function TextBlock({ content, variant = "default" }: TextBlockProps) {
 
   return (
     <div
-      className={`border rounded-lg p-6 mb-6 ${variantStyles[variant]}`}
+      className={`border rounded-xl p-4 md:p-6 ${variantStyles[variant]}`}
     >
       {variantIcons[variant] && (
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">{variantIcons[variant]}</div>
-          <div className="flex-1 prose prose-sm max-w-none">
+        <div className="flex items-start gap-2 md:gap-3">
+          <div className="flex-shrink-0 mt-0.5">{variantIcons[variant]}</div>
+          <div className="flex-1 min-w-0">
             <MarkdownContent content={content} />
           </div>
         </div>
       )}
       {!variantIcons[variant] && (
-        <div className="prose prose-sm max-w-none">
-          <MarkdownContent content={content} />
-        </div>
+        <MarkdownContent content={content} />
       )}
     </div>
   );
@@ -96,19 +94,19 @@ function MarkdownContent({ content }: { content: string }) {
     // Headers
     if (line.startsWith("### ")) {
       elements.push(
-        <h3 key={index} className="text-lg font-semibold mt-4 mb-2">
+        <h3 key={index} className="text-base md:text-lg font-semibold mt-3 md:mt-4 mb-2 text-[var(--foreground)]">
           {line.replace("### ", "")}
         </h3>
       );
     } else if (line.startsWith("## ")) {
       elements.push(
-        <h2 key={index} className="text-xl font-bold mt-4 mb-2">
+        <h2 key={index} className="text-lg md:text-xl font-bold mt-3 md:mt-4 mb-2 text-[var(--foreground)]">
           {line.replace("## ", "")}
         </h2>
       );
     } else if (line.startsWith("# ")) {
       elements.push(
-        <h1 key={index} className="text-2xl font-bold mt-4 mb-2">
+        <h1 key={index} className="text-xl md:text-2xl font-bold mt-3 md:mt-4 mb-2 text-[var(--foreground)]">
           {line.replace("# ", "")}
         </h1>
       );
@@ -116,24 +114,32 @@ function MarkdownContent({ content }: { content: string }) {
     // Lists
     else if (line.startsWith("- ") || line.startsWith("* ")) {
       elements.push(
-        <li key={index} className="ml-4">
+        <li key={index} className="ml-4 text-sm md:text-base text-[var(--foreground-muted)] leading-relaxed">
           {line.replace(/^[-*] /, "")}
+        </li>
+      );
+    }
+    // Numbered lists
+    else if (/^\d+\. /.test(line)) {
+      elements.push(
+        <li key={index} className="ml-4 text-sm md:text-base text-[var(--foreground-muted)] leading-relaxed list-decimal">
+          {line.replace(/^\d+\. /, "")}
         </li>
       );
     }
     // Paragraphs
     else if (line.trim()) {
       elements.push(
-        <p key={index} className="mb-2">
+        <p key={index} className="mb-2 text-sm md:text-base text-[var(--foreground-muted)] leading-relaxed">
           {line}
         </p>
       );
     }
-    // Empty lines
-    else {
-      elements.push(<br key={index} />);
+    // Empty lines - skip extra line breaks
+    else if (elements.length > 0 && elements[elements.length - 1]?.type !== 'br') {
+      elements.push(<div key={index} className="h-2" />);
     }
   });
 
-  return <div>{elements}</div>;
+  return <div className="space-y-1">{elements}</div>;
 }
