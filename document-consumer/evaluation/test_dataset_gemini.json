@@ -1,0 +1,546 @@
+[
+  {
+    "question": [
+      "What are the key characteristics of Freehold (absolute) ownership in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Freehold ownership represents absolute ownership of property without time limitation. The owner possesses complete rights to use, transfer, lease, or mortgage the property. This is the highest form of property ownership recognized under Thai law. Key Characteristics: • Perpetual ownership rights • Full transferability through sale, gift, or inheritance • Can be used as collateral for loans • Registration fee: 2% of assessed value • No time restrictions on ownership"
+      ]
+    ],
+    "ground_truth": [
+      "Freehold represents absolute ownership without time limitation. Key characteristics include perpetual ownership rights, full transferability through sale, gift, or inheritance, the ability to be used as collateral for loans, and a registration fee of 2% of the assessed value."
+    ]
+  },
+  {
+    "question": [
+      "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how long can the term be registered?"
+    ],
+    "contexts": [
+      [
+        "In Thailand, the most common structure is 30 years with options to renew for two additional 30-year periods (30+30+30 years). Key Characteristics: • Standard term: 30 years, renewable up to 90 years total • Must be registered at Land Office for terms over 3 years",
+        "IMPORTANT: The first 30-year term can be registered. Renewal periods are contractual obligations and cannot be pre-registered."
+      ]
+    ],
+    "ground_truth": [
+      "The standard structure is 30 years, renewable for two additional 30-year periods (up to 90 years total). Lease terms over 3 years must be registered at the Land Office. Only the first 30-year term can be registered; renewal periods are contractual obligations and cannot be pre-registered."
+    ]
+  },
+  {
+    "question": [
+      "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calculated?"
+    ],
+    "contexts": [
+      [
+        "Foreigners can own condominium units in their own name with full freehold rights, subject to the foreign ownership quota. Foreign Ownership Quota: • Maximum: 49% of total saleable area in any condominium • Remaining 51% must be Thai-owned • Calculated by floor area, not unit count",
+        "Section 19 bis: Foreign Ownership Quota Establishes 49% maximum foreign ownership of total floor area in any condominium."
+      ]
+    ],
+    "ground_truth": [
+      "The maximum foreign ownership quota is **49% of the total saleable floor area** in any condominium. The remaining 51% must be Thai-owned. The quota is calculated based on floor area, not unit count."
+    ]
+  },
+  {
+    "question": [
+      "Which document is required for foreigners to register freehold condominium ownership to prove the transfer of funds from abroad?"
+    ],
+    "contexts": [
+      [
+        "Requirements for Foreign Freehold Ownership: 1. Funds must be transferred from abroad in foreign currency 2. Currency must be converted to THB by Thai bank 3. Bank must issue FET Form (Foreign Exchange Transaction) 4. Minimum transfer: USD 50,000 for FET issuance 5. FET must be presented at Land Office during registration",
+        "FET Form: Foreign Exchange Transaction form from Thai bank Essential document for foreigners buying freehold condominiums. Must be presented at Land Office."
+      ]
+    ],
+    "ground_truth": [
+      "The **FET Form (Foreign Exchange Transaction)** is required. This document is issued by a Thai bank after transferring funds from abroad in foreign currency (minimum USD 50,000) and converting it to Thai Baht (THB). The FET Form must be presented at the Land Office during registration."
+    ]
+  },
+  {
+    "question": [
+      "What is a Chanote and why is it considered the 'gold standard' for land titles in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Chanote (Nor Sor 4): Highest form of land title with GPS coordinates",
+        "Chanote (Nor Sor 4 Jor): The highest and most secure form of land title in Thailand. Issued by Land Office with GPS coordinates. Provides absolute proof of ownership with precisely surveyed boundaries. Can be sold, transferred, mortgaged without restrictions. This is the 'gold standard' for property purchases."
+      ]
+    ],
+    "ground_truth": [
+      "**Chanote (Nor Sor 4 Jor)** is the highest and most secure form of land title in Thailand. It is issued by the Land Office with precise GPS coordinates, providing absolute proof of ownership with precisely surveyed boundaries. It is considered the 'gold standard' because of its security and clarity of boundaries."
+    ]
+  },
+  {
+    "question": [
+      "List the main financial obligations associated with a property purchase and who typically pays them."
+    ],
+    "contexts": [
+      [
+        "Transfer Fee: 2% of assessed value (freehold) or 1% (leasehold). Paid when registering ownership. Usually split 50/50 between buyer and seller, but negotiable.",
+        "Stamp Duty: 0.5% (if held >5 years) N/A Buyer At registration",
+        "Special Business Tax: 3.3% (if sold <5 years) N/A Seller At registration",
+        "Sinking Fund: One-time: THB 500-1000/sqm N/A Buyer At handover",
+        "Common Area Maintenance (CAM) Fee: Monthly/annual fee for building management, security, facilities, utilities. Usually THB 30-80 per sqm per month"
+      ]
+    ],
+    "ground_truth": [
+      "Key fees and taxes include: **Transfer Fee**: 2% (freehold) or 1% (leasehold) of the assessed value, usually split 50/50. **Stamp Duty**: 0.5% (if held >5 years), paid by the buyer. **Special Business Tax**: 3.3% (if sold <5 years), paid by the seller. **Sinking Fund**: A one-time fee (THB 500-1,000/sqm) paid by the buyer at handover. **CAM Fee**: A monthly/annual fee (THB 30-80/sqm per month) for common area management."
+    ]
+  },
+  {
+    "question": [
+      "What is the LTR Visa (Long-Term Resident Visa) and which of its categories were updated in 2025?"
+    ],
+    "contexts": [
+      [
+        "LONG-TERM RESIDENT (LTR) VISA Introduced September 2022, updated January 2025. 10-year visa for high-potential foreigners. 16.1 Four Categories 1. Wealthy Global Citizen • Minimum USD 1 million in assets • USD 500,000 investment in Thailand (property/bonds/FDI) • No income requirement (as of 2025) 2. Wealthy Pensioner • Age 50+ • USD 80,000/year passive income • OR USD 40,000-80,000 + USD 250,000 Thailand investment 3. Work from Thailand Professional • Remote work for established foreign company • USD 80,000/year income (last 2 years) • OR USD 40,000-80,000 + relevant degree 4. Highly Skilled Professional"
+      ]
+    ],
+    "ground_truth": [
+      "The LTR Visa is a 10-year visa (5+5 years) for high-potential foreigners, introduced in 2022 and updated in January 2025. The **Wealthy Global Citizen** category was updated in 2025 to remove the income requirement, while retaining the requirement for minimum USD 1 million in assets and USD 500,000 investment in Thailand."
+    ]
+  },
+  {
+    "question": [
+      "What is the main difference between a Condominium and an Apartment in Thailand in terms of ownership rights?"
+    ],
+    "contexts": [
+      [
+        "Condominium (Condo): Multi-unit residential building registered under Condominium Act. Offers individual unit ownership with title deed. Foreigners can own units freehold within 49% quota.",
+        "Apartment: Multi-unit building NOT registered as condominium. Does NOT offer individual unit ownership. Residents have only contractual rights (lease/rental). Cannot be owned freehold by anyone."
+      ]
+    ],
+    "ground_truth": [
+      "A **Condominium** is registered under the Condominium Act and offers individual unit ownership with a title deed (Chanote). An **Apartment** is **NOT** registered as a condominium and does not offer individual ownership; residents have only contractual rights (lease/rental), and it cannot be owned freehold by anyone."
+    ]
+  },
+  {
+    "question": [
+      "What are the current (2025) disadvantages of owning land through a Thai Company Structure?"
+    ],
+    "contexts": [
+      [
+        "Formation of Thai limited company to hold land. Traditional method but increasingly scrutinized by authorities.",
+        "2025 WARNING: Thai authorities have intensified scrutiny of 'nominee' companies formed solely for property ownership. Shell companies without genuine business activity may be deemed illegal, potentially resulting in forced sale of land. Exercise extreme caution with this structure."
+      ]
+    ],
+    "ground_truth": [
+      "In 2025, Thai authorities **intensified scrutiny** of 'nominee' companies formed solely for property ownership. Shell companies without genuine business activity may be deemed illegal, potentially resulting in the forced sale of the land."
+    ]
+  },
+  {
+    "question": [
+      "How is land area in Thailand determined using traditional units, and what is the conversion of 1 Rai into square meters?"
+    ],
+    "contexts": [
+      [
+        "Thailand uses traditional land measurement units alongside metric system:",
+        "1 Wah (Wa) 2 meters Basic unit, approximately 4 steps",
+        "1 Tarang Wah (Sq Wah) 4 square meters Square wah, for small plots",
+        "1 Ngan 100 Tarang Wah = 400 sqm Quarter of a rai",
+        "1 Rai 4 Ngan = 1,600 sqm Standard land measurement unit"
+      ]
+    ],
+    "ground_truth": [
+      "**1 Rai** is the standard land measurement unit, equal to **4 Ngan**, which converts to **1,600 square meters (sqm)**. **1 Ngan** is equal to 100 Tarang Wah (Sq Wah), or 400 sqm."
+    ]
+  },
+  {
+    "question": [
+      "What are the two main rights, similar to Leasehold, that foreigners can use for land usage or building ownership?"
+    ],
+    "contexts": [
+      [
+        "Usufruct: Right to use property for lifetime",
+        "Usufruct: Lifetime right to use property and receive income from it. Cannot be sold. Ends at death. Maximum 30 years if registered, can be renewed. Similar to leasehold but emphasizes usage rights.",
+        "Superficies: Right to own buildings on others' land",
+        "Superficies: Right to own buildings on someone else's land. Up to 30 years, renewable once. Building owner different from land owner."
+      ]
+    ],
+    "ground_truth": [
+      "Foreigners can use: 1. **Usufruct**: A lifetime right to use the property and receive income from it. The maximum registered term is 30 years, renewable. 2. **Superficies**: The right to own buildings on someone else's land. The term is up to 30 years, renewable once."
+    ]
+  },
+  {
+    "question": [
+      "List the advantages and disadvantages of Leasehold (long-term rental) compared to Freehold (absolute ownership)."
+    ],
+    "contexts": [
+      [
+        "Advantages [Leasehold]: • Lower initial cost (10-15% less than freehold) • Access to land and houses • Lower registration fees",
+        "Disadvantages [Leasehold]: • Time-limited ownership • Renewal not automatically guaranteed • Potential complications at lease expiry",
+        "Disadvantages [Freehold]: • Higher purchase price (typically 10-15% more than leasehold) • Higher transfer fees and taxes"
+      ]
+    ],
+    "ground_truth": [
+      "**Leasehold Advantages:** Lower initial cost (10-15% less than Freehold), access to land and houses, and lower registration fees. **Leasehold Disadvantages:** Time-limited ownership, renewal is not automatically guaranteed, and potential complications upon lease expiry."
+    ]
+  },
+  {
+    "question": [
+      "What are the minimum investment and time requirements for high net worth foreigners to acquire up to 1 rai of land under the special exception?"
+    ],
+    "contexts": [
+      [
+        "Exception for High Net Worth Individuals: Under very limited circumstances, foreigners may acquire up to 1 rai (1,600 sqm) of land if: • Investment of minimum THB 40 million in property (excluding land and house) • Investment made within past 5 years • Property used for residential purposes • Approval from Ministry of Interior required"
+      ]
+    ],
+    "ground_truth": [
+      "To acquire up to 1 rai (1,600 sqm) of land, an individual must invest a minimum of **THB 40 million** in property (excluding the land and house itself). The investment must have been made within the last **5 years** and the property must be used for residential purposes. Approval from the Ministry of Interior is also required."
+    ]
+  },
+  {
+    "question": [
+      "What is the primary legislation governing condominium ownership in Thailand and what does it establish regarding common areas?"
+    ],
+    "contexts": [
+      [
+        "4. THE CONDOMINIUM ACT В.Е. 2522 (1979) The Condominium Act is the primary legislation governing condominium ownership in Thailand. Section 18: Common Property & Management Defines common property (land, building exterior, hallways, facilities) and establishes joint ownership proportional to unit size. Requires formation of condominium juristic person."
+      ]
+    ],
+    "ground_truth": [
+      "The primary legislation is **The Condominium Act B.E. 2522 (1979)**. Section 18 defines common property (land, building exterior, hallways, facilities) and establishes joint ownership proportional to the unit size. It also requires the formation of a condominium juristic person."
+    ]
+  },
+  {
+    "question": [
+      "What is the approximate total annual cost in THB for maintaining a Thai company structure used for land ownership?"
+    ],
+    "contexts": [
+      [
+        "Annual Costs: • Accounting: THB 15,000-30,000 • Audit: THB 10,000-20,000 • Legal compliance: THB 10,000-15,000 • Total: approximately THB 35,000-65,000/year"
+      ]
+    ],
+    "ground_truth": [
+      "The approximate total annual cost for maintaining a Thai company is between **THB 35,000 and THB 65,000**. This covers accounting (THB 15,000–30,000), audit (THB 10,000–20,000), and legal compliance (THB 10,000–15,000)."
+    ]
+  },
+  {
+    "question": [
+      "What are the two most expensive areas in Phuket for villa prices per square meter in 2025?"
+    ],
+    "contexts": [
+      [
+        "Area Condo (THB/sqm) Villa (THB/sqm) Notes",
+        "Bang Tao 120,000-250,000 180,000-400,000 Premium, Laguna area",
+        "Surin 150,000-300,000 200,000-500,000 Most expensive"
+      ]
+    ],
+    "ground_truth": [
+      "The two most expensive areas in Phuket for villa prices per square meter in 2025 are **Surin** (THB 200,000–500,000/sqm, noted as the most expensive) and **Bang Tao** (THB 180,000–400,000/sqm, a premium, Laguna area)."
+    ]
+  },
+  {
+    "question": [
+      "What are the requirements for foreign heirs inheriting a condominium unit in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Critical limitation: Foreign heirs inheriting condominium units must qualify under Section 19 to register ownership. If heir doesn't qualify, unit must be sold within 1 year. Land Department may dispose of unit if not sold, retaining 5% fee."
+      ]
+    ],
+    "ground_truth": [
+      "Foreign heirs inheriting condominiums must qualify under Section 19 of the Condominium Act to register ownership. If the heir does not qualify, the unit must be sold within **1 year**. Otherwise, the Land Department may dispose of the unit and retain a 5% fee."
+    ]
+  },
+  {
+    "question": [
+      "What is a Tabien Baan and how does it differ from a Deed of Sale?"
+    ],
+    "contexts": [
+      [
+        "Tabien Baan: House Registration Book. Lists residents at a property address. Blue book for Thai nationals, Yellow book for registered foreigners. Not proof of ownership, only residence registration.",
+        "Deed of Sale: Official transfer document registered at Land Office. Proves transfer of ownership."
+      ]
+    ],
+    "ground_truth": [
+      "A **Tabien Baan** (House Registration Book) lists residents at a property address and is **not proof of ownership**; it is only for residence registration. A **Deed of Sale**, registered at the Land Office, is the official document that proves the transfer of ownership."
+    ]
+  },
+  {
+    "question": [
+      "What is the area of an 800 square meter land plot in Tarang Wah (Sq Wah) and Ngan?"
+    ],
+    "contexts": [
+      [
+        "1 Tarang Wah (Sq Wah) 4 square meters",
+        "1 Ngan 100 Tarang Wah = 400 sqm",
+        "800 sqm = 2 Ngan = 0.5 Rai",
+        "100 sqm = 25 Tarang Wah"
+      ]
+    ],
+    "ground_truth": [
+      "An area of 800 square meters is equal to **2 Ngan**. Since 1 Ngan is 100 Tarang Wah (Sq Wah), 800 sqm is equal to **200 Tarang Wah** (800 sqm / 4 sqm per 1 Tarang Wah)."
+    ]
+  },
+  {
+    "question": [
+      "What are considered 'Moderate' monthly living costs for expatriates in Phuket, according to 2025 data?"
+    ],
+    "contexts": [
+      [
+        "Monthly living costs for expatriates in Phuket vary significantly based on lifestyle. Below are approximate monthly expenses in Thai Baht:",
+        "Category Budget Moderate Comfortable Luxury",
+        "Rent (1BR) 15,000 25,000 40,000 70,000+",
+        "Utilities 2,000 3,500 5,000 8,000",
+        "Food & Dining 10,000 20,000 35,000 60,000",
+        "Transportation 3,000 6,000 10,000 20,000",
+        "Insurance 3,000 5,000 8,000 15,000",
+        "Entertainment 5,000 10,000 20,000 40,000",
+        "Internet/Phone 1,500 2,000 2,500 3,000",
+        "TOTAL/MONTH 39,500 71,500 120,500 216,000+"
+      ]
+    ],
+    "ground_truth": [
+      "According to 2025 data, the 'Moderate' total monthly living costs for expatriates in Phuket are approximately **THB 71,500**. This includes 1-bedroom rent (THB 25,000), food & dining (THB 20,000), transportation (THB 6,000), and other expenses."
+    ]
+  },
+  {
+    "question": [
+      "Describe the differences between the Chanote, Nor Sor 3 Gor, and Nor Sor 3 land titles in terms of security and boundary precision."
+    ],
+    "contexts": [
+      [
+        "Chanote (Nor Sor 4 Jor): The highest and most secure form of land title in Thailand. Issued by Land Office with GPS coordinates. Provides absolute proof of ownership with precisely surveyed boundaries.",
+        "Nor Sor 3 Gor: Certificate of Use. Second-best title document. Land boundaries surveyed but not with GPS precision. Acceptable for most property transactions but less secure than Chanote.",
+        "Nor Sor 3: Certificate of Notification of Use. Land possession document with approximate boundaries. Less secure, harder to upgrade to Chanote. Not recommended for foreign purchases."
+      ]
+    ],
+    "ground_truth": [
+      "**Chanote** (Nor Sor 4 Jor) is the most secure, issued with precise GPS coordinates, providing absolute proof of ownership. **Nor Sor 3 Gor** is the second-best, with surveyed boundaries but without GPS precision. **Nor Sor 3** is the least secure, with only approximate boundaries, and is generally not recommended for foreign purchases."
+    ]
+  },
+  {
+    "question": [
+      "What is Rental Yield and what is the formula used to calculate it?"
+    ],
+    "contexts": [
+      [
+        "Rental Yield: Annual rental income as percentage of property value. Formula: (Annual Rent / Property Value) x 100.",
+        "Gross Yield: Rental yield before expenses. Total rental income / Purchase price.",
+        "Net Yield: Rental yield after all expenses (fees, taxes, maintenance, vacancy). More accurate measure of investment return."
+      ]
+    ],
+    "ground_truth": [
+      "Rental Yield is the annual rental income expressed as a percentage of the property value. The formula for calculation is: **(Annual Rent / Property Value) x 100**. It can be calculated as Gross Yield (before expenses) or Net Yield (after all expenses)."
+    ]
+  },
+  {
+    "question": [
+      "Which area in Phuket has the highest anticipated Rental Yield and which areas are considered premium?"
+    ],
+    "contexts": [
+      [
+        "Patong: ... Price: Medium-High. Rental yield: 6-9%. Best for: Rental income.",
+        "Rawai: ... Price: Medium-Low. Rental yield: 7-9%. Best for: Lifestyle, value investment.",
+        "Bang Tao: ... Price: High. Rental yield: 5-7%. Best for: Luxury investment, family living.",
+        "Surin: ... Price: Very High. Rental yield: 4-6%. Best for: High-end investment."
+      ]
+    ],
+    "ground_truth": [
+      "The areas with the highest anticipated Rental Yield, in the 6-9% range, are **Patong** and **Rawai**. **Surin** (4-6%, Very High Price) and **Bang Tao** (5-7%, High Price) are considered premium areas for investment."
+    ]
+  },
+  {
+    "question": [
+      "What restrictions on land ownership does the Land Code Act B.E. 2497 impose on foreign nationals?"
+    ],
+    "contexts": [
+      [
+        "Section 86: Prohibits foreigners from acquiring land except by succession by law, provided Thai citizenship is acquired within the prescribed period.",
+        "Section 96 bis: Allows Foreign nationals married to Thai spouse to own land up to 1 rai, but with strict conditions that funds must be proven to belong solely to Thai spouse."
+      ]
+    ],
+    "ground_truth": [
+      "Section 86 of the Land Code Act **prohibits foreigners from acquiring land**, except by succession if Thai citizenship is acquired within a prescribed period. Section 96 bis allows foreign nationals married to a Thai spouse to own up to 1 rai of land, provided the funds are proven to belong solely to the Thai spouse."
+    ]
+  },
+  {
+    "question": [
+      "What are the main benefits of the LTR Visa for real estate investors?"
+    ],
+    "contexts": [
+      [
+        "16.2 Benefits [LTR Visa]: • 10-year visa (5+5 years) • Work permit in 3-5 days • Annual reporting (vs 90-day) • 17% personal income tax rate • Unlimited dependents (2025 update) • Fast track airport services • Foreign income tax exemption"
+      ]
+    ],
+    "ground_truth": [
+      "LTR Visa benefits (updated in 2025) include a 10-year visa (5+5 years), quick work permit issuance (3-5 days), annual reporting instead of 90-day, a flat 17% personal income tax rate, **unlimited dependents** (2025 update), and foreign income tax exemption."
+    ]
+  },
+  {
+    "question": [
+      "What is Off-Plan Property and what specific risk does it carry for the buyer?"
+    ],
+    "contexts": [
+      [
+        "Off-Plan Property: Property purchased before construction completion. Lower prices, payment plans, but carries completion risk. Requires careful due diligence on developer."
+      ]
+    ],
+    "ground_truth": [
+      "Off-Plan Property is purchased before construction is complete. While offering lower prices and payment plans, it carries the **completion risk** (the risk that construction will not be finished). Buyers must conduct careful due diligence on the developer."
+    ]
+  },
+  {
+    "question": [
+      "What is the minimum amount for the transfer of funds from abroad in foreign currency required to obtain the FET Form for a condominium purchase?"
+    ],
+    "contexts": [
+      [
+        "Minimum transfer: USD 50,000 for FET issuance",
+        "FET Form: Foreign Exchange Transaction form from Thai bank Issued by Thai banks for international transfers exceeding USD 50,000."
+      ]
+    ],
+    "ground_truth": [
+      "The minimum transfer amount from abroad to obtain the FET Form is **USD 50,000**. The FET Form is issued by Thai banks for international transfers exceeding this amount."
+    ]
+  },
+  {
+    "question": [
+      "What is the key difference between Gross Yield and Net Yield when calculating rental profitability?"
+    ],
+    "contexts": [
+      [
+        "Gross Yield: Rental yield before expenses. Total rental income / Purchase price.",
+        "Net Yield: Rental yield after all expenses (fees, taxes, maintenance, vacancy). More accurate measure of investment return."
+      ]
+    ],
+    "ground_truth": [
+      "**Gross Yield** is the rental yield calculated **before** deducting expenses. **Net Yield** is calculated **after** all expenses, such as fees, taxes, maintenance, and vacancy costs, and is a more accurate measure of investment return."
+    ]
+  },
+  {
+    "question": [
+      "What are the primary elements that must be included in a Registered Leasehold contract?"
+    ],
+    "contexts": [
+      [
+        "Critical Elements of Lease Contract: 1. Clear identification of parties 2. Precise property description 3. Lease term and renewal provisions 4. Payment terms 5. Rights and obligations of both parties 6. Provisions for death or default 7. Building ownership rights 8. Subletting and transfer rights"
+      ]
+    ],
+    "ground_truth": [
+      "Critical elements of a registered leasehold contract include clear identification of parties, a precise property description, the lease term and **renewal provisions**, payment terms, rights and obligations of both parties, provisions for death or default, building ownership rights, and subletting/transfer rights."
+    ]
+  },
+  {
+    "question": [
+      "What happens to a Leasehold agreement with a term exceeding 3 years if it is not registered at the Land Office?"
+    ],
+    "contexts": [
+      [
+        "Unregistered leases exceeding 3 years are only valid for 3 years under Thai law.",
+        "Section 538: Lease of immovable property for >3 years must be in writing and registered. Unregistered leases valid only 3 years."
+      ]
+    ],
+    "ground_truth": [
+      "According to Thai law (Section 538), a lease agreement for immovable property with a term exceeding 3 years, if not registered at the Land Office, is only valid for **3 years**."
+    ]
+  },
+  {
+    "question": [
+      "What factors, other than the area, can affect property pricing in Phuket?"
+    ],
+    "contexts": [
+      [
+        "Price Factors: Sea view adds 30-50%, beachfront adds 50-100%, brand name developers add 20-40%, facilities quality, floor level, unit size, and building age all affect pricing."
+      ]
+    ],
+    "ground_truth": [
+      "Property pricing in Phuket is affected by a sea view (adds 30-50%), beachfront location (adds 50-100%), brand name developers (adds 20-40%), quality of facilities, floor level, unit size, and the building's age."
+    ]
+  },
+  {
+    "question": [
+      "What are the advantages of Freehold (absolute) ownership?"
+    ],
+    "contexts": [
+      [
+        "Advantages [Freehold]: • Complete legal security • Maximum property value • Easier resale • Full control over property decisions"
+      ]
+    ],
+    "ground_truth": [
+      "The advantages of Freehold ownership include complete legal security, maximum property value, easier resale, and full control over property decisions."
+    ]
+  },
+  {
+    "question": [
+      "What is Withholding Tax and who typically pays it during a property transaction registration?"
+    ],
+    "contexts": [
+      [
+        "Withholding Tax Based on schedule Based on schedule Seller At registration"
+      ]
+    ],
+    "ground_truth": [
+      "The Withholding Tax is calculated based on a schedule and is paid by the **Seller** at the time of registration."
+    ]
+  },
+  {
+    "question": [
+      "What are the key requirements for a Thai company formed to hold land, besides the shareholding ratio?"
+    ],
+    "contexts": [
+      [
+        "Structure Requirements [Thai Company Structure]: • 51% Thai shareholding (minimum) • 49% foreign shareholding (maximum) • Minimum 3 shareholders • Thai shareholders must have genuine investment • Real business activity required",
+        "Ongoing Obligations: • Annual audited accounts • Tax filings (corporate and VAT) • Annual general meetings"
+      ]
+    ],
+    "ground_truth": [
+      "In addition to the 51% Thai shareholding, the company must have a minimum of **3 shareholders**, the Thai shareholders must have genuine investment, and the company must have **real business activity**. Ongoing obligations include annual audited accounts, tax filings, and annual general meetings."
+    ]
+  },
+  {
+    "question": [
+      "Which document confirms the ownership of a building on someone else's land, and what is its maximum term?"
+    ],
+    "contexts": [
+      [
+        "Superficies: Right to own buildings on someone else's land. Up to 30 years, renewable once. Building owner different from land owner."
+      ]
+    ],
+    "ground_truth": [
+      "The right to own buildings on someone else's land is confirmed by **Superficies**. The maximum term is **30 years**, renewable once."
+    ]
+  },
+  {
+    "question": [
+      "Which area in Phuket is characterized by 'luxury' style villas and international schools, and what is its price category?"
+    ],
+    "contexts": [
+      [
+        "Bang Tao: 8km beach, upscale area. Home to Laguna Phuket complex. Premium developments, golf courses, international schools. Family-friendly. Price: High. Rental yield: 5-7%. Best for: Luxury investment, family living."
+      ]
+    ],
+    "ground_truth": [
+      "The **Bang Tao** area is an upscale area featuring the Laguna Phuket complex, premium developments, golf courses, and international schools. Its price category is **High**."
+    ]
+  },
+  {
+    "question": [
+      "What is the difference between Sinking Fund and CAM Fee, and when are they typically paid?"
+    ],
+    "contexts": [
+      [
+        "Sinking Fund: One-time contribution for major repairs/replacements. Typically THB 500-1,000 per sqm. Paid at purchase. Managed by condominium juristic person.",
+        "Common Area Maintenance (CAM) Fee: Monthly/annual fee for building management, security, facilities, utilities. Usually THB 30-80 per sqm per month depending on building standards."
+      ]
+    ],
+    "ground_truth": [
+      "The **Sinking Fund** is a **one-time** contribution (THB 500-1,000/sqm) paid at purchase for major repairs/replacements. The **CAM Fee** (Common Area Maintenance) is a **monthly/annual** fee (THB 30-80/sqm per month) for the building's current management, security, and utilities."
+    ]
+  },
+  {
+    "question": [
+      "What are the two most affordable areas in Phuket for buying a condominium by price per square meter in 2025?"
+    ],
+    "contexts": [
+      [
+        "Area Condo (THB/sqm) Villa (THB/sqm) Notes",
+        "Kata/Karon 70,000-150,000 100,000-200,000 Established area",
+        "Rawai 60,000-120,000 80,000-150,000 Best value",
+        "Chalong 50,000-100,000 70,000-150,000 Non-beachfront"
+      ]
+    ],
+    "ground_truth": [
+      "The two most affordable areas in Phuket for buying condominiums in 2025 are **Chalong** (THB 50,000–100,000/sqm, non-beachfront) and **Rawai** (THB 60,000–120,000/sqm, noted as the best value)."
+    ]
+  }
+]

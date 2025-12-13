@@ -1,0 +1,436 @@
+[
+  {
+    "question": [
+      "What is the maximum foreign ownership quota for a condominium in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Foreigners may own freehold condominium units only within the 49% foreign ownership quota.",
+        "Quota is calculated by floor area, not number of units."
+      ]
+    ],
+    "ground_truth": [
+      "Thailand limits foreign freehold condominium ownership to 49% of the building’s saleable area."
+    ]
+  },
+  {
+    "question": [
+      "Can a foreigner directly own land in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Direct land ownership by foreigners is prohibited under the Land Code, except extremely rare high-net-worth cases.",
+        "Most foreigners use leasehold or company structures instead."
+      ]
+    ],
+    "ground_truth": [
+      "Foreigners cannot directly own land in Thailand, with very limited exceptions."
+    ]
+  },
+  {
+    "question": [
+      "What is the standard duration of a leasehold agreement in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Most leasehold agreements are registered for 30 years with options for two additional 30-year renewals.",
+        "Only the first term can be registered at the Land Office."
+      ]
+    ],
+    "ground_truth": [
+      "The standard leasehold term is 30 years, with possible renewals up to 90 years."
+    ]
+  },
+  {
+    "question": [
+      "What document is required when transferring money from abroad to purchase a condominium?"
+    ],
+    "contexts": [
+      [
+        "Foreign Exchange Transaction Form (FET) is required for transfers above USD 50,000.",
+        "It must be presented at the Land Office during freehold registration."
+      ]
+    ],
+    "ground_truth": [
+      "A Foreign Exchange Transaction (FET) form is required."
+    ]
+  },
+  {
+    "question": [
+      "What is a Chanote land title?"
+    ],
+    "contexts": [
+      [
+        "Chanote (Nor Sor 4 Jor) is the highest form of land title with GPS-based boundaries.",
+        "Allows full transfer, sale, and mortgage."
+      ]
+    ],
+    "ground_truth": [
+      "A Chanote is the most secure Thai land title, featuring precise surveyed boundaries."
+    ]
+  },
+  {
+    "question": [
+      "Which Phuket area is known for luxury properties and golf courses?"
+    ],
+    "contexts": [
+      [
+        "Bang Tao features an 8 km beach, upscale developments, Laguna complex, and golf courses.",
+        "It is considered a premium investment area."
+      ]
+    ],
+    "ground_truth": [
+      "Bang Tao is the Phuket area known for luxury property and golf facilities."
+    ]
+  },
+  {
+    "question": [
+      "What payment structure is common for off-plan properties in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Typical off-plan payments include 10% down, periodic installments during construction, and 70% at completion."
+      ]
+    ],
+    "ground_truth": [
+      "Off-plan properties usually require 10% down, staged installments, and final payment at completion."
+    ]
+  },
+  {
+    "question": [
+      "What is the sinking fund in condominium purchases?"
+    ],
+    "contexts": [
+      [
+        "A one-time payment used for major building repairs or replacements.",
+        "Commonly ranges 500–1,000 THB per sqm."
+      ]
+    ],
+    "ground_truth": [
+      "A sinking fund is a one-time contribution for long-term capital repairs in a condominium."
+    ]
+  },
+  {
+    "question": [
+      "What type of property ownership is allowed for foreigners without time limits?"
+    ],
+    "contexts": [
+      [
+        "Freehold ownership provides perpetual rights but is limited to condominium units for foreigners.",
+        "It represents absolute ownership with no time restriction."
+      ]
+    ],
+    "ground_truth": [
+      "Foreigners may hold freehold ownership only for condominium units within the quota."
+    ]
+  },
+  {
+    "question": [
+      "What are common risks of leasehold property in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Leasehold is time-limited and renewal is not guaranteed.",
+        "Unregistered leases over 3 years are only recognized for 3 years."
+      ]
+    ],
+    "ground_truth": [
+      "Leasehold risks include time limits, uncertain renewals, and reduced security if not properly registered."
+    ]
+  },
+  {
+    "question": [
+      "Which areas in Phuket offer the best rental yields according to the guide?"
+    ],
+    "contexts": [
+      [
+        "Patong offers yields of 6–9%.",
+        "Rawai yields range from 7–9%."
+      ]
+    ],
+    "ground_truth": [
+      "Patong and Rawai are highlighted as strong rental-yield areas."
+    ]
+  },
+  {
+    "question": [
+      "What is required to register a condominium under Thai law?"
+    ],
+    "contexts": [
+      [
+        "Section 6 of the Condominium Act requires registration with the Land Department.",
+        "Registered condos provide individual title deeds."
+      ]
+    ],
+    "ground_truth": [
+      "A condominium must be registered with the Land Department to issue unit title deeds."
+    ]
+  },
+  {
+    "question": [
+      "Which visa offers a 10-year stay for high-potential foreigners?"
+    ],
+    "contexts": [
+      [
+        "The LTR visa provides 10 years (5+5).",
+        "Includes categories such as Wealthy Global Citizen and Work-from-Thailand Professional."
+      ]
+    ],
+    "ground_truth": [
+      "The Long-Term Resident (LTR) visa provides a 10-year stay."
+    ]
+  },
+  {
+    "question": [
+      "What is a superficies right?"
+    ],
+    "contexts": [
+      [
+        "Superficies allows ownership of a building separate from the land.",
+        "It can be granted for up to 30 years and renewed once."
+      ]
+    ],
+    "ground_truth": [
+      "Superficies is the right to own buildings on someone else’s land for up to 30 years."
+    ]
+  },
+  {
+    "question": [
+      "How is rental yield calculated?"
+    ],
+    "contexts": [
+      [
+        "Rental yield formula: annual rent divided by property value multiplied by 100.",
+        "Phuket average is 4–8% for condos."
+      ]
+    ],
+    "ground_truth": [
+      "Rental yield = (Annual Rent / Property Value) × 100."
+    ]
+  },
+  {
+    "question": [
+      "Which Phuket area is known for nightlife and the highest tourist traffic?"
+    ],
+    "contexts": [
+      [
+        "Patong is the busiest area with entertainment and nightlife (Bangla Road).",
+        "It attracts high tourist volume."
+      ]
+    ],
+    "ground_truth": [
+      "Patong is Phuket’s nightlife and high-traffic tourist hub."
+    ]
+  },
+  {
+    "question": [
+      "What is the typical foreign money transfer requirement for a condo purchase?"
+    ],
+    "contexts": [
+      [
+        "Minimum USD 50,000 must be transferred from abroad for FET issuance.",
+        "Funds must be converted to THB by a Thai bank."
+      ]
+    ],
+    "ground_truth": [
+      "Foreign condo buyers must transfer at least USD 50,000 from abroad for the required FET form."
+    ]
+  },
+  {
+    "question": [
+      "What are the advantages of freehold ownership?"
+    ],
+    "contexts": [
+      [
+        "Provides perpetual rights, full control, easier resale.",
+        "Considered the most secure ownership type."
+      ]
+    ],
+    "ground_truth": [
+      "Freehold offers perpetual control, strong security, and high resale value."
+    ]
+  },
+  {
+    "question": [
+      "What limitation applies to foreign heirs of condominium units?"
+    ],
+    "contexts": [
+      [
+        "Foreign heirs must qualify under Section 19 to register ownership.",
+        "If they don't qualify, the unit must be sold within one year."
+      ]
+    ],
+    "ground_truth": [
+      "Foreign heirs must meet Section 19 criteria or sell the unit within one year."
+    ]
+  },
+  {
+    "question": [
+      "What are common Thai land measurement units?"
+    ],
+    "contexts": [
+      [
+        "1 Rai = 1,600 sqm.",
+        "1 Ngan = 400 sqm.",
+        "1 Sq Wah = 4 sqm."
+      ]
+    ],
+    "ground_truth": [
+      "Key units: Rai (1,600 sqm), Ngan (400 sqm), and Sq Wah (4 sqm)."
+    ]
+  },
+  {
+    "question": [
+      "What distinguishes a condo from an apartment in Thailand?"
+    ],
+    "contexts": [
+      [
+        "Condos are registered under the Condominium Act and provide individual ownership.",
+        "Apartments are not registered and provide only rental/contractual rights."
+      ]
+    ],
+    "ground_truth": [
+      "Condos offer individual title deeds; apartments do not and cannot be owned freehold."
+    ]
+  },
+  {
+    "question": [
+      "What is the CAM fee?"
+    ],
+    "contexts": [
+      [
+        "CAM (Common Area Maintenance) fee covers building management and facilities upkeep.",
+        "Ranges roughly 30–80 THB per sqm monthly."
+      ]
+    ],
+    "ground_truth": [
+      "The CAM fee is a recurring payment for maintaining common facilities and services."
+    ]
+  },
+  {
+    "question": [
+      "What is the typical cost of living for a moderate lifestyle in Phuket?"
+    ],
+    "contexts": [
+      [
+        "Moderate lifestyle estimated at around 71,500 THB per month.",
+        "Includes rent, utilities, food, transportation."
+      ]
+    ],
+    "ground_truth": [
+      "A moderate monthly cost of living in Phuket is approximately 71,500 THB."
+    ]
+  },
+  {
+    "question": [
+      "What risks exist with using nominee shareholders in a Thai company structure?"
+    ],
+    "contexts": [
+      [
+        "Nominee structures are illegal if shareholders are not genuine.",
+        "Authorities increased scrutiny in 2025."
+      ]
+    ],
+    "ground_truth": [
+      "Nominee shareholder structures may be deemed illegal and lead to forced land divestment."
+    ]
+  },
+  {
+    "question": [
+      "What is Nor Sor 3 Gor?"
+    ],
+    "contexts": [
+      [
+        "A mid-level land title with surveyed boundaries but less precise than Chanote.",
+        "Can be upgraded to Chanote."
+      ]
+    ],
+    "ground_truth": [
+      "Nor Sor 3 Gor is a secure land title with surveyed boundaries, upgradeable to Chanote."
+    ]
+  },
+  {
+    "question": [
+      "Which Phuket areas are considered value zones for investment?"
+    ],
+    "contexts": [
+      [
+        "Rawai is medium-low price with strong rental yields.",
+        "Chalong offers good central location value."
+      ]
+    ],
+    "ground_truth": [
+      "Rawai and Chalong are identified as value-focused investment areas."
+    ]
+  },
+  {
+    "question": [
+      "What tax applies when selling a freehold property held for less than five years?"
+    ],
+    "contexts": [
+      [
+        "Special Business Tax of 3.3% applies if property is sold within 5 years.",
+        "Stamp duty is used only if SBT does not apply."
+      ]
+    ],
+    "ground_truth": [
+      "A 3.3% Special Business Tax applies when selling a freehold held under five years."
+    ]
+  },
+  {
+    "question": [
+      "What is a usufruct right?"
+    ],
+    "contexts": [
+      [
+        "A usufruct grants a lifetime right to use the property and receive income.",
+        "Cannot be sold and ends at death."
+      ]
+    ],
+    "ground_truth": [
+      "Usufruct gives lifetime usage and income rights without ownership."
+    ]
+  },
+  {
+    "question": [
+      "Which Phuket area provides the quietest high-end environment?"
+    ],
+    "contexts": [
+      [
+        "Surin is described as a sophisticated, quieter luxury beach area with exclusive villas.",
+        "Known for upscale dining and boutique hotels."
+      ]
+    ],
+    "ground_truth": [
+      "Surin is noted as a quiet, high-end beach area."
+    ]
+  },
+  {
+    "question": [
+      "What must be registered for leases over 3 years?"
+    ],
+    "contexts": [
+      [
+        "Leases longer than 3 years must be in writing and registered at the Land Office.",
+        "Unregistered long leases are legally valid only for 3 years."
+      ]
+    ],
+    "ground_truth": [
+      "Leases exceeding 3 years must be registered with the Land Office."
+    ]
+  },
+  {
+    "question": [
+      "Which unit is used for Thai land area calculations?"
+    ],
+    "contexts": [
+      [
+        "Land is commonly measured in Rai, Ngan, and Sq Wah.",
+        "1 Rai = 4 Ngan."
+      ]
+    ],
+    "ground_truth": [
+      "Thai land area is primarily measured in Rai, Ngan, and Square Wah."
+    ]
+  }
+]
