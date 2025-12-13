@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated_at": "2025-12-13T01:09:43.102Z",
+  "generated_at": "2025-12-13T01:48:05.715Z",
   "components": [
     "apartment_cards",
     "villa_cards",
@@ -9,7 +9,9 @@
     "summary",
     "text",
     "comparison_table",
-    "map"
+    "map",
+    "amenities",
+    "timeline"
   ],
   "schemas": {
     "apartment_cards": {
@@ -524,6 +526,117 @@
         ],
         "additionalProperties": false,
         "definitions": {}
+      }
+    },
+    "amenities": {
+      "type": "amenities",
+      "name": "Amenities List",
+      "description": "Список удобств и сервисов проекта",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/AmenitiesCategory"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "definitions": {
+          "AmenitiesCategory": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "name",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "timeline",
+      "name": "Deal Timeline",
+      "description": "Этапы и прогресс сделки",
+      "props_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/TimelineStep"
+            }
+          },
+          "currentStep": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "steps"
+        ],
+        "additionalProperties": false,
+        "definitions": {
+          "TimelineStep": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "status": {
+                "$ref": "#/definitions/TimelineStepStatus"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "status"
+            ],
+            "additionalProperties": false
+          },
+          "TimelineStepStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "current",
+              "completed"
+            ]
+          }
+        }
       }
     }
   }

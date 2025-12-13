@@ -23,26 +23,36 @@ async def retriever_tool(
     k: int = 5,
     collection: Optional[str] = None,
 ) -> str:
-    """Search documents in vector store by semantic similarity.
+    """Поиск информации в базе знаний по семантическому сходству.
 
-    Use this tool to find relevant information from the knowledge base.
-    The tool searches through indexed documents and returns the most
-    relevant passages based on the query.
+    Используй этот инструмент для получения информации о:
+    - Проектах и застройщиках (описания, характеристики, условия)
+    - Районах и локациях (инфраструктура, преимущества, особенности)
+    - Правилах покупки недвижимости для иностранцев
+    - Налогах и сборах при покупке/владении
+    - Визовых программах для инвесторов
+    - Рынке недвижимости в целом
 
     Args:
-        query: Search query - what information you're looking for.
-               Be specific and descriptive for better results.
-        k: Number of documents to return (default: 5, max: 20)
-        collection: Optional collection name to search in.
-                   If not specified, uses default collection.
+        query: Поисковый запрос — формулируй конкретно и развёрнуто для лучших результатов.
+               Примеры хороших запросов:
+               - "инфраструктура и удобства района Dubai Marina"
+               - "налоги при покупке недвижимости в Таиланде для иностранцев"
+               - "условия рассрочки от застройщика Emaar"
+        k: Количество документов для возврата (по умолчанию 5, максимум 20)
+        collection: Коллекция для поиска (опционально, по умолчанию — основная)
 
     Returns:
-        Formatted string with found documents and their content.
+        Форматированный текст с найденными документами и их содержимым.
 
-    Examples:
-        - "What amenities does Marina Bay project have?"
-        - "Tell me about payment plans for Dubai properties"
-        - "What are the nearby schools in JVC area?"
+    Когда использовать:
+        ✓ Клиент спрашивает о конкретном проекте или застройщике
+        ✓ Вопросы о районах, инфраструктуре, локациях
+        ✓ Вопросы о налогах, визах, правилах покупки
+        ✓ Общие вопросы о рынке недвижимости
+
+    Когда НЕ использовать:
+        ✗ Поиск конкретных апартаментов по параметрам → используй search_apartments
     """
     logger.info(f"Retriever tool called", query=query[:100], k=k)
 

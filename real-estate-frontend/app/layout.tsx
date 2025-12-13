@@ -16,8 +16,8 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Globrix | Premium Real Estate Intelligence",
-  description: "AI-Powered Real Estate Deal Management Platform",
+  title: "Globrix | Управление сделками с недвижимостью",
+  description: "ИИ-платформа для работы с недвижимостью",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSerif.variable} ${plusJakarta.variable}`}>
+    <html lang="ru" className={`${dmSerif.variable} ${plusJakarta.variable}`}>
       <body className="noise antialiased min-h-screen">
         {children}
       </body>

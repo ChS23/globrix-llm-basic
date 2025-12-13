@@ -1,0 +1,63 @@
+{
+  "type": "timeline",
+  "name": "Deal Timeline",
+  "description": "Этапы и прогресс сделки",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/TimelineStep"
+        }
+      },
+      "currentStep": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "steps"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "TimelineStep": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/definitions/TimelineStepStatus"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "TimelineStepStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "current",
+          "completed"
+        ]
+      }
+    }
+  }
+}

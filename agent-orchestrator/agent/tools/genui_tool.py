@@ -27,35 +27,38 @@ def get_genui_agent() -> GenUIAgent:
 
 @tool
 async def genui_tool(deal_id: str, instruction: str) -> str:
-    """Transform UI state for a deal page based on instruction.
+    """Обновление визуального интерфейса страницы сделки.
 
-    This tool invokes GenUI Agent which:
-    1. Reads current UI state from Supabase
-    2. Analyzes the instruction using LLM
-    3. Generates new UI blocks
-    4. Validates blocks against component schemas
-    5. Saves updated state to Supabase
+    Этот инструмент вызывает GenUI Agent для трансформации UI:
+    1. Загружает текущее состояние страницы из базы данных
+    2. Анализирует инструкцию с помощью LLM
+    3. Генерирует обновлённые UI блоки
+    4. Валидирует блоки по схемам компонентов
+    5. Сохраняет новое состояние
 
     Args:
-        deal_id: UUID сделки
-        instruction: Инструкция что изменить в UI
-                    (например: "Добавь карточки найденных апартаментов")
+        deal_id: UUID сделки (используй deal_id из контекста сообщения)
+        instruction: Детальная инструкция что изменить в UI.
+
+                    ВАЖНО для апартаментов:
+                    Передавай РЕАЛЬНЫЕ данные из search_apartments в формате:
+                    "Добавь карточки апартаментов: [
+                      {{"id": "реальный_id", "type": "2br", "area": 85, "price": 1500000, "currency": "AED", "status": "available"}},
+                      ...
+                    ]"
 
     Returns:
-        Результат в виде строки для главного агента
+        Результат операции: успех с описанием изменений или ошибка
 
-    Examples:
-        >>> await genui_tool(
-        ...     deal_id="abc-123",
-        ...     instruction="Add apartment cards with search results"
-        ... )
-        "✅ Updated deal page: added apartment_cards block with 5 items"
+    Когда использовать:
+        ✓ После search_apartments — чтобы показать найденные апартаменты на странице
+        ✓ Клиент просит "покажи", "выведи", "отобрази" результаты
+        ✓ Нужно обновить фильтры или другие UI элементы
 
-        >>> await genui_tool(
-        ...     deal_id="abc-123",
-        ...     instruction="Show filters: location=Dubai Marina, bedrooms=2br"
-        ... )
-        "✅ Updated deal page: added filters block"
+    Критически важно:
+        - Передавай в instruction ТОЛЬКО реальные данные из результатов поиска
+        - НЕ выдумывай id, цены, площади или характеристики
+        - Используй deal_id из контекста [Context: Current deal_id = ...]
     """
     logger.info(f"GenUI tool called for deal {deal_id}")
 

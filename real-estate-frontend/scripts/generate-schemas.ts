@@ -71,6 +71,18 @@ const COMPONENTS = [
     description: "Карта с отображением объектов",
     propsType: "MapProps",
   },
+  {
+    type: "amenities",
+    name: "Amenities List",
+    description: "Список удобств и сервисов проекта",
+    propsType: "AmenitiesListProps",
+  },
+  {
+    type: "timeline",
+    name: "Deal Timeline",
+    description: "Этапы и прогресс сделки",
+    propsType: "TimelineProps",
+  },
 ];
 
 // === Main Logic ===

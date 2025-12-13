@@ -119,24 +119,35 @@ class GenUIAgent:
             current_blocks_summary = self._summarize_blocks(state["current_blocks"])
             available_components = list(state["component_schemas"].keys())
 
-            prompt = f"""You are GenUI Agent. Your job is to transform UI state for a real estate deal page.
+            prompt = f"""# Роль
+Ты — GenUI Agent, специализированный агент для трансформации UI страницы сделки с недвижимостью.
 
-**Current UI blocks:**
+# Текущее состояние страницы
 {current_blocks_summary}
 
-**Available components:**
+# Доступные UI компоненты
 {', '.join(available_components)}
 
-**Instruction from Realtor Agent:**
+# Инструкция от главного агента
 {state['instruction']}
 
-**Your task:**
-Analyze the instruction and decide what UI changes are needed.
-Provide a brief reasoning about what blocks to add, modify, or remove.
+# Твоя задача
+Проанализируй инструкцию и определи какие МИНИМАЛЬНЫЕ изменения в UI необходимы:
+1. Какие блоки добавить?
+2. Какие блоки обновить?
+3. Какие блоки ТОЧНО нужно удалить? (только если явно указано!)
 
-Respond in this format:
-REASONING: <your analysis>
-ACTIONS: <list of actions like "add apartment_cards block with 5 items", "update filters block", etc.>
+# ВАЖНЫЕ ПРАВИЛА
+- СОХРАНЯЙ ВСЕ существующие блоки, которые не затрагиваются инструкцией!
+- Если инструкция про апартаменты — НЕ трогай текстовые блоки, фильтры и т.д.
+- "Оставь топ 3" = измени только items в apartment_cards, сохрани остальные блоки
+- "Покажи только X" = фильтруй данные внутри блока, НЕ удаляй другие блоки
+- Если в инструкции есть данные апартаментов — используй их БЕЗ ИЗМЕНЕНИЙ
+- Не выдумывай данные (id, цены, площади)
+
+# Формат ответа
+REASONING: <твой анализ: что менять, что сохранить>
+ACTIONS: <список действий, например: "обновить apartment_cards (оставить 3 из 8), сохранить text_block">
 """
 
             response = await self.llm.ainvoke(prompt)
@@ -168,46 +179,66 @@ ACTIONS: <list of actions like "add apartment_cards block with 5 items", "update
                 for k, v in state["component_schemas"].items()
             }
 
-            prompt = f"""You are GenUI Agent. Generate updated UI blocks for a real estate deal page.
+            prompt = f"""# Роль
+Ты — GenUI Agent. Сгенерируй обновлённые UI блоки для страницы сделки с недвижимостью.
 
-**Current blocks (JSON):**
+# Текущие блоки на странице
 ```json
 {current_blocks_json}
 ```
 
-**Component schemas:**
+# Схемы компонентов (TypeScript типы)
 ```json
 {schemas_json}
 ```
 
-**Instruction:**
+# Инструкция
 {state['instruction']}
 
-**Your reasoning:**
+# Твой анализ
 {state.get('reasoning', '')}
 
-**Generate updated blocks:**
-Return ONLY a valid JSON array of blocks. Each block must have:
-- "type": one of the available component types
-- "props": matching the component schema
+# КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА
 
-Example:
+## 1. СОХРАНЯЙ СУЩЕСТВУЮЩИЕ БЛОКИ
+- ВСЕ текущие блоки должны быть включены в ответ, если инструкция явно не требует их удалить
+- Если инструкция касается только apartment_cards — сохрани все остальные блоки (text_block, filters и т.д.)
+- Если инструкция говорит "оставь только X" или "покажи только X" — это касается ТОЛЬКО данных внутри блока, НЕ удаляй другие типы блоков
+
+## 2. Используй ТОЛЬКО реальные данные из инструкции
+- Если в инструкции есть список апартаментов — копируй их точно
+- НЕ выдумывай id, цены, площади или характеристики
+- НЕ добавляй поля images с выдуманными URL
+
+## 3. Структура apartment_cards
+- items: массив апартаментов
+- Каждый апартамент: id, type, area, price, currency, status
+- Опционально: floor, bedrooms, bathrooms, developer, completion_date
+
+## 4. Валидация
+- type должен быть из доступных компонентов
+- props должны соответствовать схеме компонента
+
+# Формат ответа
+Верни ТОЛЬКО валидный JSON массив со ВСЕМИ блоками (существующими + изменёнными), без markdown и пояснений.
+
+Пример (если на странице был text_block и нужно добавить apartment_cards):
 [
   {{
-    "type": "filters",
-    "props": {{ "location": "Dubai Marina", "bedrooms": "2br" }}
+    "type": "text_block",
+    "props": {{ "content": "существующий текст сохраняется" }}
   }},
   {{
     "type": "apartment_cards",
     "props": {{
       "items": [
-        {{ "id": "apt-1", "type": "2br", "area": 120, "price": 1500000, "status": "available", "project_id": "proj-1" }}
+        {{"id": "APT-001", "type": "2br", "area": 85, "price": 1500000, "currency": "AED", "status": "available"}}
       ]
     }}
   }}
 ]
 
-Return ONLY the JSON array, no other text.
+JSON:
 """
 
             response = await self.llm.ainvoke(prompt)

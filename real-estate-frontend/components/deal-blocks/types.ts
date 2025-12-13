@@ -120,6 +120,37 @@ export interface MapProps {
   zoom?: number;
 }
 
+// === Amenities ===
+
+export interface AmenitiesCategory {
+  name: string;
+  items: string[];
+}
+
+export interface AmenitiesListProps {
+  title?: string;
+  items?: string[];
+  categories?: AmenitiesCategory[];
+}
+
+// === Timeline ===
+
+export type TimelineStepStatus = "pending" | "current" | "completed";
+
+export interface TimelineStep {
+  id: string;
+  title: string;
+  description?: string;
+  date?: string;
+  status: TimelineStepStatus;
+}
+
+export interface TimelineProps {
+  title?: string;
+  steps: TimelineStep[];
+  currentStep?: string;
+}
+
 // === Block Types ===
 
 export type BlockType =
@@ -130,7 +161,9 @@ export type BlockType =
   | "summary"
   | "text"
   | "comparison_table"
-  | "map";
+  | "map"
+  | "amenities"
+  | "timeline";
 
 export interface Block<T = any> {
   type: BlockType;

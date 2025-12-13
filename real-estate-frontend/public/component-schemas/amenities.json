@@ -1,0 +1,48 @@
+{
+  "type": "amenities",
+  "name": "Amenities List",
+  "description": "Список удобств и сервисов проекта",
+  "props_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "categories": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/AmenitiesCategory"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "definitions": {
+      "AmenitiesCategory": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "items"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

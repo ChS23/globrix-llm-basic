@@ -10,7 +10,7 @@ interface Message {
 
 interface ChatPanelProps {
   dealId: string;
-  onUpdate?: () => void; // Callback для обновления страницы после изменений
+  onUpdate?: () => void;
 }
 
 export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
@@ -18,8 +18,8 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -28,12 +28,18 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  // Auto-focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleSend = async (messageText?: string) => {
+    const textToSend = messageText || input;
+    if (!textToSend.trim() || isLoading) return;
 
     const userMessage: Message = {
       role: "user",
-      content: input,
+      content: textToSend,
       timestamp: new Date(),
     };
 
@@ -42,13 +48,13 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual backend URL from env
       const response = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           thread_id: dealId,
-          message: input,
+          deal_id: dealId,
+          message: textToSend,
         }),
       });
 
@@ -68,7 +74,7 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
 
       // Trigger page update if UI was modified
       if (onUpdate) {
-        onUpdate();
+        setTimeout(() => onUpdate(), 500);
       }
     } catch (error) {
       console.error("Chat error:", error);
@@ -93,60 +99,112 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white border-l border-gray-200">
+    <div className="flex flex-col h-full bg-[var(--background-elevated)] border-l border-[var(--border)]">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Chat Assistant</h2>
-        <p className="text-sm text-gray-500">Deal ID: {dealId}</p>
+      <div className="flex-shrink-0 p-5 border-b border-[var(--border)]">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-dark)] to-[var(--accent-light)] flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--background)]">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[var(--success)] border-2 border-[var(--background-elevated)]" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-[var(--foreground)]">ИИ-Ассистент</h2>
+            <p className="text-xs text-[var(--foreground-subtle)]">Онлайн</p>
+          </div>
+        </div>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            <p className="mb-2">Start a conversation</p>
-            <p className="text-sm">
-              Try: &quot;Find 2BR apartments in Dubai Marina under 2M AED&quot;
-            </p>
-          </div>
-        )}
+        {messages.length === 0 && <WelcomeMessage onSend={(text) => handleSend(text)} />}
 
         {messages.map((message, index) => (
           <MessageBubble key={index} message={message} />
         ))}
 
-        {isLoading && (
-          <div className="flex items-center gap-2 text-gray-500">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
-            <span className="text-sm">Thinking...</span>
-          </div>
-        )}
+        {isLoading && <TypingIndicator />}
 
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex gap-2">
+      <div className="flex-shrink-0 p-4 border-t border-[var(--border)]">
+        <div className="relative">
           <textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Type your message..."
-            className="flex-1 resize-none rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Спросите что угодно..."
+            className="w-full resize-none rounded-xl bg-[var(--background-card)] border border-[var(--border)] px-4 py-3 pr-12 text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)] transition-all"
             rows={2}
             disabled={isLoading}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-3 bottom-3 w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--background)] flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[var(--accent-light)] transition-colors"
           >
-            Send
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+            </svg>
           </button>
         </div>
+        <p className="mt-2 text-xs text-[var(--foreground-subtle)] text-center">
+          Enter — отправить, Shift + Enter — новая строка
+        </p>
       </div>
     </div>
+  );
+}
+
+function WelcomeMessage({ onSend }: { onSend: (text: string) => void }) {
+  return (
+    <div className="py-8 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-[var(--background-card)] border border-[var(--border)] flex items-center justify-center mx-auto mb-4">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--accent)]">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <h3 className="text-lg mb-2 text-[var(--foreground)]">Начните диалог</h3>
+      <p className="text-sm text-[var(--foreground-muted)] mb-6 leading-relaxed max-w-[280px] mx-auto">
+        Я помогу найти объекты, отвечу на вопросы о недвижимости и помогу вести сделки.
+      </p>
+      <div className="space-y-2">
+        <QuickAction onSend={onSend}>Найди доступные двушки</QuickAction>
+        <QuickAction onSend={onSend}>Покажи пентхаусы до 5М</QuickAction>
+        <QuickAction onSend={onSend}>Какие правила налогов?</QuickAction>
+      </div>
+    </div>
+  );
+}
+
+function QuickAction({ children, onSend }: { children: React.ReactNode; onSend: (text: string) => void }) {
+  const handleClick = () => {
+    if (typeof children === "string") {
+      onSend(children);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="w-full px-4 py-2.5 rounded-xl bg-[var(--background-card)] border border-[var(--border)] text-sm text-[var(--foreground-muted)] text-left hover:border-[var(--border-accent)] hover:text-[var(--foreground)] transition-all group"
+    >
+      <span className="flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--accent)] opacity-50 group-hover:opacity-100 transition-opacity">
+          <polyline points="9,18 15,12 9,6"/>
+        </svg>
+        {children}
+      </span>
+    </button>
   );
 }
 
@@ -154,23 +212,41 @@ function MessageBubble({ message }: { message: Message }) {
   const isUser = message.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} animate-fade-in-up`}>
       <div
-        className={`max-w-[80%] rounded-lg px-4 py-2 ${
+        className={`max-w-[85%] rounded-2xl px-4 py-3 ${
           isUser
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-900"
+            ? "bg-[var(--accent)] text-[var(--background)] rounded-br-md"
+            : "bg-[var(--background-card)] border border-[var(--border)] text-[var(--foreground)] rounded-bl-md"
         }`}
       >
-        <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+        <div className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</div>
         <div
-          className={`text-xs mt-1 ${
-            isUser ? "text-blue-100" : "text-gray-500"
+          className={`text-[10px] mt-2 ${
+            isUser ? "text-[var(--background)]/60" : "text-[var(--foreground-subtle)]"
           }`}
         >
-          {message.timestamp.toLocaleTimeString()}
+          {formatTime(message.timestamp)}
         </div>
       </div>
     </div>
   );
+}
+
+function TypingIndicator() {
+  return (
+    <div className="flex justify-start animate-fade-in">
+      <div className="bg-[var(--background-card)] border border-[var(--border)] rounded-2xl rounded-bl-md px-4 py-3">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "0ms" }} />
+          <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "150ms" }} />
+          <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

@@ -285,15 +285,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.5s ease-out both;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out both;
 }
 
 .animate-fade-in-scale {
-  animation: fadeInScale 0.4s ease-out forwards;
+  animation: fadeInScale 0.4s ease-out both;
 }
 
 .animate-shimmer {
@@ -368,6 +368,16 @@ h1, h2, h3, h4, h5, h6 {
 
 /* === RESPONSIVE === */
 
+/* Tablet */
+@media (max-width: 1024px) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    padding: 10px 20px;
+  }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   :root {
     --radius-lg: 16px;
@@ -376,5 +386,116 @@ h1, h2, h3, h4, h5, h6 {
 
   body {
     font-size: 14px;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+
+  .badge {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 14px;
+    width: 100%;
+  }
+}
+
+/* === MOBILE UTILITIES === */
+
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* === SAFE AREA (for notched phones) === */
+
+@supports (padding: max(0px)) {
+  .safe-area-inset-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .safe-area-inset-top {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+}
+
+/* === TOUCH OPTIMIZATIONS === */
+
+@media (hover: none) and (pointer: coarse) {
+  .card-hover:hover {
+    transform: none;
+    border-color: var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-hover:active {
+    transform: scale(0.98);
+    border-color: var(--border-accent);
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
   }
 }
