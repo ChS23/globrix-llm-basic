@@ -1,0 +1,67 @@
+{
+  "timestamp": "2025-12-13T13:54:31.463052",
+  "mode": "retrieval",
+  "dataset": "/tmp/small_dataset.json",
+  "summary": {
+    "total_tests": 3,
+    "passed": 0,
+    "failed": 3
+  },
+  "average_metrics": {
+    "Contextual Precision": 0.9166666666666666,
+    "Contextual Relevancy": 0.22705882352941176
+  },
+  "detailed_results": [
+    {
+      "test_index": 0,
+      "input": "What are the key characteristics of Freehold (absolute) ownership in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are well-ranked, with the first node providing key characteristics of freehold ownership, stating that 'Freehold ownership represents absolute ownership of"
+        },
+        "Contextual Relevancy": {
+          "score": 0.27450980392156865,
+          "success": false,
+          "reason": "The score is 0.27 because while there are relevant statements such as 'Freehold ownership represents absolute ownership of property without time limitation' and 'The owner possesses complete rights to"
+        }
+      }
+    },
+    {
+      "test_index": 1,
+      "input": "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.9166666666666666,
+          "success": true,
+          "reason": "The score is 0.92 because the relevant nodes are well-ranked, with the first node providing a direct answer about the standard structure of lease agreements, stating that 'the most common structure is"
+        },
+        "Contextual Relevancy": {
+          "score": 0.24,
+          "success": false,
+          "reason": "The score is 0.24 because while there are relevant statements such as 'Leasehold represents a long-term rental arrangement where the lessee gains rights to use and occupy property for a specified peri"
+        }
+      }
+    },
+    {
+      "test_index": 2,
+      "input": "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calcula...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear answer about the maximum foreign ownership quota, stating that 'Maximum: 49% o"
+        },
+        "Contextual Relevancy": {
+          "score": 0.16666666666666666,
+          "success": false,
+          "reason": "The score is 0.17 because while the retrieval context includes relevant statements such as 'Foreign Ownership Quota: Maximum: 49% of total saleable area in any condominium' and 'Calculated by floor ar"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,390 @@
+{
+  "timestamp": "2025-12-13T21:41:50.182982",
+  "mode": "custom",
+  "dataset": "/tmp/small_test.json",
+  "summary": {
+    "total_tests": 10,
+    "passed": 0,
+    "failed": 10
+  },
+  "average_metrics": {
+    "Property Info Completeness [GEval]": 0.0011753519225971086,
+    "Legal Accuracy [GEval]": 0.6703201241365119,
+    "Price Information Accuracy [GEval]": 0.13256894182036694,
+    "Location Specificity [GEval]": 0.0008444502142334195,
+    "Investment Advice Quality [GEval]": 0.13956310941229993,
+    "Language Appropriateness [GEval]": 0.8661253435261129
+  },
+  "detailed_results": [
+    {
+      "test_index": 0,
+      "input": "What are the key characteristics of Freehold (absolute) ownership in Thailand?",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.005015139046505355,
+          "success": false,
+          "reason": "The response does not include any information about the property's location, price, size, or amenities, which are all critical elements outlined in the evaluation steps. It focuses solely on the chara"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.5443158563201127,
+          "success": false,
+          "reason": "The response provides a general overview of freehold property characteristics in Thailand, which aligns with the legal framework. However, it lacks specific references to current Thai real estate laws"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not provide any price information, which is essential for evaluating the currency format, numerical accuracy, validity against reliable sources, and relevance to the context. Without"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city name, district name, or street details, which are essential for scoring positive points based on the evaluation steps. It focuses solely on the characte"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.2717782170026505,
+          "success": false,
+          "reason": "The response provides a general overview of freehold property characteristics in Thailand but lacks specific metrics related to ROI and rental yield, which are crucial for potential investors. Additio"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8651354871433913,
+          "success": false,
+          "reason": "The language used in the output is clear and easily understandable, making it suitable for the target audience interested in real estate. The tone is professional, avoiding any slang or casual express"
+        }
+      }
+    },
+    {
+      "test_index": 1,
+      "input": "What is a Chanote and why is it considered the 'gold standard' for land titles in Thailand?",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps. It fails to mention the property's location, price, size, or any amenities, focusing instead on the legal aspects of land titles in Thailand "
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6141409380697715,
+          "success": false,
+          "reason": "The response accurately describes the Chanote title as the highest form of land title in Thailand, highlighting its legal significance and benefits. However, it lacks cross-referencing with official T"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not provide any price information, which is essential for evaluating the currency format, numerical accuracy, or comparison against reliable sources. Additionally, there is no contex"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not include any specific city name, district, or street names, which are essential elements for a complete location detail as per the evaluation steps. It focuses solely on the Chano"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps, lacking specific metrics related to ROI, rental yield information, or insights on market trends. It focuses solely on the legal aspects of th"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.893245331496086,
+          "success": false,
+          "reason": "The language used in the output is clear and easily understandable, making it suitable for the target audience. The tone is professional, avoiding slang and maintaining formality throughout. The vocab"
+        }
+      }
+    },
+    {
+      "test_index": 2,
+      "input": "What is the LTR Visa (Long-Term Resident Visa) and which of its categories were updated in 2025?",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to property details, such as location, price, size, or amenities. Instead, it focuses on visa categories and requirements, which are i"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6088113027401796,
+          "success": false,
+          "reason": "The response provides detailed information about the LTR Visa categories and their requirements, which is relevant to real estate scenarios in Thailand. However, it lacks verification against official"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.3901121902629359,
+          "success": false,
+          "reason": "The response does not provide any price information in a currency format, nor does it include numerical values that can be verified for accuracy. Additionally, there is no comparison against reliable "
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city, district, or street name, which are essential for scoring based on the evaluation steps. It focuses solely on the details of the LTR Visa without provi"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.18555297306840196,
+          "success": false,
+          "reason": "The response provides some financial thresholds for the LTR Visa categories, such as minimum asset requirements and income levels, but lacks specific metrics related to ROI, rental yield information, "
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8077621118793928,
+          "success": false,
+          "reason": "The language used in the Actual Output is clear and easily understandable, making it accessible for the target audience interested in the LTR Visa. The tone is professional, avoiding slang and maintai"
+        }
+      }
+    },
+    {
+      "test_index": 3,
+      "input": "How is land area in Thailand determined using traditional units, and what is the conversion of 1 Rai...",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to property listings. It fails to mention the property's location, price, size, or amenities, focusing instead on explaining tradition"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6843880556511731,
+          "success": false,
+          "reason": "The response accurately describes the traditional units of land measurement in Thailand and provides a clear formula for converting these units into square meters. However, it lacks verification again"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.10664435214756081,
+          "success": false,
+          "reason": "The response does not provide any price information, which is essential for evaluating the currency format, numerical accuracy, or comparison against reliable sources. It focuses solely on land measur"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city, district, or street name, which are essential for scoring based on the evaluation steps. It focuses solely on the measurement units used in Thailand wi"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to investment considerations such as ROI metrics, rental yield information, or market trends. It solely focuses on explaining land mea"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.881757447397119,
+          "success": false,
+          "reason": "The response is clear and easily understandable, effectively explaining the traditional land measurement units in Thailand. The tone is professional, using formal language without slang. The vocabular"
+        }
+      }
+    },
+    {
+      "test_index": 4,
+      "input": "What are the current (2025) disadvantages of owning land through a Thai Company Structure?",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to property details such as location, price, size, or amenities. It focuses solely on the disadvantages of owning land through a Thai "
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6229558210079724,
+          "success": false,
+          "reason": "The response provides a detailed overview of the disadvantages of owning land through a Thai company structure, which aligns with the comprehensiveness requirement. However, it lacks verification agai"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.05118969832178409,
+          "success": false,
+          "reason": "The response does not include any price information, which is essential for evaluating the currency format, numerical accuracy, or comparison against reliable sources. Additionally, there are no detai"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city name, district name, or street details, which are essential for scoring based on the evaluation steps. It focuses solely on the disadvantages of land ow"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.23484881631215027,
+          "success": false,
+          "reason": "The response outlines several disadvantages of owning land through a Thai company structure, but it lacks specific metrics related to ROI, such as projected returns or historical performance data. The"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8679178705669172,
+          "success": false,
+          "reason": "The response is clear and well-structured, making it easy for the target audience to understand the complexities of land ownership through a Thai company. The tone is professional, avoiding casual lan"
+        }
+      }
+    },
+    {
+      "test_index": 5,
+      "input": "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how...",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps, as it lacks information about a property's location, price, size, and amenities. Instead, it discusses the structure of a leasehold agreement"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6978033804771575,
+          "success": false,
+          "reason": "The response accurately outlines the standard structure of a registered leasehold agreement in Thailand, including the initial 30-year term and the conditions for renewal. However, it lacks cross-refe"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not provide any price information, which is essential for evaluating the currency format, numerical accuracy, or comparison against reliable sources. Additionally, there is no contex"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city name, district name, or street names, which are essential for a higher evaluation score. It focuses solely on the structure of lease agreements in Thail"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.014680774970992735,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to ROI metrics, rental yield information, or market trend analysis. It solely focuses on the structure of lease agreements in Thailand"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8201813212658987,
+          "success": false,
+          "reason": "The language used in the output is clear and understandable, making it accessible for the target audience. The tone is professional, avoiding slang and casual expressions. The vocabulary is appropriat"
+        }
+      }
+    },
+    {
+      "test_index": 6,
+      "input": "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calcula...",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps, as it lacks information about the property's location, price, size, and amenities. It focuses solely on the quota for foreign ownership of co"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.8113618127400333,
+          "success": false,
+          "reason": "The response accurately states the maximum quota for foreign ownership of condominiums in Thailand, aligning with legal regulations. It correctly emphasizes that the quota is based on floor area rathe"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not provide any price information, currency format, or numerical values related to prices, which are essential for the evaluation steps. It focuses solely on ownership quotas without"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city, district, or street details, which are essential for a higher score according to the evaluation steps. It focuses solely on the quota for foreign owner"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to ROI metrics, rental yield information, current market trends, or comprehensive investment considerations. It solely focuses on the "
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.88175744784161,
+          "success": false,
+          "reason": "The language used in the output is clear and easily understandable, making it suitable for the target audience. The tone is professional, avoiding any slang or casual expressions. The vocabulary is ap"
+        }
+      }
+    },
+    {
+      "test_index": 7,
+      "input": "What is the main difference between a Condominium and an Apartment in Thailand in terms of ownership...",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps. It fails to mention the property's location, price, size, or any amenities, focusing instead on the legal distinctions between condominiums a"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6630066370981696,
+          "success": false,
+          "reason": "The response accurately outlines the differences between condominiums and apartments in Thailand, referencing the Condominium Act and ownership rights, which aligns with the legal information requirem"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not provide any price information, which is essential for evaluating the currency format, numerical accuracy, or comparison against reliable sources. Additionally, there is no contex"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city, district, or street name, which are essential for scoring based on the evaluation steps. It focuses solely on the differences between condominiums and "
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to investment metrics, rental yield information, or current market trends. It focuses solely on the legal distinctions between condomi"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8851952798209368,
+          "success": false,
+          "reason": "The response is clear and easily understandable, effectively outlining the differences between condominiums and apartments in Thailand. The tone is professional, using formal language appropriate for "
+        }
+      }
+    },
+    {
+      "test_index": 8,
+      "input": "Which document is required for foreigners to register freehold condominium ownership to prove the tr...",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to property details such as location, price, size, or amenities. It focuses solely on the documentation required for foreign ownership"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.7586721945725811,
+          "success": false,
+          "reason": "The response accurately describes the requirement of the FET Form for foreign ownership registration of a condominium in Thailand, aligning well with legal procedures. However, it lacks a reference to"
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.023011840726778265,
+          "success": false,
+          "reason": "The response does not provide any price information, currency format, or numerical values related to the costs of registering property. It focuses solely on the documentation required for foreign owne"
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The response does not mention any specific city, district, neighborhood, or street name, which are essential for a strong output according to the evaluation steps. It focuses solely on the requirement"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.14778612771675592,
+          "success": false,
+          "reason": "The response provides specific information about the FET Form required for foreign ownership of a condominium, but it lacks key investment metrics such as ROI and rental yield. Additionally, it does n"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8851952805727255,
+          "success": false,
+          "reason": "The language used in the output is clear and easily understandable, making it suitable for the target audience. The tone is professional, avoiding slang and maintaining formality throughout. The vocab"
+        }
+      }
+    },
+    {
+      "test_index": 9,
+      "input": "List the main financial obligations associated with a property purchase and who typically pays them.",
+      "success": false,
+      "metrics": {
+        "Property Info Completeness [GEval]": {
+          "score": 0.006738380179465731,
+          "success": false,
+          "reason": "The response does not address any of the evaluation steps related to property details such as location, price, size, or amenities. It focuses solely on financial obligations associated with property p"
+        },
+        "Legal Accuracy [GEval]": {
+          "score": 0.6977452426879678,
+          "success": false,
+          "reason": "The response provides detailed financial obligations related to real estate transactions in Thailand, including specific fees and taxes, which aligns well with the evaluation steps. However, it lacks "
+        },
+        "Price Information Accuracy [GEval]": {
+          "score": 0.7547313367446102,
+          "success": false,
+          "reason": "The response provides detailed price information in a clear format, including percentages and specific amounts for various fees associated with property purchases. However, it lacks explicit currency "
+        },
+        "Location Specificity [GEval]": {
+          "score": 0.008444502142334194,
+          "success": false,
+          "reason": "The response lacks any specific city name, district, neighborhood, or street name, which are essential for a strong output according to the evaluation steps. It provides detailed information about fin"
+        },
+        "Investment Advice Quality [GEval]": {
+          "score": 0.5409841850520478,
+          "success": false,
+          "reason": "The response provides detailed information on various financial obligations related to property purchase, including specific metrics like transfer fees and management fees. However, it lacks a discuss"
+        },
+        "Language Appropriateness [GEval]": {
+          "score": 0.8731058572770515,
+          "success": false,
+          "reason": "The response demonstrates high clarity and professionalism, using formal language appropriate for a real estate context. The vocabulary is well-suited to the industry, with specific terms like 'Transf"
+        }
+      }
+    }
+  ]
+}

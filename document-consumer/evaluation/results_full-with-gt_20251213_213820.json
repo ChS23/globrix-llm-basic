@@ -1,0 +1,390 @@
+{
+  "timestamp": "2025-12-13T21:39:54.212830",
+  "mode": "full-with-gt",
+  "dataset": "/tmp/small_test.json",
+  "summary": {
+    "total_tests": 10,
+    "passed": 0,
+    "failed": 10
+  },
+  "average_metrics": {
+    "Contextual Precision": 0.8788888888888888,
+    "Contextual Relevancy": 0.28615330271212625,
+    "Contextual Recall": 0.975,
+    "Faithfulness": 0.8497222222222222,
+    "Answer Relevancy": 0.9708333333333334,
+    "Answer Semantic Similarity [GEval]": 0.7027042633795578
+  },
+  "detailed_results": [
+    {
+      "test_index": 0,
+      "input": "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.9166666666666666,
+          "success": true,
+          "reason": "The score is 0.92 because the relevant nodes are well-ranked, with the first two nodes providing direct answers about the standard structure and registration requirements for lease agreements. However"
+        },
+        "Contextual Relevancy": {
+          "score": 0.2702702702702703,
+          "success": false,
+          "reason": "The score is 0.27 because while there are relevant statements such as 'Leasehold represents a long-term rental arrangement where the lessee gains rights to use and occupy property for a specified peri"
+        },
+        "Contextual Recall": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because while the main points about the lease structure and registration requirements are well-supported by nodes 1 and 3 in the retrieval context, the mention of renewal periods as "
+        },
+        "Faithfulness": {
+          "score": 0.6,
+          "success": false,
+          "reason": "The score is 0.60 because the actual output inaccurately claims that only the first 30-year lease can be registered and fails to acknowledge that lease renewal periods can be included in the original "
+        },
+        "Answer Relevancy": {
+          "score": 0.875,
+          "success": true,
+          "reason": "The score is 0.88 because while the response provided relevant information about the standard structure of a registered lease agreement in Thailand, it included an irrelevant statement regarding exten"
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.8562176500885798,
+          "success": true,
+          "reason": "The actual output closely aligns with the expected output in terms of key concepts and themes, such as the initial lease term of 30 years and the possibility of extensions. Both outputs convey the sam"
+        }
+      }
+    },
+    {
+      "test_index": 1,
+      "input": "Which document is required for foreigners to register freehold condominium ownership to prove the tr...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7555555555555555,
+          "success": false,
+          "reason": "The score is 0.76 because while there are relevant nodes that provide essential information about the FET Form necessary for foreigners to register freehold condominium ownership, there are also irrel"
+        },
+        "Contextual Relevancy": {
+          "score": 0.2857142857142857,
+          "success": false,
+          "reason": "The score is 0.29 because while there are relevant statements such as 'Valid passport copy is required for foreign buyers to register freehold condominium ownership' and 'Source of funds documentation"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every aspect of the expected output is directly supported by the relevant nodes in the retrieval context, ensuring a perfect alignment with the information provided."
+        },
+        "Faithfulness": {
+          "score": 0.6,
+          "success": false,
+          "reason": "The score is 0.60 because the actual output incorrectly implies that the FET Form alone confirms currency transfer, while the contradictions clarify that it is only required for transfers over USD 50,"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no irrelevant statements in the output, indicating a perfect alignment with the input question."
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.7474768100810286,
+          "success": false,
+          "reason": "The actual output conveys the essential information about the FET Form and its requirements, aligning well with the expected output. However, it includes additional details about the document's purpos"
+        }
+      }
+    },
+    {
+      "test_index": 2,
+      "input": "What is the main difference between a Condominium and an Apartment in Thailand in terms of ownership...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are ranked higher than the irrelevant nodes, with the first node providing a clear explanation of condominium ownership rights and the third node detailing"
+        },
+        "Contextual Relevancy": {
+          "score": 0.625,
+          "success": true,
+          "reason": "The score is 0.62 because while there are relevant statements such as 'Condominium (Condo) offers individual unit ownership with title deed' and 'Apartment does NOT offer individual unit ownership', m"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is directly supported by the information in the 1st node of the retrieval context, clearly defining the differences between condominiums"
+        },
+        "Faithfulness": {
+          "score": 0.9,
+          "success": true,
+          "reason": "The score is 0.90 because the actual output contradicts the retrieval context by stating that apartments cannot be owned freehold by anyone, including Thai citizens, which may not accurately reflect t"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the differences in ownership rights between a Condominium and an Apartment in Thailand without any irrelevant statements."
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.8089778724424697,
+          "success": false,
+          "reason": "The actual output effectively captures the key concepts and themes present in the expected output, such as the distinction between ownership rights of condominiums and apartments. The language used is"
+        }
+      }
+    },
+    {
+      "test_index": 3,
+      "input": "What is a Chanote and why is it considered the 'gold standard' for land titles in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear explanation that 'Chanote (Nor Sor 4 Jor) is the highest and most secure form "
+        },
+        "Contextual Relevancy": {
+          "score": 0.18181818181818182,
+          "success": false,
+          "reason": "The score is 0.18 because while the retrieval context includes relevant statements like 'Chanote (Nor Sor 4 Jor) is the highest and most secure form of land title in Thailand' and 'This is the 'gold s"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every aspect of the expected output is directly supported by the information in node 1 of the retrieval context, confirming the accuracy and relevance of the details provided"
+        },
+        "Faithfulness": {
+          "score": 0.8333333333333334,
+          "success": false,
+          "reason": "The score is 0.83 because the actual output incorrectly refers to Chanote as Nor Sor 4 Jor, while the retrieval context clearly states that it is simply called Chanote."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about Chanote and its significance as a land title in Thailand without any irrelevant statements."
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.8042160818713407,
+          "success": false,
+          "reason": "The actual output effectively captures the key concepts and themes present in the expected output, such as the definition of Chanote, its features, and its status as the 'gold standard' for land title"
+        }
+      }
+    },
+    {
+      "test_index": 4,
+      "input": "What are the current (2025) disadvantages of owning land through a Thai Company Structure?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node discusses how 'Thai authorities have intensified scrutiny of 'nominee' companies formed solely "
+        },
+        "Contextual Relevancy": {
+          "score": 0.36363636363636365,
+          "success": false,
+          "reason": "The score is 0.36 because the retrieval context primarily contains irrelevant statements such as 'Preferred shares with voting rights' and 'Director appointment rights', which do not address the disad"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every aspect of the expected output is directly supported by the relevant node(s) in the retrieval context, ensuring a perfect alignment with no discrepancies."
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the disadvantages of owning land through a Thai Company Structure without any irrelevant statements."
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.378980130774942,
+          "success": false,
+          "reason": "The actual output provides a detailed list of disadvantages related to property ownership through Thai companies, while the expected output focuses on the intensified scrutiny of nominee companies. Al"
+        }
+      }
+    },
+    {
+      "test_index": 5,
+      "input": "What are the key characteristics of Freehold (absolute) ownership in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are ranked higher than the irrelevant nodes, with the first and third nodes providing key characteristics of freehold ownership. However, the presence of t"
+        },
+        "Contextual Relevancy": {
+          "score": 0.23529411764705882,
+          "success": false,
+          "reason": "The score is 0.24 because while there are relevant statements such as 'Freehold ownership represents absolute ownership of property without time limitation' and 'The owner possesses complete rights to"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the expected output perfectly aligns with the information provided in the node(s) in retrieval context, specifically detailing freehold ownership and its key characteristics."
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 0.8333333333333334,
+          "success": false,
+          "reason": "The score is 0.83 because while the response provided relevant information about Freehold ownership, it included an irrelevant statement regarding the registration fee, which detracted from the overal"
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.6548819756605375,
+          "success": false,
+          "reason": "The actual output captures the key concepts of freehold ownership, such as absolute ownership and transferability, which align with the expected output. However, the language and tone differ, with the"
+        }
+      }
+    },
+    {
+      "test_index": 6,
+      "input": "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calcula...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear answer about the maximum foreign ownership quota, stating that 'Maximum: 49% o"
+        },
+        "Contextual Relevancy": {
+          "score": 0.18,
+          "success": false,
+          "reason": "The score is 0.18 because the retrieval context primarily contained irrelevant information such as 'Funds must be transferred from abroad in foreign currency' and 'Currency must be converted to THB by"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the expected output is fully aligned with the retrieval context, as each sentence is directly supported by the relevant nodes in retrieval context."
+        },
+        "Faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about the maximum Foreign Ownership Quota for condominium units in Thailand and how it is calculated, with no irrelevant statemen"
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.7863174382264284,
+          "success": false,
+          "reason": "The actual output effectively conveys the same key concepts and themes as the expected output, specifically regarding the foreign ownership quota and its calculation based on floor area. The language "
+        }
+      }
+    },
+    {
+      "test_index": 7,
+      "input": "List the main financial obligations associated with a property purchase and who typically pays them.",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7,
+          "success": false,
+          "reason": "The score is 0.70 because while there are relevant nodes that provide key financial obligations associated with property purchase, such as the first and fifth nodes detailing the 'Transfer Fee' and 'T"
+        },
+        "Contextual Relevancy": {
+          "score": 0.3235294117647059,
+          "success": false,
+          "reason": "The score is 0.32 because while there are relevant statements like 'Transfer Fee: 2% of assessed value' and 'Buyer pays BPHTB: 5% of (property value minus NPOPTKP threshold)', the majority of the retr"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are directly supported by the details in the 1st node of the retrieval context, providing a comprehensive overview of key fees and taxes."
+        },
+        "Faithfulness": {
+          "score": 0.875,
+          "success": false,
+          "reason": "The score is 0.88 because the actual output incorrectly states that the buyer directly manages the Sinking Fund, while the retrieval context clarifies that it is managed by the condominium juristic pe"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the input by listing the main financial obligations associated with a property purchase and identifying who typically pays them, with no irrel"
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.5203982045664368,
+          "success": false,
+          "reason": "The actual output provides a comprehensive list of financial obligations related to property purchases, similar to the expected output. However, it includes additional details such as management fees "
+        }
+      }
+    },
+    {
+      "test_index": 8,
+      "input": "How is land area in Thailand determined using traditional units, and what is the conversion of 1 Rai...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because the relevant nodes are ranked higher than the irrelevant nodes, but there are still three irrelevant nodes that dilute the overall precision. The first node provides a direct"
+        },
+        "Contextual Relevancy": {
+          "score": 0.24242424242424243,
+          "success": false,
+          "reason": "The score is 0.24 because while the retrieval context includes relevant statements such as '1 Rai = 4 Ngan = 1,600 sqm' and 'Thailand uses traditional land measurement units alongside metric system', "
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are directly supported by the information in node 1 of the retrieval context, confirming the conversions and measurements without any con"
+        },
+        "Faithfulness": {
+          "score": 0.8888888888888888,
+          "success": false,
+          "reason": "The score is 0.89 because the actual output incorrectly states that 1 Ngan is a quarter of Rai, while the retrieval context clarifies that it is equal to 100 Tarang Wah or 400 square meters."
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about how land area in Thailand is determined using traditional units and provides the conversion of 1 Rai into square meters wit"
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.7559217749832843,
+          "success": false,
+          "reason": "The actual output provides a detailed explanation of land measurement units in Thailand, including conversions and a practical example, which aligns well with the expected output's intent. However, it"
+        }
+      }
+    },
+    {
+      "test_index": 9,
+      "input": "What is the LTR Visa (Long-Term Resident Visa) and which of its categories were updated in 2025?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear definition of the LTR Visa, stating it was 'Introduced September 2022, updated"
+        },
+        "Contextual Relevancy": {
+          "score": 0.15384615384615385,
+          "success": false,
+          "reason": "The score is 0.15 because while there are some relevant statements about the LTR Visa updates, such as 'Introduced September 2022, updated January 2025' and details about categories like 'Wealthy Glob"
+        },
+        "Contextual Recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all elements of the expected output are directly supported by the relevant nodes in the retrieval context, specifically the details about the LTR Visa and the updates to the "
+        },
+        "Faithfulness": {
+          "score": 0.8,
+          "success": false,
+          "reason": "The score is 0.80 because the actual output incorrectly states that the Wealthy Global Citizen category has no income requirement, while it actually requires a minimum of USD 1 million in assets and a"
+        },
+        "Answer Relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the question about the LTR Visa and its updated categories in 2025 without any irrelevant statements."
+        },
+        "Answer Semantic Similarity [GEval]": {
+          "score": 0.7136546951005303,
+          "success": false,
+          "reason": "The actual output provides a comprehensive overview of the LTR Visa, including detailed categories and benefits, which aligns with the expected output's focus on the visa's key features. However, the "
+        }
+      }
+    }
+  ]
+}
