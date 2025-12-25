@@ -20,7 +20,7 @@ export function Filters({
     location && { label: "Location", value: location },
     property_type && { label: "Type", value: capitalize(property_type) },
     status && { label: "Status", value: capitalize(status) },
-  ].filter(Boolean);
+  ].filter((f): f is { label: string; value: string } => Boolean(f));
 
   if (activeFilters.length === 0) {
     return null;
@@ -52,10 +52,10 @@ export function Filters({
             className="inline-flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1.5"
           >
             <span className="text-xs font-medium text-gray-500">
-              {filter!.label}:
+              {filter.label}:
             </span>
             <span className="text-sm font-semibold text-gray-900">
-              {filter!.value}
+              {filter.value}
             </span>
           </div>
         ))}
