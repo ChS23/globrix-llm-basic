@@ -136,8 +136,12 @@ function MarkdownContent({ content }: { content: string }) {
       );
     }
     // Empty lines - skip extra line breaks
-    else if (elements.length > 0 && elements[elements.length - 1]?.type !== 'br') {
-      elements.push(<div key={index} className="h-2" />);
+    else if (elements.length > 0) {
+      const lastElement = elements[elements.length - 1];
+      const isLastBr = React.isValidElement(lastElement) && lastElement.type === 'br';
+      if (!isLastBr) {
+        elements.push(<div key={index} className="h-2" />);
+      }
     }
   });
 
