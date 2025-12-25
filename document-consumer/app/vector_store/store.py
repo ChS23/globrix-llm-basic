@@ -71,6 +71,7 @@ class DocumentVectorStore:
             openai_api_key=embedding_key,
             openai_api_base="https://api.openai.com/v1",  # Явно OpenAI для эмбеддингов
             http_client=http_client,
+            check_embedding_ctx_length=False,  # Отключаем tiktoken (требует скачивания через прокси)
         )
 
         # 3. Создаем коллекцию в Qdrant (если еще не создана)

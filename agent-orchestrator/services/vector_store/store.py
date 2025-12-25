@@ -63,6 +63,7 @@ class DocumentVectorStore:
             model=embedding_model,
             openai_api_key=embedding_api_key,
             http_client=http_client,
+            check_embedding_ctx_length=False,  # Отключаем tiktoken
         )
 
         # 3. Создаём коллекцию если не существует
