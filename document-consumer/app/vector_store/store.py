@@ -16,6 +16,7 @@ from qdrant_client.models import Distance, VectorParams
 import structlog
 
 from app.config.settings import settings
+from app.utils.http_client import get_http_client
 
 logger = structlog.get_logger()
 
@@ -61,10 +62,15 @@ class DocumentVectorStore:
         # Используем отдельный ключ для эмбеддингов если задан
         # Явно указываем base_url для OpenAI, чтобы не подхватывать OPENAI_BASE_URL из env
         embedding_key = settings.embedding_api_key or settings.openai_api_key
+
+        # HTTP клиент с прокси (если настроен)
+        http_client = get_http_client()
+
         self.embeddings = OpenAIEmbeddings(
             model=settings.embedding_model,
             openai_api_key=embedding_key,
-            openai_api_base="https://api.openai.com/v1"  # Явно OpenAI для эмбеддингов
+            openai_api_base="https://api.openai.com/v1",  # Явно OpenAI для эмбеддингов
+            http_client=http_client,
         )
 
         # 3. Создаем коллекцию в Qdrant (если еще не создана)

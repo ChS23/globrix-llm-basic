@@ -19,6 +19,8 @@ from langchain_core.retrievers import BaseRetriever
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
 
+from utils.http_client import get_http_client
+
 logger = structlog.get_logger(__name__)
 
 
@@ -55,10 +57,12 @@ class DocumentVectorStore:
         # 1. Клиент Qdrant
         self.client = QdrantClient(url=qdrant_url)
 
-        # 2. Embeddings через OpenAI
+        # 2. Embeddings через OpenAI (с прокси если настроен)
+        http_client = get_http_client()
         self.embeddings = OpenAIEmbeddings(
             model=embedding_model,
             openai_api_key=embedding_api_key,
+            http_client=http_client,
         )
 
         # 3. Создаём коллекцию если не существует
