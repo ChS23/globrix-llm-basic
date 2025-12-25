@@ -1,0 +1,662 @@
+{
+  "timestamp": "2025-12-23T22:31:57.159666",
+  "mode": "retrieval",
+  "dataset": "evaluation/test_dataset_gemini.json",
+  "summary": {
+    "total_tests": 38,
+    "passed": 4,
+    "failed": 34
+  },
+  "average_metrics": {
+    "Contextual Precision": 0.8906432748538011,
+    "Contextual Relevancy": 0.2796534231747582
+  },
+  "detailed_results": [
+    {
+      "test_index": 0,
+      "input": "What is the primary legislation governing condominium ownership in Thailand and what does it establi...",
+      "success": true,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are well-ranked, with the first node providing a clear answer about the primary legislation and the third node detailing common areas. However, the presenc"
+        },
+        "Contextual Relevancy": {
+          "score": 0.6,
+          "success": true,
+          "reason": "The score is 0.60 because while the retrieval context includes relevant statements such as 'The Condominium Act is the primary legislation governing condominium ownership in Thailand' and 'It establis"
+        }
+      }
+    },
+    {
+      "test_index": 1,
+      "input": "What are the minimum investment and time requirements for high net worth foreigners to acquire up to...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the relevant node provides a clear and direct answer to the question regarding minimum investment requirements for high net worth foreigners acquiring land. The first node st"
+        },
+        "Contextual Relevancy": {
+          "score": 0.12903225806451613,
+          "success": false,
+          "reason": "The score is 0.13 because the retrieval context primarily contains irrelevant information regarding land ownership restrictions and procedures, such as 'Direct land ownership by foreigners is PROHIBIT"
+        }
+      }
+    },
+    {
+      "test_index": 2,
+      "input": "What are the current (2025) disadvantages of owning land through a Thai Company Structure?",
+      "success": true,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node discusses how 'Thai authorities have intensified scrutiny of 'nominee' companies formed solely "
+        },
+        "Contextual Relevancy": {
+          "score": 0.5416666666666666,
+          "success": true,
+          "reason": "The score is 0.54 because while some relevant statements like 'Formation of Thai limited company to hold land' and 'Thai authorities have intensified scrutiny of nominee companies' provide context, th"
+        }
+      }
+    },
+    {
+      "test_index": 3,
+      "input": "What are the two main rights, similar to Leasehold, that foreigners can use for land usage or buildi...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear definition of 'Usufruct', which directly answers the question about rights sim"
+        },
+        "Contextual Relevancy": {
+          "score": 0.1794871794871795,
+          "success": false,
+          "reason": "The score is 0.18 because the retrieval context primarily discusses 'Freehold' and 'Superficies', which are not relevant to the input question about rights similar to Leasehold for foreigners. While t"
+        }
+      }
+    },
+    {
+      "test_index": 4,
+      "input": "What are the two most expensive areas in Phuket for villa prices per square meter in 2025?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the relevant nodes are perfectly ranked above the irrelevant nodes. The first node provides specific price ranges for villas in Surin and Bang Tao, stating 'Surin (THB 200,00"
+        },
+        "Contextual Relevancy": {
+          "score": 0.28205128205128205,
+          "success": false,
+          "reason": "The score is 0.28 because while Surin is identified as the most expensive area for villa prices per square meter in 2025, the context lacks comprehensive details about the second most expensive area, "
+        }
+      }
+    },
+    {
+      "test_index": 5,
+      "input": "How is land area in Thailand determined using traditional units, and what is the conversion of 1 Rai...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because while the relevant nodes provide clear answers about land area measurements in Thailand, the presence of three irrelevant nodes ranked higher than some relevant ones affects "
+        },
+        "Contextual Relevancy": {
+          "score": 0.24242424242424243,
+          "success": false,
+          "reason": "The score is 0.24 because while the retrieval context includes relevant statements like '1 Rai = 4 Ngan = 1,600 sqm' and 'Thailand uses traditional land measurement units alongside metric system', the"
+        }
+      }
+    },
+    {
+      "test_index": 6,
+      "input": "List the advantages and disadvantages of Leasehold (long-term rental) compared to Freehold (absolute...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8055555555555555,
+          "success": true,
+          "reason": "The score is 0.81 because the relevant nodes are ranked higher than the irrelevant nodes, with the first node providing clear advantages of Leasehold and the second node discussing disadvantages. Howe"
+        },
+        "Contextual Relevancy": {
+          "score": 0.42,
+          "success": false,
+          "reason": "The score is 0.42 because while there are some relevant statements like 'Lower initial cost (10-15% less than freehold)' and 'Leasehold represents a long-term rental arrangement', the majority of the "
+        }
+      }
+    },
+    {
+      "test_index": 7,
+      "input": "Which document is required for foreigners to register freehold condominium ownership to prove the tr...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first three nodes provide essential information about the required documents for foreigners to register fr"
+        },
+        "Contextual Relevancy": {
+          "score": 0.2727272727272727,
+          "success": false,
+          "reason": "The score is 0.27 because while there are relevant statements such as 'Valid passport copy is required for foreign buyers to register freehold condominium ownership' and 'Source of funds documentation"
+        }
+      }
+    },
+    {
+      "test_index": 8,
+      "input": "What are the key characteristics of Freehold (absolute) ownership in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.8333333333333333,
+          "success": true,
+          "reason": "The score is 0.83 because the relevant nodes are ranked higher than the irrelevant nodes, with the first node providing a direct answer about freehold ownership characteristics. However, the presence "
+        },
+        "Contextual Relevancy": {
+          "score": 0.2641509433962264,
+          "success": false,
+          "reason": "The score is 0.26 because the retrieval context primarily discusses leasehold ownership and associated costs, which are irrelevant to the characteristics of freehold ownership. For instance, statement"
+        }
+      }
+    },
+    {
+      "test_index": 9,
+      "input": "List the main financial obligations associated with a property purchase and who typically pays them.",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because the relevant nodes provide substantial information about financial obligations, such as the 'Transfer Fee' and 'Sinking Fund' in the first node, which directly addresses the "
+        },
+        "Contextual Relevancy": {
+          "score": 0.38235294117647056,
+          "success": false,
+          "reason": "The score is 0.38 because while there are relevant statements regarding financial obligations such as 'Transfer Fee: 2% of assessed value' and 'Buyer pays BPHTB: 5% of (property value minus NPOPTKP th"
+        }
+      }
+    },
+    {
+      "test_index": 10,
+      "input": "What is the main difference between a Condominium and an Apartment in Thailand in terms of ownership...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because while the relevant nodes are ranked higher, there are still several irrelevant nodes that dilute the overall precision. For instance, the second node discusses the legal fram"
+        },
+        "Contextual Relevancy": {
+          "score": 0.5102040816326531,
+          "success": true,
+          "reason": "The score is 0.51 because while there are relevant statements such as 'Condominium (Condo) offers individual unit ownership with title deed' and 'Apartment does NOT offer individual unit ownership', m"
+        }
+      }
+    },
+    {
+      "test_index": 11,
+      "input": "What are considered 'Moderate' monthly living costs for expatriates in Phuket, according to 2025 dat...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the relevant node provides a clear and specific answer regarding 'Moderate' monthly living costs for expatriates in Phuket, stating that 'the 'Moderate' total monthly living "
+        },
+        "Contextual Relevancy": {
+          "score": 0.10256410256410256,
+          "success": false,
+          "reason": "The score is 0.10 because the retrieval context fails to provide specific figures for 'Moderate' monthly living costs, which is the focus of the input. While it mentions costs like 'Scooter rental: TH"
+        }
+      }
+    },
+    {
+      "test_index": 12,
+      "input": "What is a Chanote and why is it considered the 'gold standard' for land titles in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear explanation that 'Chanote (Nor Sor 4 Jor) is the highest and most secure form "
+        },
+        "Contextual Relevancy": {
+          "score": 0.14634146341463414,
+          "success": false,
+          "reason": "The score is 0.15 because while the retrieval context includes relevant statements about Chanote being the 'gold standard' for land titles, such as 'Chanote (Nor Sor 4 Jor) is the highest and most sec"
+        }
+      }
+    },
+    {
+      "test_index": 13,
+      "input": "What is the area of an 800 square meter land plot in Tarang Wah (Sq Wah) and Ngan?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node provides a clear conversion table that directly answers the question about the area in Ngan, making it highly relevant. The subsequent nodes, ranked lower, con"
+        },
+        "Contextual Relevancy": {
+          "score": 0.15384615384615385,
+          "success": false,
+          "reason": "The score is 0.15 because while the relevant statement '800 sqm = 2 Ngan = 0.5 Rai' provides a conversion related to the area of the land plot, the majority of the context focuses on unrelated topics "
+        }
+      }
+    },
+    {
+      "test_index": 14,
+      "input": "What are the requirements for foreign heirs inheriting a condominium unit in Thailand?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node directly addresses the requirements for foreign heirs inheriting condominium units in Thailand, stating that 'Foreign heirs inheriting condominium units must q"
+        },
+        "Contextual Relevancy": {
+          "score": 0.425,
+          "success": false,
+          "reason": "The score is 0.42 because while there are relevant statements such as 'Foreign heirs inheriting condominium units must qualify under Section 19 to register ownership,' the majority of the context disc"
+        }
+      }
+    },
+    {
+      "test_index": 15,
+      "input": "What is the maximum Foreign Ownership Quota for condominium units in Thailand, and how is it calcula...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first three nodes provide direct answers about the maximum foreign ownership quota, stating that 'Maximum:"
+        },
+        "Contextual Relevancy": {
+          "score": 0.13333333333333333,
+          "success": false,
+          "reason": "The score is 0.13 because while there are relevant statements such as 'Foreign Ownership Quota: Maximum: 49% of total saleable area in any condominium', the majority of the context focuses on unrelate"
+        }
+      }
+    },
+    {
+      "test_index": 16,
+      "input": "What is the standard structure for a registered lease agreement (Leasehold) in Thailand, and for how...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.9166666666666666,
+          "success": true,
+          "reason": "The score is 0.92 because the relevant nodes are well-ranked, with the first two nodes providing direct answers about the standard structure and registration of lease agreements. However, the presence"
+        },
+        "Contextual Relevancy": {
+          "score": 0.21568627450980393,
+          "success": false,
+          "reason": "The score is 0.22 because while there are relevant statements such as 'Leasehold represents a long-term rental arrangement where the lessee gains rights to use and occupy property for a specified peri"
+        }
+      }
+    },
+    {
+      "test_index": 17,
+      "input": "What is the LTR Visa (Long-Term Resident Visa) and which of its categories were updated in 2025?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear answer about the LTR Visa, stating it was 'Introduced September 2022, updated "
+        },
+        "Contextual Relevancy": {
+          "score": 0.15384615384615385,
+          "success": false,
+          "reason": "The score is 0.15 because the retrieval context primarily contains irrelevant information about taxes and fees, such as '|Tax/Fee|Freehold|Leasehold|WhoPays|WhenPaid|', which does not relate to the LT"
+        }
+      }
+    },
+    {
+      "test_index": 18,
+      "input": "What is the approximate total annual cost in THB for maintaining a Thai company structure used for l...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node provides a detailed breakdown of annual costs, stating 'Total: approximately THB 35,000-65,000/year' which directly answers the question about the total annual"
+        },
+        "Contextual Relevancy": {
+          "score": 0.08620689655172414,
+          "success": false,
+          "reason": "The score is 0.09 because, despite the retrieval context containing relevant cost information such as 'Total: approximately THB 35,000-65,000/year' and specific breakdowns for 'Accounting', 'Audit', a"
+        }
+      }
+    },
+    {
+      "test_index": 19,
+      "input": "Describe the differences between the Chanote, Nor Sor 3 Gor, and Nor Sor 3 land titles in terms of s...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first three nodes provide direct insights into the security and boundary precision of the Chanote, Nor Sor"
+        },
+        "Contextual Relevancy": {
+          "score": 0.18181818181818182,
+          "success": false,
+          "reason": "The score is 0.18 because the retrieval context primarily contains irrelevant information, such as 'FET Form' and 'Tabien Baan', which do not address the differences between the specified land titles."
+        }
+      }
+    },
+    {
+      "test_index": 20,
+      "input": "What is Rental Yield and what is the formula used to calculate it?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node directly addresses the question about Rental Yield and its formula, providing a clear and relevant answer. The subsequent nodes, ranked lower, discuss topics s"
+        },
+        "Contextual Relevancy": {
+          "score": 0.1951219512195122,
+          "success": false,
+          "reason": "The score is 0.20 because the majority of the retrieval context discusses unrelated topics such as construction quality and payment structures, while only a few statements like 'Annual rental income a"
+        }
+      }
+    },
+    {
+      "test_index": 21,
+      "input": "Which area in Phuket has the highest anticipated Rental Yield and which areas are considered premium...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides specific information about 'Rawai' with a rental yield of 7-9%, directly supporting th"
+        },
+        "Contextual Relevancy": {
+          "score": 0.4642857142857143,
+          "success": false,
+          "reason": "The score is 0.46 because while some statements mention rental yields, such as 'Rental yield: 6-8%' and 'Rental yield: 7-9%', many other statements do not directly address the anticipated rental yield"
+        }
+      }
+    },
+    {
+      "test_index": 22,
+      "input": "What are the advantages of Freehold (absolute) ownership?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.9166666666666666,
+          "success": true,
+          "reason": "The score is 0.92 because the relevant nodes are well-ranked, with the first two nodes providing clear advantages of Freehold ownership, while the third and fifth nodes, which discuss leasehold owners"
+        },
+        "Contextual Relevancy": {
+          "score": 0.30952380952380953,
+          "success": false,
+          "reason": "The score is 0.31 because the retrieval context primarily discusses disadvantages and irrelevant aspects of ownership, such as 'Lower initial cost' and 'Time-limited ownership', which do not address t"
+        }
+      }
+    },
+    {
+      "test_index": 23,
+      "input": "What restrictions on land ownership does the Land Code Act B.E. 2497 impose on foreign nationals?",
+      "success": true,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear answer about restrictions on land ownership, stating that 'Prohibits foreigner"
+        },
+        "Contextual Relevancy": {
+          "score": 0.5,
+          "success": true,
+          "reason": "The score is 0.50 because while the retrieval context includes relevant statements such as 'Direct land ownership by foreigners is PROHIBITED under Section 86 of the Land Code' and 'Foreigners can own"
+        }
+      }
+    },
+    {
+      "test_index": 24,
+      "input": "What are the main benefits of the LTR Visa for real estate investors?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.45,
+          "success": false,
+          "reason": "The score is 0.45 because while there are relevant nodes that effectively outline the benefits of the LTR Visa, such as the second node which details '10-year visa (5+5 years)', 'quick work permit iss"
+        },
+        "Contextual Relevancy": {
+          "score": 0.36363636363636365,
+          "success": false,
+          "reason": "The score is 0.36 because the retrieval context primarily discusses limitations and challenges of the LTR Visa, such as 'discusses a limitation of the visa' and 'refers to a risk rather than a benefit"
+        }
+      }
+    },
+    {
+      "test_index": 25,
+      "input": "What is Withholding Tax and who typically pays it during a property transaction registration?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.0,
+          "success": false,
+          "reason": "The score is 0.00 because all nodes in the retrieval contexts are irrelevant to the input question about Withholding Tax. Specifically, the first node ranks highest but states, 'The context discusses "
+        },
+        "Contextual Relevancy": {
+          "score": 0.08695652173913043,
+          "success": false,
+          "reason": "The score is 0.09 because the majority of the retrieval context discusses various taxes and exemptions that do not pertain to withholding tax or payment responsibilities during property transactions. "
+        }
+      }
+    },
+    {
+      "test_index": 26,
+      "input": "What is the minimum amount for the transfer of funds from abroad in foreign currency required to obt...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node states, 'Transfer funds from abroad (minimum USD 50,000)' which directly answers the question a"
+        },
+        "Contextual Relevancy": {
+          "score": 0.18181818181818182,
+          "success": false,
+          "reason": "The score is 0.18 because while there are relevant statements like 'Minimum transfer: USD 50,000 for FET issuance', the majority of the retrieval context focuses on procedural steps and general inform"
+        }
+      }
+    },
+    {
+      "test_index": 27,
+      "input": "What is the key difference between Gross Yield and Net Yield when calculating rental profitability?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node provides a clear definition of 'Gross Yield' and 'Net Yield', directly addressing the key difference in rental profitability. The subsequent nodes, ranked lowe"
+        },
+        "Contextual Relevancy": {
+          "score": 0.06060606060606061,
+          "success": false,
+          "reason": "The score is 0.06 because while the relevant statements define Gross Yield and Net Yield, the majority of the context is filled with unrelated information, such as 'assessed value' and 'down payment',"
+        }
+      }
+    },
+    {
+      "test_index": 28,
+      "input": "What factors, other than the area, can affect property pricing in Phuket?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node provides a comprehensive answer to the question about factors affecting property pricing in Phuket, stating that 'sea view adds 30-50%, beachfront adds 50-100%"
+        },
+        "Contextual Relevancy": {
+          "score": 0.3142857142857143,
+          "success": false,
+          "reason": "The score is 0.31 because while some relevant statements mention factors like 'Sea view adds 30-50%' and 'Strong rental demand from tourism', the majority of the context focuses on area-specific chara"
+        }
+      }
+    },
+    {
+      "test_index": 29,
+      "input": "Which document confirms the ownership of a building on someone else's land, and what is its maximum ...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.3333333333333333,
+          "success": false,
+          "reason": "The score is 0.33 because the relevant node, which defines 'Superficies' and its maximum term, is ranked third, while the first two nodes are irrelevant as they discuss lease terms without addressing "
+        },
+        "Contextual Relevancy": {
+          "score": 0.65,
+          "success": true,
+          "reason": "The score is 0.65 because while many statements in the retrieval context are irrelevant, such as 'Clear identification of parties' and 'Payment terms', there are relevant statements like 'Building own"
+        }
+      }
+    },
+    {
+      "test_index": 30,
+      "input": "What happens to a Leasehold agreement with a term exceeding 3 years if it is not registered at the L...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.7555555555555555,
+          "success": false,
+          "reason": "The score is 0.76 because while there are relevant nodes that directly address the question about leasehold agreements, there are also several irrelevant nodes that rank higher than some relevant ones"
+        },
+        "Contextual Relevancy": {
+          "score": 0.22580645161290322,
+          "success": false,
+          "reason": "The score is 0.23 because the majority of the retrieval context is irrelevant, focusing on aspects like 'Lower initial cost' and 'Access to land and houses', which do not address the question about le"
+        }
+      }
+    },
+    {
+      "test_index": 31,
+      "input": "What are the key requirements for a Thai company formed to hold land, besides the shareholding ratio...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant node. The first four nodes provide essential requirements for a Thai company, such as 'Minimum 3 shareholders' (1st n"
+        },
+        "Contextual Relevancy": {
+          "score": 0.41025641025641024,
+          "success": false,
+          "reason": "The score is 0.41 because while there are relevant statements such as 'Formation of Thai limited company to hold land' and '51% Thai shareholding (minimum)', the majority of the retrieval context cont"
+        }
+      }
+    },
+    {
+      "test_index": 32,
+      "input": "What are the two most affordable areas in Phuket for buying a condominium by price per square meter ...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the relevant nodes are ranked higher than the irrelevant nodes. The first node provides a detailed table of approximate price ranges for condominiums in Chalong and Rawai, wh"
+        },
+        "Contextual Relevancy": {
+          "score": 0.07142857142857142,
+          "success": false,
+          "reason": "The score is 0.07 because the retrieval context fails to specify the two most affordable areas for buying a condominium, as highlighted by statements like 'The statement does not specify the two most "
+        }
+      }
+    },
+    {
+      "test_index": 33,
+      "input": "What are the primary elements that must be included in a Registered Leasehold contract?",
+      "success": true,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a comprehensive list of critical elements for a Registered Leasehold contract, directl"
+        },
+        "Contextual Relevancy": {
+          "score": 0.5945945945945946,
+          "success": true,
+          "reason": "The score is 0.59 because while the retrieval context includes relevant statements such as 'Clear identification of parties' and 'Lease term and renewal provisions', it is overshadowed by numerous irr"
+        }
+      }
+    },
+    {
+      "test_index": 34,
+      "input": "Which area in Phuket is characterized by 'luxury' style villas and international schools, and what i...",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 0.75,
+          "success": false,
+          "reason": "The score is 0.75 because while the relevant nodes about 'Bang Tao' are ranked higher, there are still three irrelevant nodes that discuss areas not related to luxury villas or international schools. "
+        },
+        "Contextual Relevancy": {
+          "score": 0.25,
+          "success": false,
+          "reason": "The score is 0.25 because while there are relevant statements like 'Bang Tao is characterized by luxury style villas and has a price range of 180,000-400,000 THB/sqm.' and 'Surin is the most expensive"
+        }
+      }
+    },
+    {
+      "test_index": 35,
+      "input": "What is Off-Plan Property and what specific risk does it carry for the buyer?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear definition of 'Off-Plan Property' and highlights 'completion risk', directly a"
+        },
+        "Contextual Relevancy": {
+          "score": 0.23529411764705882,
+          "success": false,
+          "reason": "The score is 0.24 because while there are relevant statements like 'Risks: No standardized escrow system, limited warranties, construction delays, developer default' and 'Off-Plan Property is property"
+        }
+      }
+    },
+    {
+      "test_index": 36,
+      "input": "What is the difference between Sinking Fund and CAM Fee, and when are they typically paid?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear definition of the 'Sinking Fund' as a 'one-time contribution for major repairs"
+        },
+        "Contextual Relevancy": {
+          "score": 0.19047619047619047,
+          "success": false,
+          "reason": "The score is 0.19 because while there are relevant statements about Sinking Fund and CAM Fee, such as 'Sinking Fund is a one-time contribution for major repairs/replacements' and 'Common Area Maintena"
+        }
+      }
+    },
+    {
+      "test_index": 37,
+      "input": "What is a Tabien Baan and how does it differ from a Deed of Sale?",
+      "success": false,
+      "metrics": {
+        "Contextual Precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first node provides a clear definition of a 'Tabien Baan' as a 'House Registration Book' that is '**not pr"
+        },
+        "Contextual Relevancy": {
+          "score": 0.1,
+          "success": false,
+          "reason": "The score is 0.10 because the retrieval context primarily contains irrelevant information about various land titles and forms, such as 'Claim Receipt' and 'FET Form', which do not address the definiti"
+        }
+      }
+    }
+  ]
+}
