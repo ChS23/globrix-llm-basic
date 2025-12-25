@@ -64,11 +64,11 @@ class Settings(BaseSettings):
 
     # Параметры chunking (разбиение документа на кусочки)
     chunk_size: int = Field(
-        default=1000,
+        default=700,
         description="Размер одного кусочка текста в символах"
     )
     chunk_overlap: int = Field(
-        default=200,
+        default=150,
         description="Перекрытие между кусочками в символах (чтобы не терять контекст)"
     )
 

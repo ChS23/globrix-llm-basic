@@ -228,4 +228,4 @@ class TestDocumentIngestionService:
 
         # Проверяем что каждый chunk не превышает chunk_size
         for chunk in chunks:
-            assert len(chunk.page_content) <= 1200  # chunk_size + небольшой запас
+            assert len(chunk.page_content) <= 900  # chunk_size (700) + небольшой запас

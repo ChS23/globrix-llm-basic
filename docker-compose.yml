@@ -1,0 +1,143 @@
+# Globrix LLM Basic - Docker Compose
+# Full stack deployment for production
+
+services:
+  # ============================================
+  # Infrastructure Services
+  # ============================================
+
+  # Qdrant - Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: globrix-qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # RabbitMQ - Message Queue
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: globrix-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-guest}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # PostgreSQL - Agent State Storage
+  postgres:
+    image: postgres:16-alpine
+    container_name: globrix-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-globrix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-globrix}
+      POSTGRES_DB: ${POSTGRES_DB:-globrix}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-globrix}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ============================================
+  # Application Services
+  # ============================================
+
+  # Agent Orchestrator - Main Agent + API
+  agent-orchestrator:
+    build:
+      context: ./agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: globrix-agent
+    environment:
+      # OpenAI
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # Qdrant
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION_NAME: ${QDRANT_COLLECTION_NAME:-real_estate_docs}
+      # PostgreSQL (for LangGraph checkpoints)
+      POSTGRES_URI: postgresql://${POSTGRES_USER:-globrix}:${POSTGRES_PASSWORD:-globrix}@postgres:5432/${POSTGRES_DB:-globrix}
+      # Supabase (optional)
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_KEY: ${SUPABASE_KEY:-}
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Document Consumer - PDF Processing & Indexing
+  document-consumer:
+    build:
+      context: ./document-consumer
+      dockerfile: Dockerfile
+    container_name: globrix-consumer
+    environment:
+      # OpenAI
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # RabbitMQ
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASS:-guest}@rabbitmq:5672/
+      # Qdrant
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION_NAME: ${QDRANT_COLLECTION_NAME:-real_estate_docs}
+      # Supabase (optional)
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_KEY: ${SUPABASE_KEY:-}
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Real Estate Frontend - Next.js UI
+  frontend:
+    build:
+      context: ./real-estate-frontend
+      dockerfile: Dockerfile
+    container_name: globrix-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://agent-orchestrator:8000
+    networks:
+      - default
+      - gateway-net
+    depends_on:
+      - agent-orchestrator
+    restart: unless-stopped
+
+# Persistent Volumes
+volumes:
+  qdrant_data:
+    name: globrix-qdrant-data
+  rabbitmq_data:
+    name: globrix-rabbitmq-data
+  postgres_data:
+    name: globrix-postgres-data
+
+# Networks
+networks:
+  default:
+    name: globrix-network
+  gateway-net:
+    external: true

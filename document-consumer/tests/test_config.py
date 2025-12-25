@@ -36,8 +36,8 @@ class TestSettings:
         assert isinstance(settings.embedding_model, str), "embedding_model должен быть строкой"
 
         # Chunking
-        assert settings.chunk_size == 1000
-        assert settings.chunk_overlap == 200
+        assert settings.chunk_size == 700
+        assert settings.chunk_overlap == 150
 
     def test_chunk_overlap_less_than_size(self):
         """
