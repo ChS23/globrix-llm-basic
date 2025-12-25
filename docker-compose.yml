@@ -68,10 +68,11 @@ services:
     environment:
       # OpenAI
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      # Proxy for OpenAI
+      # Proxy for OpenAI (exclude internal services)
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
       ALL_PROXY: ${ALL_PROXY:-}
+      NO_PROXY: qdrant,rabbitmq,postgres,localhost,127.0.0.1
       # Qdrant
       QDRANT_URL: http://qdrant:6333
       QDRANT_COLLECTION_NAME: ${QDRANT_COLLECTION_NAME:-real_estate_docs}
@@ -101,10 +102,11 @@ services:
     environment:
       # OpenAI
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      # Proxy for OpenAI
+      # Proxy for OpenAI (exclude internal services)
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
       ALL_PROXY: ${ALL_PROXY:-}
+      NO_PROXY: qdrant,rabbitmq,postgres,localhost,127.0.0.1
       # RabbitMQ
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASS:-guest}@rabbitmq:5672/
       # Qdrant
