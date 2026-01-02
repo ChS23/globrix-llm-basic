@@ -23,9 +23,18 @@ logger = structlog.get_logger(__name__)
 
 # === Configuration ===
 
+import httpx
+
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 MODEL_NAME = os.getenv("ORCHESTRATOR_MODEL", "openai/gpt-4.1-mini")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
+def get_http_client():
+    """Get httpx client with proxy if configured."""
+    proxy = os.getenv("HTTPS_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("ALL_PROXY")
+    if proxy:
+        return httpx.Client(proxy=proxy)
+    return None
 
 SYSTEM_PROMPT = """# Роль
 Ты — Globrix AI, профессиональный ассистент по недвижимости премиум-класса в Дубае и Таиланде.
@@ -199,12 +208,13 @@ class OrchestratorAgent:
     def __init__(self, checkpointer: MemorySaver):
         self.checkpointer = checkpointer
 
-        # LLM с tool calling через OpenRouter
+        # LLM с tool calling через OpenRouter (с прокси если настроен)
         self.llm = ChatOpenAI(
             api_key=OPENROUTER_API_KEY,
             base_url=OPENROUTER_BASE_URL,
             model=MODEL_NAME,
             temperature=0.3,
+            http_client=get_http_client(),
         )
 
         # Доступные tools

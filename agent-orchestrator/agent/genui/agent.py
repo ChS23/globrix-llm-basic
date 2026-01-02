@@ -26,9 +26,18 @@ logger = structlog.get_logger(__name__)
 
 # === Configuration ===
 
+import httpx
+
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MODEL_NAME = os.getenv("GENUI_MODEL", "openai/gpt-4.1-mini")
+
+def get_http_client():
+    """Get httpx client with proxy if configured."""
+    proxy = os.getenv("HTTPS_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("ALL_PROXY")
+    if proxy:
+        return httpx.Client(proxy=proxy)
+    return None
 
 
 # === GenUI Agent ===
@@ -58,6 +67,7 @@ class GenUIAgent:
             base_url=OPENROUTER_BASE_URL,
             model=MODEL_NAME,
             temperature=0,  # Детерминистичность для UI генерации
+            http_client=get_http_client(),
         )
         self.deal_crud = deal_crud or get_deal_crud()
         self.schema_service = schema_service or get_component_schema_service()
