@@ -3,7 +3,7 @@
 
 Что он делает:
 - Подключается к Qdrant
-- Сохраняет документы с эмбеддингами
+- Сохраняет документы с эмбеддингами через OpenRouter
 - Ищет похожие документы по запросу
 """
 from typing import List
@@ -18,6 +18,9 @@ import structlog
 from app.config.settings import settings
 
 logger = structlog.get_logger()
+
+# OpenRouter configuration
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 class DocumentVectorStore:
@@ -57,14 +60,12 @@ class DocumentVectorStore:
         # 1. Создаем клиент для подключения к Qdrant
         self.client = QdrantClient(url=settings.qdrant_url)
 
-        # 2. Создаем объект для генерации эмбеддингов
-        # Используем отдельный ключ для эмбеддингов если задан
-        # Явно указываем base_url для OpenAI, чтобы не подхватывать OPENAI_BASE_URL из env
-        embedding_key = settings.embedding_api_key or settings.openai_api_key
+        # 2. Создаем объект для генерации эмбеддингов через OpenRouter
         self.embeddings = OpenAIEmbeddings(
             model=settings.embedding_model,
-            openai_api_key=embedding_key,
-            openai_api_base="https://api.openai.com/v1"  # Явно OpenAI для эмбеддингов
+            openai_api_key=settings.openrouter_api_key,
+            openai_api_base=OPENROUTER_BASE_URL,
+            check_embedding_ctx_length=False,  # OpenRouter не требует tiktoken
         )
 
         # 3. Создаем коллекцию в Qdrant (если еще не создана)

@@ -2,7 +2,7 @@
 Vector Store для работы с Qdrant.
 
 Использует LangChain для:
-- Создания эмбеддингов через OpenAI
+- Создания эмбеддингов через OpenRouter
 - Поиска похожих документов (similarity search)
 - Retriever для RAG pipeline
 """
@@ -20,6 +20,9 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
 
 logger = structlog.get_logger(__name__)
+
+# OpenRouter configuration
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 class DocumentVectorStore:
@@ -55,10 +58,12 @@ class DocumentVectorStore:
         # 1. Клиент Qdrant
         self.client = QdrantClient(url=qdrant_url)
 
-        # 2. Embeddings через OpenAI
+        # 2. Embeddings через OpenRouter
         self.embeddings = OpenAIEmbeddings(
             model=embedding_model,
             openai_api_key=embedding_api_key,
+            openai_api_base=OPENROUTER_BASE_URL,
+            check_embedding_ctx_length=False,  # OpenRouter не требует tiktoken
         )
 
         # 3. Создаём коллекцию если не существует
@@ -178,15 +183,18 @@ def get_vector_store() -> DocumentVectorStore:
     Singleton factory для DocumentVectorStore.
 
     Читает конфигурацию из env переменных.
+    Использует OpenRouter для эмбеддингов.
     """
     qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
     collection_name = os.getenv("QDRANT_COLLECTION_NAME", "documents")
-    embedding_api_key = os.getenv("OPENAI_API_KEY", "")
-    embedding_model = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+    # Используем OPENROUTER_API_KEY для эмбеддингов
+    embedding_api_key = os.getenv("OPENROUTER_API_KEY", "")
+    # Модель в формате OpenRouter: openai/text-embedding-3-small
+    embedding_model = os.getenv("EMBEDDING_MODEL", "openai/text-embedding-3-small")
     embedding_dimensions = int(os.getenv("EMBEDDING_DIMENSIONS", "1536"))
 
     if not embedding_api_key:
-        logger.warning("OPENAI_API_KEY not set, vector store may not work")
+        logger.warning("OPENROUTER_API_KEY not set, vector store may not work")
 
     return DocumentVectorStore(
         qdrant_url=qdrant_url,

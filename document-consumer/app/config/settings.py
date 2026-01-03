@@ -44,18 +44,14 @@ class Settings(BaseSettings):
         description="Название коллекции в Qdrant"
     )
 
-    # Эмбеддинги - настройки модели
-    openai_api_key: str = Field(
+    # Эмбеддинги - настройки модели (через OpenRouter)
+    openrouter_api_key: str = Field(
         default="",
-        description="OpenAI API ключ (используется для эмбеддингов)"
-    )
-    embedding_api_key: str = Field(
-        default="",
-        description="Отдельный API ключ для эмбеддингов (если отличается от openai_api_key)"
+        description="OpenRouter API ключ для эмбеддингов и LLM"
     )
     embedding_model: str = Field(
-        default="text-embedding-3-small",
-        description="Название модели эмбеддингов (например: text-embedding-3-small, text-embedding-3-large)"
+        default="openai/text-embedding-3-small",
+        description="Модель эмбеддингов в формате OpenRouter (openai/text-embedding-3-small)"
     )
     embedding_dimensions: int = Field(
         default=1536,

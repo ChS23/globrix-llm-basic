@@ -19,13 +19,16 @@ POSTGRES_URL = os.getenv("POSTGRES_URL", "postgresql://user:password@localhost:5
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # PostgreSQL connection pool for checkpointer
+    # autocommit=True required for CREATE INDEX CONCURRENTLY in setup()
     async with AsyncConnectionPool(
         conninfo=POSTGRES_URL,
         max_size=10,
         min_size=2,
+        kwargs={"autocommit": True, "prepare_threshold": 0},
     ) as pool:
         checkpointer = AsyncPostgresSaver(pool)
         await checkpointer.setup()
+        print("✅ Checkpoint tables ready")
 
         agent = OrchestratorAgent(checkpointer=checkpointer)
         app.state.agent = agent

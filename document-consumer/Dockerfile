@@ -12,6 +12,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install dependencies (without dev and evaluation dependencies)
+ENV UV_HTTP_TIMEOUT=300
 RUN uv sync --frozen --no-install-project --no-dev
 
 # Production stage

@@ -66,16 +66,23 @@ services:
       dockerfile: Dockerfile
     container_name: globrix-agent
     environment:
-      # OpenAI
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # OpenRouter (для LLM и эмбеддингов)
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      # Core API (apartments, projects)
+      CORE_API_BASE_URL: ${CORE_API_BASE_URL:-https://api.globrix.pro}
+      CORE_API_KEY: ${CORE_API_KEY:-}
       # Qdrant
       QDRANT_URL: http://qdrant:6333
       QDRANT_COLLECTION_NAME: ${QDRANT_COLLECTION_NAME:-real_estate_docs}
       # PostgreSQL (for LangGraph checkpoints)
-      POSTGRES_URI: postgresql://${POSTGRES_USER:-globrix}:${POSTGRES_PASSWORD:-globrix}@postgres:5432/${POSTGRES_DB:-globrix}
+      POSTGRES_URL: postgresql://${POSTGRES_USER:-globrix}:${POSTGRES_PASSWORD:-globrix}@postgres:5432/${POSTGRES_DB:-globrix}
       # Supabase (optional)
       SUPABASE_URL: ${SUPABASE_URL:-}
       SUPABASE_KEY: ${SUPABASE_KEY:-}
+      # Frontend (for component schemas)
+      FRONTEND_URL: http://frontend:3000
+    ports:
+      - "8000:8000"
     depends_on:
       qdrant:
         condition: service_healthy
@@ -95,8 +102,8 @@ services:
       dockerfile: Dockerfile
     container_name: globrix-consumer
     environment:
-      # OpenAI
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # OpenRouter (для эмбеддингов)
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       # RabbitMQ
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASS:-guest}@rabbitmq:5672/
       # Qdrant
