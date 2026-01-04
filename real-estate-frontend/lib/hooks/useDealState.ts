@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { DealState } from "@/components/deal-blocks/types";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-
 interface UseDealStateReturn {
   data: DealState | null;
   isLoading: boolean;
@@ -32,10 +30,11 @@ export function useDealState(
     try {
       setError(null);
 
-      const response = await fetch(`${BACKEND_URL}/api/deal/${dealId}/state`);
+      const response = await fetch(`/api/deal/${dealId}/state`);
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const dealState = await response.json();

@@ -48,7 +48,7 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -59,10 +59,15 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+
+      if (!data.response) {
+        throw new Error("Empty response from server");
+      }
 
       const assistantMessage: Message = {
         role: "assistant",
@@ -81,8 +86,9 @@ export function ChatPanel({ dealId, onUpdate }: ChatPanelProps) {
 
       const errorMessage: Message = {
         role: "assistant",
-        content: `Error: ${error instanceof Error ? error.message : "Failed to send message"}`,
+        content: error instanceof Error ? error.message : "Failed to send message",
         timestamp: new Date(),
+        isError: true,
       };
 
       setMessages((prev) => [...prev, errorMessage]);
