@@ -538,7 +538,6 @@ name = "document-consumer"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "deepeval" },
     { name = "faststream", extra = ["cli", "rabbit"] },
     { name = "httpx" },
     { name = "langchain" },
@@ -552,7 +551,6 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "python-dotenv" },
     { name = "qdrant-client" },
-    { name = "ragas" },
     { name = "structlog" },
     { name = "supabase" },
 ]
@@ -563,10 +561,14 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-mock" },
 ]
+evaluation = [
+    { name = "deepeval" },
+    { name = "ragas" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "deepeval", specifier = ">=3.7.5" },
+    { name = "deepeval", marker = "extra == 'evaluation'", specifier = ">=3.7.5" },
     { name = "faststream", extras = ["rabbit", "cli"], specifier = ">=0.5.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "langchain", specifier = ">=0.1.0" },
@@ -583,11 +585,11 @@ requires-dist = [
     { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=3.12.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "qdrant-client", specifier = ">=1.7.0" },
-    { name = "ragas", specifier = ">=0.4.1" },
+    { name = "ragas", marker = "extra == 'evaluation'", specifier = ">=0.4.1" },
     { name = "structlog", specifier = ">=24.0.0" },
     { name = "supabase", specifier = ">=2.25.1" },
 ]
-provides-extras = ["dev"]
+provides-extras = ["dev", "evaluation"]
 
 [[package]]
 name = "execnet"
