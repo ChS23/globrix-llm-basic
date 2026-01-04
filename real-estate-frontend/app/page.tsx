@@ -3,13 +3,27 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Генерация UUID, совместимая со всеми браузерами и HTTP-контекстами
+function generateUUID(): string {
+  // Пробуем crypto.randomUUID() если доступен (HTTPS + современный браузер)
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  // Fallback для HTTP или старых браузеров
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export default function HomePage() {
   const router = useRouter();
   const [dealId, setDealId] = useState("");
   const [isHovering, setIsHovering] = useState<string | null>(null);
 
   const handleCreateDeal = () => {
-    const newDealId = crypto.randomUUID();
+    const newDealId = generateUUID();
     router.push(`/deal/${newDealId}`);
   };
 
