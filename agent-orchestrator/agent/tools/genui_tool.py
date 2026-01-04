@@ -60,19 +60,36 @@ async def genui_tool(deal_id: str, instruction: str) -> str:
         - НЕ выдумывай id, цены, площади или характеристики
         - Используй deal_id из контекста [Context: Current deal_id = ...]
     """
-    logger.info(f"GenUI tool called for deal {deal_id}")
+    await logger.ainfo(
+        "genui_tool CALLED",
+        deal_id=deal_id,
+        instruction=instruction,
+        instruction_length=len(instruction),
+    )
 
     try:
         # Get GenUI Agent
         agent = get_genui_agent()
+        await logger.ainfo("genui_tool: GenUI Agent obtained")
 
         # Run agent
         result = await agent.run(deal_id=deal_id, instruction=instruction)
 
+        await logger.ainfo(
+            "genui_tool: Agent run completed",
+            success=result.get("success"),
+            blocks_count=len(result.get("blocks", [])),
+            error=result.get("error"),
+        )
+
         # Check result
         if not result["success"]:
             error_msg = f"❌ Failed to update UI: {result['error']}"
-            logger.error(error_msg)
+            await logger.aerror(
+                "genui_tool FAILED",
+                deal_id=deal_id,
+                error=result["error"],
+            )
             return error_msg
 
         # Success - return summary
@@ -84,12 +101,22 @@ async def genui_tool(deal_id: str, instruction: str) -> str:
         if result.get("reasoning"):
             success_msg += f"\n\nReasoning: {result['reasoning'][:200]}..."
 
-        logger.info(f"GenUI tool succeeded: {len(blocks)} blocks")
+        await logger.ainfo(
+            "genui_tool SUCCESS",
+            deal_id=deal_id,
+            blocks_count=len(blocks),
+            blocks_types=[b.get("type") for b in blocks],
+        )
         return success_msg
 
     except Exception as e:
         error_msg = f"❌ GenUI tool error: {str(e)}"
-        logger.error(error_msg)
+        await logger.aerror(
+            "genui_tool EXCEPTION",
+            deal_id=deal_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
         return error_msg
 
 

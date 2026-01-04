@@ -84,7 +84,11 @@ class GenUIAgent:
 
     async def _load_context(self, state: GenUIState) -> GenUIState:
         """Load current UI state and component schemas."""
-        logger.info(f"Loading context for deal {state['deal_id']}")
+        await logger.ainfo(
+            "GenUI _load_context START",
+            deal_id=state["deal_id"],
+            instruction_preview=state.get("instruction", "")[:100],
+        )
 
         try:
             # Read current UI state from Supabase
@@ -92,27 +96,46 @@ class GenUIAgent:
             state["current_blocks"] = ui_state.get("blocks", [])
             state["metadata"] = ui_state.get("metadata", {})
 
+            await logger.ainfo(
+                "GenUI _load_context: loaded deal state",
+                deal_id=state["deal_id"],
+                blocks_count=len(state["current_blocks"]),
+                blocks_types=[b.get("type") for b in state["current_blocks"]],
+            )
+
             # Fetch component schemas from frontend
             schemas = await self.schema_service.get_schemas()
             state["component_schemas"] = schemas
 
-            logger.info(
-                f"Loaded {len(state['current_blocks'])} blocks and {len(schemas)} component schemas"
+            await logger.ainfo(
+                "GenUI _load_context DONE",
+                blocks_count=len(state["current_blocks"]),
+                schemas_count=len(schemas),
+                available_components=list(schemas.keys()) if schemas else [],
             )
 
             return state
 
         except Exception as e:
-            logger.error(f"Failed to load context: {e}")
+            await logger.aerror(
+                "GenUI _load_context FAILED",
+                deal_id=state["deal_id"],
+                error=str(e),
+                error_type=type(e).__name__,
+            )
             state["error"] = str(e)
             return state
 
     async def _analyze_instruction(self, state: GenUIState) -> GenUIState:
         """Analyze instruction from Realtor Agent using LLM."""
         if state.get("error"):
+            await logger.awarning("GenUI _analyze_instruction SKIPPED due to error", error=state["error"])
             return state
 
-        logger.info("Analyzing instruction with LLM")
+        await logger.ainfo(
+            "GenUI _analyze_instruction START",
+            instruction=state["instruction"],
+        )
 
         try:
             # Prepare context for LLM
@@ -153,21 +176,34 @@ ACTIONS: <список действий, например: "обновить apa
             response = await self.llm.ainvoke(prompt)
             state["reasoning"] = response.content
 
-            logger.info(f"LLM reasoning: {response.content[:200]}...")
+            await logger.ainfo(
+                "GenUI _analyze_instruction DONE",
+                reasoning_preview=response.content[:300] if response.content else None,
+            )
 
             return state
 
         except Exception as e:
-            logger.error(f"Failed to analyze instruction: {e}")
+            await logger.aerror(
+                "GenUI _analyze_instruction FAILED",
+                error=str(e),
+                error_type=type(e).__name__,
+            )
             state["error"] = str(e)
             return state
 
     async def _transform_ui(self, state: GenUIState) -> GenUIState:
         """Transform UI blocks based on reasoning."""
         if state.get("error"):
+            await logger.awarning("GenUI _transform_ui SKIPPED due to error", error=state["error"])
             return state
 
-        logger.info("Transforming UI blocks")
+        await logger.ainfo(
+            "GenUI _transform_ui START",
+            deal_id=state["deal_id"],
+            current_blocks_count=len(state["current_blocks"]),
+            instruction_length=len(state.get("instruction", "")),
+        )
 
         try:
             # Parse instruction and create new blocks
@@ -178,6 +214,12 @@ ACTIONS: <список действий, например: "обновить apa
                 k: v.get("props_schema")
                 for k, v in state["component_schemas"].items()
             }
+
+            await logger.adebug(
+                "GenUI _transform_ui: preparing LLM prompt",
+                current_blocks_json=current_blocks_json,
+                schemas_keys=list(schemas_json.keys()),
+            )
 
             prompt = f"""# Роль
 Ты — GenUI Agent. Сгенерируй обновлённые UI блоки для страницы сделки с недвижимостью.
@@ -243,6 +285,12 @@ JSON:
 
             response = await self.llm.ainvoke(prompt)
 
+            await logger.ainfo(
+                "GenUI _transform_ui: LLM response received",
+                response_length=len(response.content) if response.content else 0,
+                response_preview=response.content[:500] if response.content else None,
+            )
+
             # Parse JSON response
             import json
             content = response.content
@@ -253,35 +301,78 @@ JSON:
             elif "```" in content:
                 content = content.split("```")[1].split("```")[0].strip()
 
+            await logger.adebug(
+                "GenUI _transform_ui: extracted JSON",
+                json_preview=content[:500] if content else None,
+            )
+
             new_blocks = json.loads(content)
+
+            await logger.ainfo(
+                "GenUI _transform_ui: parsed blocks",
+                blocks_count=len(new_blocks),
+                blocks_types=[b.get("type") for b in new_blocks],
+                blocks_data=new_blocks,  # Full data for debugging
+            )
 
             # Validate blocks
             await validate_blocks(new_blocks)
 
             state["new_blocks"] = new_blocks
 
-            logger.info(f"Generated {len(new_blocks)} new blocks")
+            await logger.ainfo(
+                "GenUI _transform_ui DONE",
+                blocks_count=len(new_blocks),
+            )
 
             return state
 
+        except json.JSONDecodeError as e:
+            await logger.aerror(
+                "GenUI _transform_ui FAILED: JSON parse error",
+                error=str(e),
+                content_preview=content[:500] if content else None,
+            )
+            state["error"] = f"JSON parse error: {e}"
+            return state
+
         except Exception as e:
-            logger.error(f"Failed to transform UI: {e}")
+            await logger.aerror(
+                "GenUI _transform_ui FAILED",
+                error=str(e),
+                error_type=type(e).__name__,
+            )
             state["error"] = str(e)
             return state
 
     async def _save_state(self, state: GenUIState) -> GenUIState:
         """Save updated UI state to Supabase."""
         if state.get("error"):
-            logger.error(f"Skipping save due to error: {state['error']}")
+            await logger.awarning(
+                "GenUI _save_state SKIPPED due to error",
+                deal_id=state["deal_id"],
+                error=state["error"],
+            )
             return state
 
-        logger.info("Saving updated UI state")
+        await logger.ainfo(
+            "GenUI _save_state START",
+            deal_id=state["deal_id"],
+            blocks_count=len(state.get("new_blocks", [])),
+        )
 
         try:
             # Update metadata
             metadata = state.get("metadata", {})
-            metadata["last_updated"] = datetime.utcnow().isoformat()
+            metadata["last_updated"] = datetime.now().isoformat()
             metadata["schema_version"] = "1.0"
+
+            await logger.adebug(
+                "GenUI _save_state: writing to Supabase",
+                deal_id=state["deal_id"],
+                blocks=state["new_blocks"],
+                metadata=metadata,
+            )
 
             # Write to Supabase
             await write_deal_state(
@@ -291,12 +382,21 @@ JSON:
                 metadata=metadata,
             )
 
-            logger.info(f"Successfully saved UI state for deal {state['deal_id']}")
+            await logger.ainfo(
+                "GenUI _save_state DONE",
+                deal_id=state["deal_id"],
+                blocks_count=len(state["new_blocks"]),
+            )
 
             return state
 
         except Exception as e:
-            logger.error(f"Failed to save state: {e}")
+            await logger.aerror(
+                "GenUI _save_state FAILED",
+                deal_id=state["deal_id"],
+                error=str(e),
+                error_type=type(e).__name__,
+            )
             state["error"] = str(e)
             return state
 
@@ -342,7 +442,11 @@ JSON:
                 "error": str | None
             }
         """
-        logger.info(f"Running GenUI Agent for deal {deal_id}")
+        await logger.ainfo(
+            "GenUI Agent RUN START",
+            deal_id=deal_id,
+            instruction=instruction,
+        )
 
         initial_state: GenUIState = {
             "messages": [],
@@ -360,11 +464,23 @@ JSON:
             final_state = await self.graph.ainvoke(initial_state)
 
             if final_state.get("error"):
+                await logger.aerror(
+                    "GenUI Agent RUN FAILED",
+                    deal_id=deal_id,
+                    error=final_state["error"],
+                )
                 return {
                     "success": False,
                     "blocks": [],
                     "error": final_state["error"],
                 }
+
+            await logger.ainfo(
+                "GenUI Agent RUN SUCCESS",
+                deal_id=deal_id,
+                blocks_count=len(final_state["new_blocks"]),
+                blocks_types=[b.get("type") for b in final_state["new_blocks"]],
+            )
 
             return {
                 "success": True,
@@ -374,5 +490,10 @@ JSON:
             }
 
         except Exception as e:
-            logger.error(f"GenUI Agent failed: {e}")
+            await logger.aerror(
+                "GenUI Agent RUN EXCEPTION",
+                deal_id=deal_id,
+                error=str(e),
+                error_type=type(e).__name__,
+            )
             return {"success": False, "blocks": [], "error": str(e)}

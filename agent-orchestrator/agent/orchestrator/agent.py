@@ -162,9 +162,27 @@ async def search_apartments(
         limit=limit,
     )
 
+    await logger.ainfo(
+        "search_apartments called",
+        apartment_type=apartment_type,
+        min_price=min_price,
+        max_price=max_price,
+        min_area=min_area,
+        max_area=max_area,
+        status=status,
+        limit=limit,
+    )
+
     results = await apartments_search(filters)
 
+    await logger.ainfo(
+        "search_apartments results",
+        count=len(results) if results else 0,
+        sample=results[:2] if results else None,
+    )
+
     if not results:
+        await logger.awarning("search_apartments: no apartments found")
         return "Апартаменты по заданным критериям не найдены."
 
     # Format results
@@ -181,7 +199,9 @@ async def search_apartments(
             f"{i}. **{identifier}** — {apt_type}, {area} м², {price} {currency}, статус: {status}"
         )
 
-    return "\n".join(formatted)
+    result_text = "\n".join(formatted)
+    await logger.ainfo("search_apartments formatted result", result_length=len(result_text))
+    return result_text
 
 
 # === Agent Class ===
@@ -261,7 +281,28 @@ class OrchestratorAgent:
         if not messages or not isinstance(messages[0], SystemMessage):
             messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
 
+        await logger.ainfo(
+            "Orchestrator _call_model",
+            message_count=len(messages),
+            last_message_type=type(messages[-1]).__name__ if messages else None,
+        )
+
         response = await self.llm_with_tools.ainvoke(messages)
+
+        # Log tool calls if any
+        if hasattr(response, "tool_calls") and response.tool_calls:
+            await logger.ainfo(
+                "Orchestrator LLM response with tool_calls",
+                tool_calls=[
+                    {"name": tc.get("name"), "args": tc.get("args")}
+                    for tc in response.tool_calls
+                ],
+            )
+        else:
+            await logger.ainfo(
+                "Orchestrator LLM response (no tools)",
+                content_preview=str(response.content)[:200] if response.content else None,
+            )
 
         return {"messages": [response]}
 
@@ -269,11 +310,16 @@ class OrchestratorAgent:
         """Решает продолжать ли выполнение tools или завершить."""
         last_message = state["messages"][-1]
 
-        # Если есть tool_calls — продолжаем
+        # Если есть tool_calls — продолжаем (sync method, can't await)
         if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+            logger.info(
+                "Orchestrator _should_continue: CONTINUE",
+                tool_count=len(last_message.tool_calls),
+            )
             return "continue"
 
         # Иначе завершаем
+        logger.info("Orchestrator _should_continue: END")
         return "end"
 
     async def ainvoke(self, inputs: dict, config: dict) -> dict:

@@ -62,11 +62,16 @@ async def read_deal_state(deal_id: str, deal_crud: DealCRUD) -> dict[str, Any]:
     Raises:
         Exception: При ошибке чтения из Supabase
     """
+    await logger.ainfo("read_deal_state START", deal_id=deal_id)
+
     try:
         deal = await deal_crud.get_by_id(deal_id)
 
         if not deal:
-            logger.awarning(f"Deal {deal_id} not found, returning empty state")
+            await logger.awarning(
+                "read_deal_state: Deal not found, returning empty state",
+                deal_id=deal_id,
+            )
             return {
                 "deal_id": deal_id,
                 "blocks": [],
@@ -74,17 +79,29 @@ async def read_deal_state(deal_id: str, deal_crud: DealCRUD) -> dict[str, Any]:
             }
 
         ui_state = deal.get("ui_state") or {"blocks": []}
+        blocks = ui_state.get("blocks", [])
 
-        logger.ainfo(f"Read deal state for {deal_id}: {len(ui_state.get('blocks', []))} blocks")
+        await logger.ainfo(
+            "read_deal_state DONE",
+            deal_id=deal_id,
+            blocks_count=len(blocks),
+            blocks_types=[b.get("type") for b in blocks],
+            ui_state_keys=list(ui_state.keys()) if ui_state else [],
+        )
 
         return {
             "deal_id": deal_id,
-            "blocks": ui_state.get("blocks", []),
+            "blocks": blocks,
             "metadata": ui_state.get("metadata", {}),
         }
 
     except Exception as e:
-        logger.aerror(f"Failed to read deal state for {deal_id}: {e}")
+        await logger.aerror(
+            "read_deal_state FAILED",
+            deal_id=deal_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
         raise
 
 
@@ -108,6 +125,13 @@ async def write_deal_state(
     Raises:
         Exception: При ошибке записи в Supabase
     """
+    await logger.ainfo(
+        "write_deal_state START",
+        deal_id=deal_id,
+        blocks_count=len(blocks),
+        blocks_types=[b.get("type") for b in blocks],
+    )
+
     try:
         # Prepare UI state
         ui_state = {
@@ -116,22 +140,42 @@ async def write_deal_state(
             "metadata": metadata or {},
         }
 
+        await logger.adebug(
+            "write_deal_state: prepared ui_state",
+            deal_id=deal_id,
+            ui_state=ui_state,
+        )
+
         # Check if deal exists
         existing_deal = await deal_crud.get_by_id(deal_id)
 
         if existing_deal:
             # Update existing deal
             await deal_crud.update(deal_id=deal_id, ui_state=ui_state)
-            logger.ainfo(f"Updated deal state for {deal_id}: {len(blocks)} blocks")
+            await logger.ainfo(
+                "write_deal_state: UPDATED existing deal",
+                deal_id=deal_id,
+                blocks_count=len(blocks),
+            )
         else:
             # Create new deal
             await deal_crud.create(deal_id=deal_id, ui_state=ui_state)
-            logger.ainfo(f"Created new deal {deal_id} with {len(blocks)} blocks")
+            await logger.ainfo(
+                "write_deal_state: CREATED new deal",
+                deal_id=deal_id,
+                blocks_count=len(blocks),
+            )
 
+        await logger.ainfo("write_deal_state DONE", deal_id=deal_id)
         return True
 
     except Exception as e:
-        logger.aerror(f"Failed to write deal state for {deal_id}: {e}")
+        await logger.aerror(
+            "write_deal_state FAILED",
+            deal_id=deal_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
         raise
 
 
@@ -153,20 +197,35 @@ async def validate_block(block: dict[str, Any]) -> bool:
     block_type = block.get("type")
 
     if not block_type:
+        await logger.aerror("validate_block FAILED: no type field", block=block)
         raise ValueError("Block must have 'type' field")
 
     # Fetch schemas
     schemas = await fetch_component_schemas()
 
     if block_type not in schemas:
+        await logger.aerror(
+            "validate_block FAILED: unknown block type",
+            block_type=block_type,
+            available_types=list(schemas.keys()),
+        )
         raise ValueError(f"Unknown block type: {block_type}")
 
     # TODO: Implement JSON Schema validation
     # For now, just check that props exist
     if "props" not in block:
+        await logger.aerror(
+            "validate_block FAILED: no props field",
+            block_type=block_type,
+            block=block,
+        )
         raise ValueError(f"Block of type '{block_type}' must have 'props' field")
 
-    logger.adebug(f"Block type '{block_type}' validated successfully")
+    await logger.adebug(
+        "validate_block: OK",
+        block_type=block_type,
+        props_keys=list(block.get("props", {}).keys()),
+    )
     return True
 
 
@@ -182,11 +241,26 @@ async def validate_blocks(blocks: list[dict[str, Any]]) -> bool:
     Raises:
         ValueError: Если хотя бы один блок невалиден
     """
+    await logger.ainfo(
+        "validate_blocks START",
+        blocks_count=len(blocks),
+        blocks_types=[b.get("type") for b in blocks],
+    )
+
     for i, block in enumerate(blocks):
         try:
             await validate_block(block)
         except ValueError as e:
+            await logger.aerror(
+                "validate_blocks FAILED",
+                block_index=i,
+                block=block,
+                error=str(e),
+            )
             raise ValueError(f"Block at index {i} is invalid: {e}")
 
-    logger.ainfo(f"Validated {len(blocks)} blocks successfully")
+    await logger.ainfo(
+        "validate_blocks DONE",
+        blocks_count=len(blocks),
+    )
     return True
