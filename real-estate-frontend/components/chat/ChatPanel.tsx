@@ -6,6 +6,7 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  isError?: boolean;
 }
 
 interface ChatPanelProps {
