@@ -226,4 +226,4 @@ test_setup.py
 
 # IDE
 .vscode/
-.idea/
+.idea/.env.server
