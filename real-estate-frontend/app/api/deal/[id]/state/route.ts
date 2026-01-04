@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Backend URL - должен быть задан в переменных окружения
-const BACKEND_URL = process.env.BACKEND_URL;
-
-if (!BACKEND_URL) {
-  throw new Error("BACKEND_URL environment variable is not set");
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Backend URL - внутри Docker используем имя сервиса, локально localhost
+  const BACKEND_URL = process.env.BACKEND_URL || "http://agent-orchestrator:8000";
+
   const { id: dealId } = await params;
 
   try {
