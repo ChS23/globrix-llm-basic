@@ -100,9 +100,9 @@ function generateSchemas() {
     tsconfig: path.join(process.cwd(), "tsconfig.json"),
     type: "*", // Генерируем для всех типов
     skipTypeCheck: true,
-    expose: "all",
+    expose: "all" as const,
     topRef: false,
-    jsDoc: "extended",
+    jsDoc: "extended" as const,
   };
 
   const allSchemas: Record<string, any> = {};
