@@ -5,12 +5,15 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+import structlog
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from psycopg_pool import AsyncConnectionPool
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from agent.orchestrator.agent import OrchestratorAgent
+
+logger = structlog.get_logger(__name__)
 
 # Database URL for checkpointer
 POSTGRES_URL = os.getenv("POSTGRES_URL", "postgresql://user:password@localhost:5432/globrix")
@@ -66,6 +69,14 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
+    await logger.ainfo(
+        "POST /chat received",
+        thread_id=request.thread_id,
+        deal_id=request.deal_id,
+        message=request.message,
+        message_length=len(request.message),
+    )
+
     try:
         thread_id = request.thread_id
         deal_id = request.deal_id or thread_id  # Fallback to thread_id if no deal_id
@@ -77,15 +88,37 @@ async def chat(request: ChatRequest):
         else:
             context_message = user_message
 
+        await logger.ainfo(
+            "Calling agent.ainvoke",
+            thread_id=thread_id,
+            deal_id=deal_id,
+            context_message=context_message,
+        )
+
         inputs = {"messages": [("user", context_message)]}
         config = {"configurable": {"thread_id": thread_id}}
 
         output = await app.state.agent.ainvoke(inputs, config)
 
         last_message = output["messages"][-1]
+
+        await logger.ainfo(
+            "Agent response",
+            thread_id=thread_id,
+            response_preview=last_message.content[:200] if last_message.content else None,
+            total_messages=len(output["messages"]),
+        )
+
         return {"response": last_message.content}
 
     except Exception as e:
+        await logger.aerror(
+            "POST /chat FAILED",
+            thread_id=request.thread_id,
+            deal_id=request.deal_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
         raise HTTPException(status_code=500, detail=f"Ошибка оркестратора: {str(e)}")
 
 # === DEAL STATE API ===
@@ -103,10 +136,26 @@ async def get_deal_state(
     Returns the current JSON state of the deal page.
     Frontend uses this to render dynamic blocks.
     """
+    await logger.ainfo("GET /api/deal/state", deal_id=deal_id)
+
     try:
         state = await read_deal_state(deal_id, deal_crud)
+
+        await logger.ainfo(
+            "GET /api/deal/state response",
+            deal_id=deal_id,
+            blocks_count=len(state.get("blocks", [])),
+            blocks_types=[b.get("type") for b in state.get("blocks", [])],
+        )
+
         return state
     except Exception as e:
+        await logger.aerror(
+            "GET /api/deal/state FAILED",
+            deal_id=deal_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
         raise HTTPException(status_code=500, detail=f"Failed to fetch deal state: {str(e)}")
 
 
