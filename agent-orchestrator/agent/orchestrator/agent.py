@@ -9,7 +9,15 @@ import os
 from typing import Literal
 
 import structlog
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+
+def _force_all_required(schema: dict) -> None:
+    """Force all properties into required array for Azure/o3 compatibility."""
+    if "properties" in schema:
+        schema["required"] = list(schema["properties"].keys())
+
+
 from langgraph.graph import StateGraph, MessagesState, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import ToolNode
@@ -110,6 +118,8 @@ SYSTEM_PROMPT = """# Роль
 class SearchApartmentsInput(BaseModel):
     """Схема аргументов для search_apartments."""
 
+    model_config = ConfigDict(json_schema_extra=_force_all_required)
+
     apartment_type: str | None = Field(
         default=None,
         description="Тип апартаментов: studio, 1br, 2br, 3br, 4br, penthouse, duplex, loft"
@@ -138,14 +148,6 @@ class SearchApartmentsInput(BaseModel):
         default=10,
         description="Максимальное количество результатов (по умолчанию 10)"
     )
-
-    @classmethod
-    def model_json_schema(cls, *args, **kwargs) -> dict:
-        """Override to force all properties into required array for Azure/o3 compatibility."""
-        schema = super().model_json_schema(*args, **kwargs)
-        if "properties" in schema:
-            schema["required"] = list(schema["properties"].keys())
-        return schema
 
 
 @tool(args_schema=SearchApartmentsInput)

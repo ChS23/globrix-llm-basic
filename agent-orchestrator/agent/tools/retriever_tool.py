@@ -9,8 +9,16 @@ Retriever Tool - поиск по векторному хранилищу док�
 from typing import List
 
 import structlog
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from langchain_core.tools import tool
+
+
+def _force_all_required(schema: dict) -> None:
+    """Force all properties into required array for Azure/o3 compatibility."""
+    if "properties" in schema:
+        schema["required"] = list(schema["properties"].keys())
+
+
 from langchain_core.documents import Document
 
 from services.vector_store import get_vector_store, DocumentVectorStore
@@ -20,6 +28,8 @@ logger = structlog.get_logger(__name__)
 
 class RetrieverToolInput(BaseModel):
     """Схема аргументов для retriever_tool."""
+
+    model_config = ConfigDict(json_schema_extra=_force_all_required)
 
     query: str = Field(
         description="Поисковый запрос — формулируй конкретно и развёрнуто для лучших результатов"
@@ -32,14 +42,6 @@ class RetrieverToolInput(BaseModel):
         default=None,
         description="Коллекция для поиска (опционально, по умолчанию — основная)"
     )
-
-    @classmethod
-    def model_json_schema(cls, *args, **kwargs) -> dict:
-        """Override to force all properties into required array for Azure/o3 compatibility."""
-        schema = super().model_json_schema(*args, **kwargs)
-        if "properties" in schema:
-            schema["required"] = list(schema["properties"].keys())
-        return schema
 
 
 @tool(args_schema=RetrieverToolInput)
