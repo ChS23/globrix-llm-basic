@@ -6,9 +6,10 @@ LLM сам решает какие инструменты вызывать на 
 """
 
 import os
-from typing import Literal
+from typing import Literal, Optional
 
 import structlog
+from pydantic import BaseModel, Field
 from langgraph.graph import StateGraph, MessagesState, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import ToolNode
@@ -105,7 +106,47 @@ SYSTEM_PROMPT = """# Роль
 
 # === Tools ===
 
-@tool
+
+class SearchApartmentsInput(BaseModel):
+    """Схема аргументов для search_apartments."""
+
+    apartment_type: Optional[str] = Field(
+        default=None,
+        description="Тип апартаментов: studio, 1br, 2br, 3br, 4br, penthouse, duplex, loft"
+    )
+    min_price: Optional[float] = Field(
+        default=None,
+        description="Минимальная цена (AED для Дубая, THB для Таиланда)"
+    )
+    max_price: Optional[float] = Field(
+        default=None,
+        description="Максимальная цена"
+    )
+    min_area: Optional[float] = Field(
+        default=None,
+        description="Минимальная площадь в м²"
+    )
+    max_area: Optional[float] = Field(
+        default=None,
+        description="Максимальная площадь в м²"
+    )
+    status: Optional[str] = Field(
+        default=None,
+        description="Статус: available, reserved, sold"
+    )
+    limit: int = Field(
+        default=10,
+        description="Максимальное количество результатов (по умолчанию 10)"
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "required": ["apartment_type", "min_price", "max_price", "min_area", "max_area", "status", "limit"]
+        }
+    }
+
+
+@tool(args_schema=SearchApartmentsInput)
 async def search_apartments(
     apartment_type: str | None = None,
     min_price: float | None = None,
