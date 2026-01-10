@@ -6,9 +6,10 @@ Retriever Tool - поиск по векторному хранилищу док�
 - Контекстное обогащение ответов агента
 """
 
-from typing import List, Optional
+from typing import List
 
 import structlog
+from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from langchain_core.documents import Document
 
@@ -17,11 +18,35 @@ from services.vector_store import get_vector_store, DocumentVectorStore
 logger = structlog.get_logger(__name__)
 
 
-@tool
+class RetrieverToolInput(BaseModel):
+    """Схема аргументов для retriever_tool."""
+
+    query: str = Field(
+        description="Поисковый запрос — формулируй конкретно и развёрнуто для лучших результатов"
+    )
+    k: int = Field(
+        default=5,
+        description="Количество документов для возврата (по умолчанию 5, максимум 20)"
+    )
+    collection: str | None = Field(
+        default=None,
+        description="Коллекция для поиска (опционально, по умолчанию — основная)"
+    )
+
+    @classmethod
+    def model_json_schema(cls, *args, **kwargs) -> dict:
+        """Override to force all properties into required array for Azure/o3 compatibility."""
+        schema = super().model_json_schema(*args, **kwargs)
+        if "properties" in schema:
+            schema["required"] = list(schema["properties"].keys())
+        return schema
+
+
+@tool(args_schema=RetrieverToolInput)
 async def retriever_tool(
     query: str,
     k: int = 5,
-    collection: Optional[str] = None,
+    collection: str | None = None,
 ) -> str:
     """Поиск информации в базе знаний по семантическому сходству.
 
@@ -185,7 +210,7 @@ async def search_documents(
     return await vector_store.search(query=query, k=k)
 
 
-def get_retriever(search_kwargs: Optional[dict] = None):
+def get_retriever(search_kwargs: dict | None = None):
     """
     Get LangChain Retriever for use in chains.
 

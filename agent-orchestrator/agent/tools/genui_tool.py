@@ -6,6 +6,7 @@
 
 import structlog
 from typing import Dict, Any
+from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 
 from agent.genui.agent import GenUIAgent
@@ -25,7 +26,26 @@ def get_genui_agent() -> GenUIAgent:
     return _genui_agent
 
 
-@tool
+class GenUIToolInput(BaseModel):
+    """Схема аргументов для genui_tool."""
+
+    deal_id: str = Field(
+        description="UUID сделки (используй deal_id из контекста сообщения)"
+    )
+    instruction: str = Field(
+        description="Детальная инструкция что изменить в UI"
+    )
+
+    @classmethod
+    def model_json_schema(cls, *args, **kwargs) -> dict:
+        """Override to force all properties into required array for Azure/o3 compatibility."""
+        schema = super().model_json_schema(*args, **kwargs)
+        if "properties" in schema:
+            schema["required"] = list(schema["properties"].keys())
+        return schema
+
+
+@tool(args_schema=GenUIToolInput)
 async def genui_tool(deal_id: str, instruction: str) -> str:
     """Обновление визуального интерфейса страницы сделки.
 

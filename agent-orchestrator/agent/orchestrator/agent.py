@@ -6,7 +6,7 @@ LLM сам решает какие инструменты вызывать на 
 """
 
 import os
-from typing import Literal, Optional
+from typing import Literal
 
 import structlog
 from pydantic import BaseModel, Field
@@ -110,27 +110,27 @@ SYSTEM_PROMPT = """# Роль
 class SearchApartmentsInput(BaseModel):
     """Схема аргументов для search_apartments."""
 
-    apartment_type: Optional[str] = Field(
+    apartment_type: str | None = Field(
         default=None,
         description="Тип апартаментов: studio, 1br, 2br, 3br, 4br, penthouse, duplex, loft"
     )
-    min_price: Optional[float] = Field(
+    min_price: float | None = Field(
         default=None,
         description="Минимальная цена (AED для Дубая, THB для Таиланда)"
     )
-    max_price: Optional[float] = Field(
+    max_price: float | None = Field(
         default=None,
         description="Максимальная цена"
     )
-    min_area: Optional[float] = Field(
+    min_area: float | None = Field(
         default=None,
         description="Минимальная площадь в м²"
     )
-    max_area: Optional[float] = Field(
+    max_area: float | None = Field(
         default=None,
         description="Максимальная площадь в м²"
     )
-    status: Optional[str] = Field(
+    status: str | None = Field(
         default=None,
         description="Статус: available, reserved, sold"
     )
@@ -139,11 +139,13 @@ class SearchApartmentsInput(BaseModel):
         description="Максимальное количество результатов (по умолчанию 10)"
     )
 
-    model_config = {
-        "json_schema_extra": {
-            "required": ["apartment_type", "min_price", "max_price", "min_area", "max_area", "status", "limit"]
-        }
-    }
+    @classmethod
+    def model_json_schema(cls, *args, **kwargs) -> dict:
+        """Override to force all properties into required array for Azure/o3 compatibility."""
+        schema = super().model_json_schema(*args, **kwargs)
+        if "properties" in schema:
+            schema["required"] = list(schema["properties"].keys())
+        return schema
 
 
 @tool(args_schema=SearchApartmentsInput)
