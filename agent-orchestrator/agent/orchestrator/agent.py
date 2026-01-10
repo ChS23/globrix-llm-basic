@@ -282,6 +282,17 @@ class OrchestratorAgent:
         # LLM с привязанными tools
         self.llm_with_tools = self.llm.bind_tools(self.tools)
 
+        # Debug: log tool schemas
+        for tool in self.tools:
+            if hasattr(tool, 'args_schema') and tool.args_schema:
+                schema = tool.args_schema.model_json_schema()
+                logger.info(
+                    "Tool schema",
+                    tool_name=tool.name,
+                    required=schema.get("required", []),
+                    properties=list(schema.get("properties", {}).keys()),
+                )
+
         # Создаём граф
         self.graph = self._build_graph()
 
